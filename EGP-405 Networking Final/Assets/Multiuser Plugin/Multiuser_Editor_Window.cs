@@ -30,6 +30,18 @@ public class Multiuser_Editor_Window : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+
+        GUILayout.Label("Sync Interval (0 for realtime)");
+        MultiuserPlugin.syncInterval = EditorGUILayout.FloatField(MultiuserPlugin.syncInterval);
+
+        EditorGUILayout.EndHorizontal();
+
         MultiuserPlugin.mConnected = GUILayout.Toggle(MultiuserPlugin.mConnected, "Run");
+
+        if(GUILayout.Button("Manual Sync"))
+        {
+            MultiuserPlugin.Sync();
+        }
     }
 }
