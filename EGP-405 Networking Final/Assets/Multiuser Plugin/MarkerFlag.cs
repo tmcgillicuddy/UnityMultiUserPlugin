@@ -7,4 +7,9 @@ using UnityEditor;
 public class MarkerFlag : MonoBehaviour {
      public bool isModified = true;
      public bool isLocked = true;
+
+    void OnEnable()
+    {
+        this.hideFlags = HideFlags.HideInInspector;
+    }
 }

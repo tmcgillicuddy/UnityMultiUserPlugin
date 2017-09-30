@@ -50,10 +50,8 @@ public class MultiuserPlugin
         if (mConnected && (syncInterval == 0 ||DateTime.Now.Minute*60+ DateTime.Now.Second >= 
             (lastSyncTime.Second+syncInterval+ lastSyncTime.Minute*60)))
         {
-           
             Sync();
             lastSyncTime = DateTime.Now;
-            //EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
         else
         {
