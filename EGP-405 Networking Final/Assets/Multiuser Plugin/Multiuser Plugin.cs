@@ -86,21 +86,20 @@ public class MultiuserPlugin
     static void viewMode()
     {
         Selection.activeObject = null;
-
-
+        
     }
     public static void Sync()
     {
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
         Debug.Log("Syncing");
+
         for (int i = 0; i < allGameobjects.Length; ++i) //Checks All objects in scene and 
         {
-            if (allGameobjects[i].GetComponent<MarkerFlag>() == null)    //If an object doesn't have the marker flag script on it
-            {                                                           //it will be added
-                allGameobjects[i].AddComponent<MarkerFlag>();
-            }
-
             MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if (objectFlag == null)    //If an object doesn't have the marker flag script on it
+            {                                                           //it will be added
+                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+            }
 
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
