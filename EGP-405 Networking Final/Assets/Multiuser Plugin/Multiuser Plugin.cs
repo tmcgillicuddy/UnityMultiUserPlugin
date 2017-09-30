@@ -29,21 +29,36 @@ public class MultiuserPlugin
 
     //Update Loop
     static void Update()
-    {       //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
-        if(mConnected && (syncInterval == 0 || DateTime.Now.Second >= (lastSyncTime.Second+syncInterval)))
+    {
+
+        if (Selection.gameObjects.Length > 0)
         {
-            if (Selection.gameObjects.Length > 0)
+            GameObject[] selectedObjects = Selection.gameObjects;
+
+            for (int i = 0; i < selectedObjects.Length; ++i)
             {
-                GameObject[] selectedObjects = Selection.gameObjects;
-                for (int i = 0; i < selectedObjects.Length; ++i)
-                {
-                    selectedObjects[i].GetComponent<MarkerFlag>().isModified = true;
-                    selectedObjects[i].GetComponent<MarkerFlag>().isLocked = true;
+                MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
+                if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
+                {                                                           //it will be added
+                    selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
                 }
+                selectedObjFlags.isModified = true;
+                selectedObjFlags.isLocked = true;
             }
+        }
+        //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
+        if (mConnected && (syncInterval == 0 ||DateTime.Now.Minute*60+ DateTime.Now.Second >= 
+            (lastSyncTime.Second+syncInterval+ lastSyncTime.Minute*60)))
+        {
+           
             Sync();
             lastSyncTime = DateTime.Now;
             //EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
+        else
+        {
+          //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+            //  Debug.Log(DateTime.Now.Second);
         }
     }
 
