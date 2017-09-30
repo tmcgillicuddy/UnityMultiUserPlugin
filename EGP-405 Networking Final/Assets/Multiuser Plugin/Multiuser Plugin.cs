@@ -14,6 +14,12 @@ public class MultiuserPlugin
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
 
+    enum supportedTypes
+    {
+        Transform,
+        RigidBody
+    }
+
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
@@ -23,19 +29,18 @@ public class MultiuserPlugin
 
     //Update Loop
     static void Update()
-    {
-        if(Selection.gameObjects.Length > 0)
-        {
-            GameObject[] selectedObjects = Selection.gameObjects;
-            for(int i =0; i < selectedObjects.Length; ++i)
-            {
-                selectedObjects[i].GetComponent<MarkerFlag>().isModified = true;
-                selectedObjects[i].GetComponent<MarkerFlag>().isLocked = true;
-            }
-        }
-
+    {       //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
         if(mConnected && (syncInterval == 0 || DateTime.Now.Second >= (lastSyncTime.Second+syncInterval)))
         {
+            if (Selection.gameObjects.Length > 0)
+            {
+                GameObject[] selectedObjects = Selection.gameObjects;
+                for (int i = 0; i < selectedObjects.Length; ++i)
+                {
+                    selectedObjects[i].GetComponent<MarkerFlag>().isModified = true;
+                    selectedObjects[i].GetComponent<MarkerFlag>().isLocked = true;
+                }
+            }
             Sync();
             lastSyncTime = DateTime.Now;
             //EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());

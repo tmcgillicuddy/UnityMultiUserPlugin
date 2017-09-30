@@ -34,7 +34,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
         GUILayout.Label("Sync Interval (0 for realtime)");
         MultiuserPlugin.syncInterval = EditorGUILayout.FloatField(MultiuserPlugin.syncInterval);
-
+        GUILayout.Label("seconds");
         EditorGUILayout.EndHorizontal();
 
         MultiuserPlugin.mConnected = GUILayout.Toggle(MultiuserPlugin.mConnected, "Run");
