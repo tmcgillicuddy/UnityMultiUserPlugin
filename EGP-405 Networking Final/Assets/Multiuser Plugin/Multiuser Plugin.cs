@@ -13,11 +13,19 @@ public class MultiuserPlugin
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
+    public static mode toolMode;
+
+    public enum mode
+    {
+        EDIT,
+        VIEW
+    }
+
 
     enum supportedTypes
     {
-        Transform,
-        RigidBody
+        TRANSFORM,
+        RIGIDBODY
     }
 
     static MultiuserPlugin()
@@ -30,7 +38,21 @@ public class MultiuserPlugin
     //Update Loop
     static void Update()
     {
+        if (!Application.isPlaying)
+        {
+            if (toolMode == mode.EDIT)
+            {
+                editMode();
+            }
+            else if (toolMode == mode.VIEW)
+            {
+                viewMode();
+            }
+        }
+    }
 
+    static void editMode()
+    {
         if (Selection.gameObjects.Length > 0)
         {
             GameObject[] selectedObjects = Selection.gameObjects;
@@ -46,20 +68,27 @@ public class MultiuserPlugin
                 selectedObjFlags.isLocked = true;
             }
         }
+
         //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
-        if (mConnected && (syncInterval == 0 ||DateTime.Now.Minute*60+ DateTime.Now.Second >= 
-            (lastSyncTime.Second+syncInterval+ lastSyncTime.Minute*60)))
+        if (mConnected && (syncInterval == 0 || DateTime.Now.Minute * 60 + DateTime.Now.Second >=
+            (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60)))
         {
             Sync();
             lastSyncTime = DateTime.Now;
         }
         else
         {
-          //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+            //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
             //  Debug.Log(DateTime.Now.Second);
         }
     }
 
+    static void viewMode()
+    {
+        Selection.activeObject = null;
+
+
+    }
     public static void Sync()
     {
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();

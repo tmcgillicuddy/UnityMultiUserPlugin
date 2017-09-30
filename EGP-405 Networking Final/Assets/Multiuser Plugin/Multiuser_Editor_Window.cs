@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class Multiuser_Editor_Window : EditorWindow
 {
+
     [MenuItem("Window/Multiuser Network")]
     static void init()
     {
@@ -30,6 +31,9 @@ public class Multiuser_Editor_Window : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
+        MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
+
+
         EditorGUILayout.BeginHorizontal();
 
         GUILayout.Label("Sync Interval (0 for realtime)");
@@ -37,7 +41,7 @@ public class Multiuser_Editor_Window : EditorWindow
         GUILayout.Label("seconds");
         EditorGUILayout.EndHorizontal();
 
-        MultiuserPlugin.mConnected = GUILayout.Toggle(MultiuserPlugin.mConnected, "Run");
+        MultiuserPlugin.mConnected = GUILayout.Toggle(MultiuserPlugin.mConnected, "Auto Run");
 
         if(GUILayout.Button("Manual Sync"))
         {
