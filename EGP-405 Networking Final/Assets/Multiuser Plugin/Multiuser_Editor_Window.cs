@@ -17,12 +17,25 @@ public class Multiuser_Editor_Window : EditorWindow
         Multiuser_Editor_Window window = (Multiuser_Editor_Window)GetWindow(typeof(Multiuser_Editor_Window));
         window.Show();
     }
-
+    string serverpassword;
+    int mode = 0;
     private void OnGUI()
     {
 
+
         if (!MultiuserPlugin.mConnected)
         {
+            if(mode == 1)
+            {
+                GUILayout.Label("Server Settings:", EditorStyles.boldLabel);
+            }
+            else
+            {
+                GUILayout.Label("Client Settings:", EditorStyles.boldLabel);
+            }
+
+
+
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Connection Port Number");
@@ -30,24 +43,55 @@ public class Multiuser_Editor_Window : EditorWindow
 
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.BeginHorizontal();
+            if (mode == 0)
+            {
+                EditorGUILayout.BeginHorizontal();
 
-            GUILayout.Label("Connection IP");
-            MultiuserPlugin.mIP = EditorGUILayout.TextField(MultiuserPlugin.mIP);
+                GUILayout.Label("Connection IP");
+                MultiuserPlugin.mIP = EditorGUILayout.TextField(MultiuserPlugin.mIP);
 
-            EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
+                MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
+            }
+            else
+            {
+                EditorGUILayout.BeginHorizontal();
 
-            MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
+                GUILayout.Label("Server Password (leave blank if public)");
+                serverpassword= EditorGUILayout.TextField(serverpassword);
+
+                EditorGUILayout.EndHorizontal();
+            }
 
             if (GUILayout.Button("Connect"))
             {
                 MultiuserPlugin.mConnected = true;
             }
+
+            if (mode == 1)
+            {
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Change to Client Setting"))
+                {
+                    mode = 0;
+                }
+                EditorGUILayout.EndHorizontal();
+
+            }
+            else
+            {
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Change to Server Mode"))
+                {
+                    mode = 1;
+                }
+                EditorGUILayout.EndHorizontal();
+
+            }
         }
         else
         {
             EditorGUILayout.BeginHorizontal();
-
             GUILayout.Label("Sync Interval (0 for realtime)");
             MultiuserPlugin.syncInterval = EditorGUILayout.FloatField(MultiuserPlugin.syncInterval);
             GUILayout.Label("seconds");
