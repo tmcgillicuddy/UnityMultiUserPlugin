@@ -91,6 +91,21 @@ public class MultiuserPlugin
         Selection.activeObject = null;
         
     }
+
+    public static void startupServer()
+    {
+        //Name all current gameobjs on server side
+
+        //Start server with given information
+    }
+
+    public static void startupClient()
+    {
+        //Clear current scene and prepare to recieve level data from server
+
+        //Request connection
+    }
+
     public static void Sync()
     {
             GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
@@ -109,7 +124,8 @@ public class MultiuserPlugin
                     Component[] allComponenets = allGameobjects[i].GetComponents<Component>();
                     for (int j = 0; j < allComponenets.Length; ++j)    //Checks the marked gameobject's componentss
                     {
-                        //THIS IS WHERE WE WILL COMPILE DATA TO SEND
+                        //CALL SERIALIZE DATA STUFF
+                        //SEND THAT DATA VIA PLUGIN
                     }
                     objectFlag.isModified = false;
                 }
@@ -121,5 +137,13 @@ public class MultiuserPlugin
 
             }
         }
+
+    public static void ReceiveData(/*char[]*/)
+    {
+        //CONNECTION REQUEST STATUS
+        //DESERIALIZE MESSAGE
+        //DESERIALIZE OTHER FEATURE
+        //DESERIALIZE GAMEOBJ DATA
     }
+ }
 

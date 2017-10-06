@@ -23,8 +23,6 @@ public class Multiuser_Editor_Window : EditorWindow
    
     private void OnGUI()
     {
-
-
         if (!MultiuserPlugin.mConnected)
         {
             if(mode == 1)
@@ -65,9 +63,21 @@ public class Multiuser_Editor_Window : EditorWindow
                 EditorGUILayout.EndHorizontal();
             }
 
-            if (GUILayout.Button("Connect"))
+            if (mode == 1)
             {
-                MultiuserPlugin.mConnected = true;
+                if (GUILayout.Button("Connect"))
+                {
+                    //CALL CONNECT TO SERVER FUNCTION HERE
+                    MultiuserPlugin.startupClient();
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Start Server"))
+                {
+                    //CALL START SERVER FUNCTION HERE
+                    MultiuserPlugin.startupServer();
+                }
             }
 
             if (mode == 1)
@@ -154,6 +164,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
     void sendMessage()
     {
+        //CALL SEND MESSAGE OVER NETWORK THING HERE
         messageStack.Add(message);
 
         //Clean up selection and GUI
