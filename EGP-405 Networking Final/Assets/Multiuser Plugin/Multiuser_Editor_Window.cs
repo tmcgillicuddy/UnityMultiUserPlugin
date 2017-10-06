@@ -7,18 +7,20 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class Multiuser_Editor_Window : EditorWindow
 {
-
-    bool test;
-
+    string serverpassword;
+    string message;
+    static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
+    int mode = 0;
+    int bottomBuffer = 10, topBuffer = 10;
 
     [MenuItem("Window/Multiuser Network")]
     static void init()
     {
         Multiuser_Editor_Window window = (Multiuser_Editor_Window)GetWindow(typeof(Multiuser_Editor_Window));
+        messageStack.Clear();
         window.Show();
     }
-    string serverpassword;
-    int mode = 0;
+   
     private void OnGUI()
     {
 
@@ -91,6 +93,26 @@ public class Multiuser_Editor_Window : EditorWindow
         }
         else
         {
+            //Draw the current stack of messages
+            
+            string display = "";
+            for (int i=0; i < messageStack.Count; ++i)
+            {
+                display = display + messageStack[i] + "\n";
+            }
+
+            GUILayout.Label(display, "textfield");
+
+
+            EditorGUILayout.BeginHorizontal();
+            message = EditorGUILayout.TextField("Message", message);
+            if (GUILayout.Button("Send", GUILayout.Width(50)))
+            {
+                sendMessage();
+            }
+            EditorGUILayout.EndHorizontal();
+
+
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Sync Interval (0 for realtime)");
             MultiuserPlugin.syncInterval = EditorGUILayout.FloatField(MultiuserPlugin.syncInterval);
@@ -127,5 +149,16 @@ public class Multiuser_Editor_Window : EditorWindow
             EditorGUILayout.EndHorizontal();
 
         }
+    }
+
+
+    void sendMessage()
+    {
+        messageStack.Add(message);
+
+        //Clean up selection and GUI
+        message = null;
+        GUI.FocusControl(null);
+        Repaint();
     }
 }
