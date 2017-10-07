@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class Multiuser_Editor_Window : EditorWindow
 {
+    StructScript checker = new StructScript();
     string serverpassword;
     string message;
     static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
@@ -34,6 +35,8 @@ public class Multiuser_Editor_Window : EditorWindow
                 GUILayout.Label("Client Settings:", EditorStyles.boldLabel);
             }
 
+
+
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Connection Port Number");
@@ -55,33 +58,26 @@ public class Multiuser_Editor_Window : EditorWindow
             {
                 EditorGUILayout.BeginHorizontal();
 
-                GUILayout.Label("Max Number of Connections");
-                MultiuserPlugin.maxConnectedClients = EditorGUILayout.IntField(MultiuserPlugin.maxConnectedClients);
+                GUILayout.Label("Server Password (leave blank if public)");
+                serverpassword= EditorGUILayout.TextField(serverpassword);
 
                 EditorGUILayout.EndHorizontal();
             }
 
-            EditorGUILayout.BeginHorizontal();
-
-            GUILayout.Label("Server Password (leave blank if public)");
-            serverpassword = EditorGUILayout.TextField(serverpassword);
-
-            EditorGUILayout.EndHorizontal();
-
             if (mode == 1)
             {
-                if (GUILayout.Button("Start Server"))
+                if (GUILayout.Button("Connect"))
                 {
                     //CALL CONNECT TO SERVER FUNCTION HERE
-                    MultiuserPlugin.startupServer();
+                    MultiuserPlugin.startupClient();
                 }
             }
             else
             {
-                if (GUILayout.Button("Connect"))
+                if (GUILayout.Button("Start Server"))
                 {
                     //CALL START SERVER FUNCTION HERE
-                    MultiuserPlugin.startupClient();
+                    MultiuserPlugin.startupServer();
                 }
             }
 
@@ -164,18 +160,12 @@ public class Multiuser_Editor_Window : EditorWindow
             EditorGUILayout.EndHorizontal();
 
         }
-
-        if(GUILayout.Button("Test Serliaze"))
+        if (GUILayout.Button("Check"))
         {
-            MultiuserPlugin.testSerialize();
+            checker.serialize(Selection.gameObjects[0]);
         }
     }
 
-
-    void OnSceneGUI()
-    {
-        Debug.Log("In the scene");
-    }
 
     void sendMessage()
     {
