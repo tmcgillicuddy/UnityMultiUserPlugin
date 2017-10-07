@@ -27,7 +27,6 @@ public class MultiuserPlugin
     {
         EditorApplication.update += Update;
         mConnected = false;
-
     }
 
     //Update Loop
@@ -134,13 +133,21 @@ public class MultiuserPlugin
             }
         }
 
-    public static void ReceiveData(/*char[]*/)  //Called by C plugin to tell Unity to read in some data
+    public static void ReceiveGOData(/*char[]*/)  //Called by C plugin to tell Unity to read in some new gameobject data
     {
-        //CONNECTION REQUEST STATUS
-        //DESERIALIZE MESSAGE
-        //DESERIALIZE OTHER FEATURE
         //DESERIALIZE GAMEOBJ DATA
     }
+
+    public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
+    {
+
+    }
+
+    public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
+    {
+
+    }
+
 
     public static void testSerialize()
     {

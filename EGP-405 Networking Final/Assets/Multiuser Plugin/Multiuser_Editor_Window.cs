@@ -172,6 +172,11 @@ public class Multiuser_Editor_Window : EditorWindow
     }
 
 
+    void OnSceneGUI()
+    {
+        Debug.Log("In the scene");
+    }
+
     void sendMessage()
     {
         //CALL SEND MESSAGE OVER NETWORK THING HERE
