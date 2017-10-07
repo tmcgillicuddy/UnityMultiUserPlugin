@@ -89,6 +89,8 @@ public class MultiuserPlugin
         //Name all current gameobjs on server side
 
         //Start server with given information
+
+        mConnected = true;
     }
 
     public static void startupClient()

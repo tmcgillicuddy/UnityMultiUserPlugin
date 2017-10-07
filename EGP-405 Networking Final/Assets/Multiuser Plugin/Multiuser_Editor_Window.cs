@@ -34,8 +34,6 @@ public class Multiuser_Editor_Window : EditorWindow
                 GUILayout.Label("Client Settings:", EditorStyles.boldLabel);
             }
 
-
-
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Connection Port Number");
@@ -75,7 +73,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Start Server"))
                 {
                     //CALL CONNECT TO SERVER FUNCTION HERE
-                    MultiuserPlugin.startupClient();
+                    MultiuserPlugin.startupServer();
                 }
             }
             else
@@ -83,7 +81,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Connect"))
                 {
                     //CALL START SERVER FUNCTION HERE
-                    MultiuserPlugin.startupServer();
+                    MultiuserPlugin.startupClient();
                 }
             }
 
