@@ -12,11 +12,14 @@ public class StructScript {
         Debug.Log(comps.Length);
         for(int i = 0; i < comps.Length; i++)
         {
-            if(comps[i] is Transform)
+            if(comps[i].GetType() == typeof(UnityEngine.Transform))
             {
                 Debug.Log("Has Transform");
             }
-           // Transform temp = obj.GetComponent<Transform>();
+            else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
+            {
+                Debug.Log("Has Rigidbody");
+            }
         }
         return null;
     }
