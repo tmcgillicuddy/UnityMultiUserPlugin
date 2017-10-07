@@ -57,15 +57,22 @@ public class Multiuser_Editor_Window : EditorWindow
             {
                 EditorGUILayout.BeginHorizontal();
 
-                GUILayout.Label("Server Password (leave blank if public)");
-                serverpassword= EditorGUILayout.TextField(serverpassword);
+                GUILayout.Label("Max Number of Connections");
+                MultiuserPlugin.maxConnectedClients = EditorGUILayout.IntField(MultiuserPlugin.maxConnectedClients);
 
                 EditorGUILayout.EndHorizontal();
             }
 
+            EditorGUILayout.BeginHorizontal();
+
+            GUILayout.Label("Server Password (leave blank if public)");
+            serverpassword = EditorGUILayout.TextField(serverpassword);
+
+            EditorGUILayout.EndHorizontal();
+
             if (mode == 1)
             {
-                if (GUILayout.Button("Connect"))
+                if (GUILayout.Button("Start Server"))
                 {
                     //CALL CONNECT TO SERVER FUNCTION HERE
                     MultiuserPlugin.startupClient();
@@ -73,7 +80,7 @@ public class Multiuser_Editor_Window : EditorWindow
             }
             else
             {
-                if (GUILayout.Button("Start Server"))
+                if (GUILayout.Button("Connect"))
                 {
                     //CALL START SERVER FUNCTION HERE
                     MultiuserPlugin.startupServer();

@@ -9,11 +9,13 @@ using UnityEngine;
 public class MultiuserPlugin
 {
     public static bool mConnected, mIsPaused;  //If the system is running;
-    public static int mPortNum = 6666;      //Which port to connect through
+    public static int mPortNum = 6666, maxConnectedClients;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
+    public static string clientID;
+    public static int objCounter = 0;
 
     public enum mode
     {
@@ -96,7 +98,7 @@ public class MultiuserPlugin
         //Request connection
     }
 
-    public static void Sync()
+    public static void Sync()   //Sends out the data of the "modified" objects
     {
             GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
             Debug.Log("Syncing");
@@ -105,8 +107,10 @@ public class MultiuserPlugin
             {
                 MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
                 if (objectFlag == null)    //If an object doesn't have the marker flag script on it
-                {                                                           //it will be added
+                {                                                           //it will be added. This happens when a client makes a new obj
                     objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+                    objectFlag.name = clientID + objCounter.ToString(); //Make a uniquie name for the client so that other objects can get confused by it
+                    objCounter++;
                 }
 
                 if (objectFlag.isModified)    //If this object's marker flag has been modified
@@ -128,7 +132,7 @@ public class MultiuserPlugin
             }
         }
 
-    public static void ReceiveData(/*char[]*/)
+    public static void ReceiveData(/*char[]*/)  //Called by C plugin to tell Unity to read in some data
     {
         //CONNECTION REQUEST STATUS
         //DESERIALIZE MESSAGE
