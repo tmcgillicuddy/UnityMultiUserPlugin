@@ -15,20 +15,10 @@ public class MultiuserPlugin
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
 
-
-
-    
     public enum mode
     {
         EDIT,
         VIEW
-    }
-
-
-    enum supportedTypes
-    {
-        TRANSFORM,
-        RIGIDBODY
     }
 
     static MultiuserPlugin()
@@ -145,5 +135,22 @@ public class MultiuserPlugin
         //DESERIALIZE OTHER FEATURE
         //DESERIALIZE GAMEOBJ DATA
     }
+
+    public static void testSerialize()
+    {
+        Debug.Log("Testing selected obj(s)");
+        if(Selection.gameObjects.Length > 0)
+        {
+            GameObject[] testObjs = Selection.gameObjects;
+            for (int i=0; i < testObjs.Length; ++i)
+            {
+                //CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
+
+                //IMMEDIARTLY DESERIALIZE IT
+
+            }
+        }
+    }
+
  }
 

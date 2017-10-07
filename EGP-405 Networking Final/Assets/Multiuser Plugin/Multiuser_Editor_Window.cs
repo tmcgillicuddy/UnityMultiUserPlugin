@@ -159,6 +159,11 @@ public class Multiuser_Editor_Window : EditorWindow
             EditorGUILayout.EndHorizontal();
 
         }
+
+        if(GUILayout.Button("Test Serliaze"))
+        {
+            MultiuserPlugin.testSerialize();
+        }
     }
 
 
