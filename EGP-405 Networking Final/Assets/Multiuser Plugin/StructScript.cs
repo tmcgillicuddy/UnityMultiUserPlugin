@@ -6,16 +6,27 @@ public class StructScript {
 
     public char[] serialize(GameObject obj)
     {
-        
+        Debug.Log("Checking");
+        Component[] comps;
+        comps = obj.GetComponents<Component>();
+        Debug.Log(comps.Length);
+        for(int i = 0; i < comps.Length; i++)
+        {
+            if(comps[i] is Transform)
+            {
+                Debug.Log("Has Transform");
+            }
+           // Transform temp = obj.GetComponent<Transform>();
+        }
         return null;
     }
 
 }
 
-public class Component
+public class serializedComponent
 {
 
-    public Component() { }
+    public serializedComponent() { }
     enum typeID
     {
         TRANSFORM,
@@ -47,28 +58,28 @@ struct Color
     float r, g, b, a;
 }*/
 
-public class Transform : Component
+public class Transform : serializedComponent
 {
     Vector3 pos;
     Quaternion rot;
     Vector3 scale;
 }
 
-public class BoxCollider : Component
+public class BoxCollider : serializedComponent
 {
     Vector3 center;
     Vector3 size;
     bool isTrigger;
 }
 
-public class SphereCollider : Component
+public class SphereCollider : serializedComponent
 {
     Vector3 center;
     float radius;
     bool isTrigger;
 }
 
-public class CapsuleCollider : Component
+public class CapsuleCollider : serializedComponent
 {
     Vector3 center;
     float radius, height;
@@ -81,7 +92,7 @@ public class CapsuleCollider : Component
     bool isTrigger;
 }
 
-public class RigidBody : Component
+public class RigidBody : serializedComponent
 {
     float mass, drag, angularDrag;
     bool useGravity, isKinematic;
@@ -100,7 +111,7 @@ public class RigidBody : Component
     Vector3 freezepos, freezeRot;
 }
 
-public class Camera : Component
+public class Camera : serializedComponent
 {
     enum clearFlags
     {
@@ -144,7 +155,7 @@ public class Camera : Component
     }
 }
 
-public class MeshFilter : Component
+public class MeshFilter : serializedComponent
 {
     string fileName;
 }
