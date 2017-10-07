@@ -3,6 +3,13 @@
 // STUFF TO BE WRAPPED
 #include "../Framework/FrameworkState.h"
 
+// RakNet includes
+#include "../../SDKs/DevSDKs/include/RakNet/RakPeerInterface.h"
+//#include "../../SDKs/DevSDKs/include/RakNet/RakNetTypes.h"
+//#include "../../SDKs/DevSDKs/include/RakNet/MessageIdentifiers.h"
+
+//using namespace RakNet;
+
 MULTIUSER_PLUGIN_SYMBOL FrameworkState *theState = 0;
 
 int Startup()
@@ -12,5 +19,43 @@ int Startup()
 		theState = new FrameworkState;
 		return 1;
 	}
+	return 0;
+}
+
+int Shutdown()
+{
+	if (theState != 0)
+	{
+		delete theState;
+		theState = 0;
+		return 1;
+	}
+	return 0;
+}
+
+int Foo(int bar)
+{
+	if (theState != 0)
+	{
+		//return theState->StateFoo(bar);
+	}
+	return 0;
+}
+
+int StartServer(/*params*/)
+{
+
+	return 0;
+}
+
+int StartClient(/*params*/)
+{
+
+	return 0;
+}
+
+int SendData(/*params*/)
+{
+
 	return 0;
 }
