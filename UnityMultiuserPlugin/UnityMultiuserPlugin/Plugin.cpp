@@ -4,11 +4,11 @@
 #include "../Framework/FrameworkState.h"
 
 // RakNet includes
-#include "../../SDKs/DevSDKs/include/RakNet/RakPeerInterface.h"
-//#include "../../SDKs/DevSDKs/include/RakNet/RakNetTypes.h"
-//#include "../../SDKs/DevSDKs/include/RakNet/MessageIdentifiers.h"
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/RakNetTypes.h"
+#include "RakNet/MessageIdentifiers.h"
 
-//using namespace RakNet;
+using namespace RakNet;
 
 MULTIUSER_PLUGIN_SYMBOL FrameworkState *theState = 0;
 
