@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class Multiuser_Editor_Window : EditorWindow
 {
+    StructScript checker = new StructScript();
     string serverpassword;
     string message;
     static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
@@ -158,6 +159,10 @@ public class Multiuser_Editor_Window : EditorWindow
             }
             EditorGUILayout.EndHorizontal();
 
+        }
+        if (GUILayout.Button("Check"))
+        {
+            checker.serialize(Selection.gameObjects[0]);
         }
     }
 

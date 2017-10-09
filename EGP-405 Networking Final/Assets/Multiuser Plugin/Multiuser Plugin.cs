@@ -9,33 +9,24 @@ using UnityEngine;
 public class MultiuserPlugin
 {
     public static bool mConnected, mIsPaused;  //If the system is running;
-    public static int mPortNum = 6666;      //Which port to connect through
+    public static int mPortNum = 6666, maxConnectedClients;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
+    public static string clientID;
+    public static int objCounter = 0;
 
-
-
-    
     public enum mode
     {
         EDIT,
         VIEW
     }
 
-
-    enum supportedTypes
-    {
-        TRANSFORM,
-        RIGIDBODY
-    }
-
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
         mConnected = false;
-
     }
 
     //Update Loop
@@ -97,6 +88,8 @@ public class MultiuserPlugin
         //Name all current gameobjs on server side
 
         //Start server with given information
+
+        mConnected = true;
     }
 
     public static void startupClient()
@@ -106,7 +99,7 @@ public class MultiuserPlugin
         //Request connection
     }
 
-    public static void Sync()
+    public static void Sync()   //Sends out the data of the "modified" objects
     {
             GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
             Debug.Log("Syncing");
@@ -115,8 +108,10 @@ public class MultiuserPlugin
             {
                 MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
                 if (objectFlag == null)    //If an object doesn't have the marker flag script on it
-                {                                                           //it will be added
+                {                                                           //it will be added. This happens when a client makes a new obj
                     objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+                    objectFlag.name = clientID + objCounter.ToString(); //Make a uniquie name for the client so that other objects can get confused by it
+                    objCounter++;
                 }
 
                 if (objectFlag.isModified)    //If this object's marker flag has been modified
@@ -138,12 +133,37 @@ public class MultiuserPlugin
             }
         }
 
-    public static void ReceiveData(/*char[]*/)
+    public static void ReceiveGOData(/*char[]*/)  //Called by C plugin to tell Unity to read in some new gameobject data
     {
-        //CONNECTION REQUEST STATUS
-        //DESERIALIZE MESSAGE
-        //DESERIALIZE OTHER FEATURE
         //DESERIALIZE GAMEOBJ DATA
     }
+
+    public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
+    {
+
+    }
+
+    public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
+    {
+
+    }
+
+
+    public static void testSerialize()
+    {
+        Debug.Log("Testing selected obj(s)");
+        if(Selection.gameObjects.Length > 0)
+        {
+            GameObject[] testObjs = Selection.gameObjects;
+            for (int i=0; i < testObjs.Length; ++i)
+            {
+                //CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
+
+                //IMMEDIARTLY DESERIALIZE IT
+
+            }
+        }
+    }
+
  }
 
