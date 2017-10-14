@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="RakNet">
-      <UniqueIdentifier>{815d7ed7-0f40-446d-b2a0-9270ab3b5051}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib.h">
@@ -23,15 +20,6 @@
     </ClInclude>
     <ClInclude Include="Plugin.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\SDKs\DevSDKs\include\RakNet\RakPeerInterface.h">
-      <Filter>RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\SDKs\DevSDKs\include\RakNet\RakNetTypes.h">
-      <Filter>RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\SDKs\DevSDKs\include\RakNet\MessageIdentifiers.h">
-      <Filter>RakNet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

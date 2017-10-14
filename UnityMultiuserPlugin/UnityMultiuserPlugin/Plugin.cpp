@@ -32,7 +32,7 @@ int Foo(int bar)
 {
 	if (theState != 0)
 	{
-		return theState->StateFoo(bar);
+		//return theState->StateFoo(bar);
 	}
 	return 0;
 }
@@ -41,7 +41,7 @@ MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum, char passwo
 {
 	if (theState != 0)
 	{
-		return 	theState->StartServer(maxClients, portNum, password);
+		//return 	theState->StartServer(maxClients, portNum, password);
 	}
 	return 0;
 }
@@ -50,7 +50,7 @@ MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum)
 {
 	if (theState != 0)
 	{
-		return 	theState->StartClient(targetIP, portNum);
+		//return 	theState->StartClient(targetIP, portNum);
 	}
 	return 0;
 }
@@ -59,7 +59,7 @@ MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length)
 {
 	if (theState != 0)
 	{
-		return 	theState->SendData(data, length);
+		//return 	theState->SendData(data, length);
 	}
 	return 0;
 }
