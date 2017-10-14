@@ -20,11 +20,11 @@ extern "C"
 	// c style declaration for framework wrappers
 	MULTIUSER_PLUGIN_SYMBOL int Foo(int bar);
 
-	MULTIUSER_PLUGIN_SYMBOL int StartServer(/*params*/);
+	MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum, char password[]);
 
-	MULTIUSER_PLUGIN_SYMBOL int StartClient(/*params*/);
+	MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum);
 
-	MULTIUSER_PLUGIN_SYMBOL int SendData(/*params*/);
+	MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length);
 
 
 
