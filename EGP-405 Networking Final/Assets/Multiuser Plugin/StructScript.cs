@@ -7,14 +7,13 @@ using UnityEngine;
 
 public class StructScript {
 
-    public char[] serialize(GameObject obj)
+    public string serialize(GameObject obj)
     {
-        List<char> serialized = new List<char>();
+        string serialized = "";
         Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
         Debug.Log(comps.Length);
-        GameObject newObj = new GameObject();
         for(int i = 0; i < comps.Length; i++)
         {
             if (comps[i].GetType() == typeof(UnityEngine.Transform))
@@ -26,7 +25,7 @@ public class StructScript {
                 serTemp.rot = temp.rotation;
                 serTemp.scale = temp.localScale; //Look here for scaling issues
                 string tempString = new string(serTemp.toChar());
-                Debug.Log(tempString);
+                serialized += tempString;
                 
             }
             else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
@@ -56,8 +55,66 @@ public class StructScript {
             else
                 Debug.Log(comps[i].GetType());
         }
-        return null;
+        return serialized;
     }
+
+    public void deserialize(string ser)
+    {
+        //Component[] components;
+        GameObject temp = new GameObject();
+        int index = 0;
+        Debug.Log(ser);
+        while(ser.Length > 0)
+        {
+            int length = ser.IndexOf("/");
+            Debug.Log(length);
+            string tag = ser.Substring(index, length);
+            ser = ser.Remove(index, length+1);
+            Debug.Log(ser);
+            
+            if(tag == "transform")
+            {
+                UnityEngine.Transform trans = temp.transform;
+                trans.position = deserializeVector3(ref ser);
+                trans.rotation = deserializeQuaternion(ref ser);
+                trans.localScale = deserializeVector3(ref ser);
+            }
+        }
+    }
+
+    public Vector3 deserializeVector3(ref string ser)
+    {
+        Vector3 vec;
+        int length = ser.IndexOf("/");
+        vec.x = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        length = ser.IndexOf("/");
+        vec.y = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        length = ser.IndexOf("/");
+        vec.z = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        return vec;
+    }
+
+    public Quaternion deserializeQuaternion(ref string ser)
+    {
+        Quaternion vec;
+        int length = ser.IndexOf("/");
+        vec.x = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        length = ser.IndexOf("/");
+        vec.y = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        length = ser.IndexOf("/");
+        vec.z = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        length = ser.IndexOf("/");
+        vec.w = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length+1);
+        return vec;
+    }
+
     public string vecToString(Vector3 vec)
     {
         string temp = "";
@@ -123,29 +180,41 @@ public class Transform : serializedComponent
     public Vector3 scale;
     public virtual char[] toChar()
     {
-        string temp = "";
-        temp += pos.x + " ";
-        temp += pos.y + " ";
-        temp += pos.z + " ";
-        temp += rot.x + " ";
-        temp += rot.y + " ";
-        temp += rot.z + " ";
-        temp += rot.w + " ";
-        temp += scale.x + " ";
-        temp += scale.y + " ";
-        temp += scale.z + " ";
+        string temp = "transform/";
+        temp += pos.x + "/";
+        temp += pos.y + "/";
+        temp += pos.z + "/";
+        temp += rot.x + "/";
+        temp += rot.y + "/";
+        temp += rot.z + "/";
+        temp += rot.w + "/";
+        temp += scale.x + "/";
+        temp += scale.y + "/";
+        temp += scale.z + "/";
         return temp.ToCharArray();
     }
 }
 
-/*public class BoxCollider : serializedComponent
+public class BoxCollider : serializedComponent
 {
     Vector3 center;
     Vector3 size;
     bool isTrigger;
+    public virtual char[] toChar()
+    {
+        string temp = "transform/";
+        temp += center.x + "/";
+        temp += center.y + "/";
+        temp += center.z + "/";
+        temp += size.x + "/";
+        temp += size.y + "/";
+        temp += size.z + "/";
+        temp += isTrigger + "/";
+        return temp.ToCharArray();
+    }
 }
 
-public class SphereCollider : serializedComponent
+/*public class SphereCollider : serializedComponent
 {
     Vector3 center;
     float radius;
