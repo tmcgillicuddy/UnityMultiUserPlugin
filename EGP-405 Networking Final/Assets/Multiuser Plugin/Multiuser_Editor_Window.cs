@@ -60,8 +60,13 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 GUILayout.Label("Server Password (leave blank if public)");
                 serverpassword= EditorGUILayout.TextField(serverpassword);
-
                 EditorGUILayout.EndHorizontal();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Autosave interval");
+                //MultiuserPlugin.saveInterval = EditorGUILayout.IntField(MultiuserPlugin.saveInterval);
+                EditorGUILayout.EndHorizontal();
+
+
             }
 
             if (mode == 1)

@@ -4,15 +4,23 @@ using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using System.Runtime.InteropServices;
+ 
 
 [InitializeOnLoad]
 public class MultiuserPlugin
 {
+    //Importing DLL functions
+    [DllImport("UnityMultiuserPlugin", EntryPoint = "Startup")]
+    public static extern int Startup();
+
+
     public static bool mConnected, mIsPaused;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
+    public static ServerUtil serverSystems;
     public static mode toolMode;
     public static string clientID;
     public static int objCounter = 0;
@@ -20,12 +28,14 @@ public class MultiuserPlugin
     public enum mode
     {
         EDIT,
-        VIEW
+        VIEW,
+        SERVER
     }
 
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
+        //Debug.Log(Startup());
         mConnected = false;
     }
 
@@ -43,6 +53,11 @@ public class MultiuserPlugin
                 viewMode();
             }
         }
+        if(toolMode == mode.SERVER)
+        {
+            serverSystems.saveScene();
+        }
+
     }
 
     static void editMode()
