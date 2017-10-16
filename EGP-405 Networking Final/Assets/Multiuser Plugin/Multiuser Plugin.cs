@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 public class MultiuserPlugin
 {
     //Importing DLL functions
-    [DllImport("UnityMultiuserPlugin", EntryPoint = "Startup")]
+    [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
 
 
@@ -35,7 +35,7 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-        //Debug.Log(Startup());
+        Debug.Log(Startup());
         mConnected = false;
     }
 
