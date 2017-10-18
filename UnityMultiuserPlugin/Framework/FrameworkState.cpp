@@ -7,16 +7,19 @@ int FrameworkState::StateFoo(int bar)
 
 bool FrameworkState::StartServer(int maxClients, int portNum, char password[])
 {
-	//TODO: Start a server with the given maxClients, portNum and password
-
-	return false;
+	RakNet::SocketDescriptor sd(portNum, 0);	//Calls to start server
+	mpPeer->Startup(maxClients, &sd, 1);
+	mpPeer->SetMaximumIncomingConnections(maxClients);
+	mPassword = password;
+	return true;
 }
 
 bool FrameworkState::StartClient(char targetIP[], int portNum)
 {
-	//TODO: Start the client with the given ip and port num
-
-	return false;
+	RakNet::SocketDescriptor sd;	//Calls to properly connect to server
+	mpPeer->Startup(1, &sd, 1);
+	mpPeer->Connect(targetIP, portNum, 0, 0);
+	return true;
 }
 
 bool FrameworkState::SendData(char data[], int length)

@@ -7,6 +7,7 @@
 
 //Other includes
 #include <vector>
+#include <string>
 
 struct ConnectedClient	//Used to store connected client information
 {
@@ -30,6 +31,9 @@ public:
 
 private:
 	bool isServer;
+	RakNet::RakPeerInterface *mpPeer;
+	RakNet::Packet *mpPacket;
+	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 };
 
