@@ -3,8 +3,6 @@
 // STUFF TO BE WRAPPED
 #include "../Framework/FrameworkState.h"
 
-
-
 MULTIUSER_PLUGIN_SYMBOL FrameworkState *theState = 0;
 
 int Startup()
@@ -62,4 +60,12 @@ MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length)
 		//return 	theState->SendData(data, length);
 	}
 	return 0;
+}
+
+MULTIUSER_PLUGIN_SYMBOL char GetStrBufOut(int index)
+{
+	if (theState != 0)
+	{
+		return strBufOut[index];
+	}
 }

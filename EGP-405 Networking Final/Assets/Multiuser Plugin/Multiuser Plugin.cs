@@ -180,5 +180,23 @@ public class MultiuserPlugin
         }
     }
 
- }
+    private string GetDllOut()
+    {
+        string ret = "";
+        for (int it = 0; it < 128; it++)
+        {
+            char val = GetStrBufOut(it);
+            if (KeyValuePair == '\0')
+            {
+                it = 500;
+            }
+            else
+            {
+                ret += val;
+            }
+        }
+        return ret;
+    }
+
+}
 
