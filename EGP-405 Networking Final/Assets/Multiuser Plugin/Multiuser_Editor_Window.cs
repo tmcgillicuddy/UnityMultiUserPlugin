@@ -63,13 +63,13 @@ public class Multiuser_Editor_Window : EditorWindow
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label("Autosave interval");
-                //MultiuserPlugin.saveInterval = EditorGUILayout.IntField(MultiuserPlugin.saveInterval);
+                ServerUtil.saveInterval = EditorGUILayout.IntField(ServerUtil.saveInterval);
                 EditorGUILayout.EndHorizontal();
 
 
             }
 
-            if (mode == 1)
+            if (mode == 0)
             {
                 if (GUILayout.Button("Connect"))
                 {

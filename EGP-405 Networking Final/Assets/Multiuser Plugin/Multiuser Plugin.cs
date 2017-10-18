@@ -20,7 +20,6 @@ public class MultiuserPlugin
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
-    public static ServerUtil serverSystems;
     public static mode toolMode;
     public static string clientID;
     public static int objCounter = 0;
@@ -35,16 +34,16 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-        Debug.Log(Startup());
+       // Debug.Log(Startup());
         mConnected = false;
     }
 
     //Update Loop
     static void Update()
     {
-        if (!Application.isPlaying && !mIsPaused)
+        if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
-            if (toolMode == mode.EDIT)
+            if (toolMode == mode.EDIT) 
             {
                 editMode();
             }
@@ -53,9 +52,9 @@ public class MultiuserPlugin
                 viewMode();
             }
         }
-        if(toolMode == mode.SERVER)
+        if(toolMode == mode.SERVER && mConnected)
         {
-            serverSystems.saveScene();
+            ServerUtil.saveScene();
         }
 
     }
@@ -100,18 +99,23 @@ public class MultiuserPlugin
 
     public static void startupServer()
     {
-        //Name all current gameobjs on server side
+        //TODO: Name all current gameobjs on server side
 
-        //Start server with given information
+        //TODO: Start server with given port num, max clients and password
 
+        Debug.Log("Starting Server");
+        toolMode = mode.SERVER;
         mConnected = true;
+        ServerUtil.saveScene(); //Save the scene to start with
     }
 
     public static void startupClient()
     {
-        //Clear current scene and prepare to recieve level data from server
+        //TODO: Clear current scene and prepare to recieve level data from server
 
-        //Request connection
+        //TODO: Start client with given port num, targetIP and password
+
+        mConnected = true;
     }
 
     public static void Sync()   //Sends out the data of the "modified" objects
@@ -134,8 +138,8 @@ public class MultiuserPlugin
                     Component[] allComponenets = allGameobjects[i].GetComponents<Component>();
                     for (int j = 0; j < allComponenets.Length; ++j)    //Checks the marked gameobject's componentss
                     {
-                        //CALL SERIALIZE DATA STUFF
-                        //SEND THAT DATA VIA PLUGIN
+                        //TODO: CALL SERIALIZE DATA STUFF
+                        //TODO: SEND THAT DATA VIA PLUGIN
                     }
                     objectFlag.isModified = false;
                 }
@@ -150,17 +154,17 @@ public class MultiuserPlugin
 
     public static void ReceiveGOData(/*char[]*/)  //Called by C plugin to tell Unity to read in some new gameobject data
     {
-        //DESERIALIZE GAMEOBJ DATA
+        //TODO: DESERIALIZE GAMEOBJ DATA
     }
 
     public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
     {
-
+        
     }
 
     public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
     {
-
+        //TODO: Send handshake message, which will have the ENTIRE scene data from the server
     }
 
 
@@ -172,9 +176,9 @@ public class MultiuserPlugin
             GameObject[] testObjs = Selection.gameObjects;
             for (int i=0; i < testObjs.Length; ++i)
             {
-                //CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
+                //TODO: CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
 
-                //IMMEDIARTLY DESERIALIZE IT
+                //TODO: IMMEDIARTLY DESERIALIZE IT
 
             }
         }
