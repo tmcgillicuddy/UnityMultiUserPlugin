@@ -38,7 +38,6 @@ public:
 
 	//TODO: Find a way to send char array to c++ and from c++
 
-	//TODO: Find a way to debug the DLL (One option is a log writer that writes out each step as it happens)
 	void resetLogger();
 	void writeToLogger(std::string message);
 
