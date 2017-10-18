@@ -14,9 +14,12 @@ public class MultiuserPlugin
     //Importing DLL functions
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
-
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartServer(int maxClients, int portNum);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern char GetStrBufOut(int index);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern char StartClient(char[] targetIP, int portNum);
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -137,6 +140,7 @@ public class MultiuserPlugin
         }
 
         //TODO: Start client with given port num, targetIP and password
+        StartClient(mIP.ToCharArray(), mPortNum);
 
         mIsServer = false;
         mConnected = true;
@@ -211,7 +215,7 @@ public class MultiuserPlugin
         for (int it = 0; it < 128; it++)
         {
             char val = GetStrBufOut(it);
-            if (KeyValuePair == '\0')
+            if (val == '\0')
             {
                 it = 500;
             }

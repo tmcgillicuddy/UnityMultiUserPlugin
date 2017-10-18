@@ -1,6 +1,4 @@
 Startup Complete
-Starting a Server
-In Server Function
-Made Socket Descriptor
-Started Peer
-Set Max connections
+Starting a Client
+PZ
+Connecting to server on ip 1

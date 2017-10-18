@@ -51,7 +51,7 @@ int StartServer(int maxClients, int portNum)
 	return 0;
 }
 
-int StartClient(char targetIP[], int portNum)
+int StartClient(char *targetIP, int portNum)
 {
 	if (theState != 0)
 	{

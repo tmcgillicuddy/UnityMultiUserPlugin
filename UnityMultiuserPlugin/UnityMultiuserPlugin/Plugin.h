@@ -21,7 +21,7 @@ extern "C"
 
 	MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum);
 
-	MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum);
+	MULTIUSER_PLUGIN_SYMBOL int StartClient(char *targetIP, int portNum);
 
 	MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length);
 

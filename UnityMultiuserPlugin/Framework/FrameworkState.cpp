@@ -17,13 +17,13 @@ bool FrameworkState::StartServer(int maxClients, int portNum)
 	return true;
 }
 
-bool FrameworkState::StartClient(char targetIP[], int portNum)
+bool FrameworkState::StartClient(char * targetIP, int portNum)
 {
 	RakNet::SocketDescriptor sd;	//Calls to properly connect to server
 	mpPeer->Startup(1, &sd, 1);
 	writeToLogger("Made Socket Descriptor on " + portNum);
-	mpPeer->Connect(targetIP, portNum, 0, 0);
-	writeToLogger("Connecting to server on ip "); //TODO: add targetIP
+	mpPeer->Connect("216.93.149.53", portNum, 0, 0);
+	writeToLogger("Connecting to server on ip 216.93.149.53"); //TODO: Properly send char array to this function
 
 	return true;
 }
