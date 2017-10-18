@@ -1,5 +1,4 @@
 #pragma once
-#define _ITERATOR_DEBUG_LEVEL 0	//For compiling in release mode properly
 
 #include <iostream>
 #include <fstream>

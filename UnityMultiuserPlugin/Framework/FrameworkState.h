@@ -1,6 +1,5 @@
 #ifndef FRAMEWORK_STATE_H
 #define FRAMEWORK_STATE_H
-#define _ITERATOR_DEBUG_LEVEL 0	//For compiling in release mode properly
 // RakNet includes
 #include "RakNet/RakPeerInterface.h"
 #include "RakNet/MessageIdentifiers.h"

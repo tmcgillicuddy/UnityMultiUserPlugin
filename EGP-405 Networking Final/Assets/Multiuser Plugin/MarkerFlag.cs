@@ -11,6 +11,6 @@ public class MarkerFlag : MonoBehaviour {
 
     void OnEnable()
     {
-        this.hideFlags = HideFlags.HideInInspector;
+        //this.hideFlags = HideFlags.HideInInspector;
     }
 }

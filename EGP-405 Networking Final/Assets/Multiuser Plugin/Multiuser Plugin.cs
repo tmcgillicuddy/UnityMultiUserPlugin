@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
  
 
 [InitializeOnLoad]
+[ExecuteInEditMode]
 public class MultiuserPlugin
 {
     //Importing DLL functions
@@ -15,26 +16,25 @@ public class MultiuserPlugin
     public static extern int Startup();
 
 
-    public static bool mConnected, mIsPaused;  //If the system is running;
-    public static int mPortNum = 6666, maxConnectedClients;      //Which port to connect through
+    public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
+    public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
-    public static string clientID;
+    public static string objectId;
     public static int objCounter = 0;
 
     public enum mode
     {
         EDIT,
         VIEW,
-        SERVER
     }
 
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-       // Debug.Log(Startup());
+        Debug.Log(Startup());
         mConnected = false;
     }
 
@@ -52,7 +52,7 @@ public class MultiuserPlugin
                 viewMode();
             }
         }
-        if(toolMode == mode.SERVER && mConnected)
+        if(mIsServer && mConnected)
         {
             ServerUtil.saveScene();
         }
@@ -99,48 +99,67 @@ public class MultiuserPlugin
 
     public static void startupServer()
     {
-        //TODO: Name all current gameobjs on server side
+        objectId = "Server ";
+        //Runs through entire scene and setups marker flags
+        objCounter = 0;
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for(int i =0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if(objectFlag == null)
+            {
+                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();                
+            }
+
+            objectFlag.id = objectId + objCounter;
+
+            objCounter++;
+        }
 
         //TODO: Start server with given port num, max clients and password
 
-        Debug.Log("Starting Server");
-        toolMode = mode.SERVER;
+
+        mIsServer = true;
         mConnected = true;
-        ServerUtil.saveScene(); //Save the scene to start with
+        ServerUtil.forceSave(); //Save the scene to start with
     }
 
     public static void startupClient()
     {
-        //TODO: Clear current scene and prepare to recieve level data from server
+        //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
+        objCounter = 0;
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            //TODO: Destroy the objects
+        }
 
         //TODO: Start client with given port num, targetIP and password
 
+        mIsServer = false;
         mConnected = true;
     }
 
     public static void Sync()   //Sends out the data of the "modified" objects
     {
             GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
-            Debug.Log("Syncing");
+            //Debug.Log("Syncing");
 
             for (int i = 0; i < allGameobjects.Length; ++i) //Checks All objects in scene and 
             {
-                MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+                MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
+
                 if (objectFlag == null)    //If an object doesn't have the marker flag script on it
-                {                                                           //it will be added. This happens when a client makes a new obj
+                {                          //it will be added. This happens when a new object has been made
                     objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
-                    objectFlag.name = clientID + objCounter.ToString(); //Make a uniquie name for the client so that other objects can get confused by it
+                    objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
                     objCounter++;
                 }
 
                 if (objectFlag.isModified)    //If this object's marker flag has been modified
                 {
-                    Component[] allComponenets = allGameobjects[i].GetComponents<Component>();
-                    for (int j = 0; j < allComponenets.Length; ++j)    //Checks the marked gameobject's componentss
-                    {
-                        //TODO: CALL SERIALIZE DATA STUFF
-                        //TODO: SEND THAT DATA VIA PLUGIN
-                    }
+                     //TODO: CALL SERIALIZE DATA STUFF
+                     //TODO: SEND THAT DATA VIA PLUGIN
                     objectFlag.isModified = false;
                 }
 
@@ -159,7 +178,7 @@ public class MultiuserPlugin
 
     public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
     {
-        
+        //TODO: Deserialize the message data
     }
 
     public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
