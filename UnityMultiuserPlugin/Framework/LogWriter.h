@@ -1,4 +1,6 @@
 #pragma once
+#define _ITERATOR_DEBUG_LEVEL 0	//For compiling in release mode properly
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,9 +8,6 @@
 class LogWriter
 {
 public:
-	LogWriter();
-	~LogWriter();
-
 	void writeToLog(std::string message);	//Appends to the current Log file
 
 	void resetLog();	//Clears the current log file

@@ -1,6 +1,5 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
-
 // actual plugin interface
 #include "lib.h"
 

@@ -73,12 +73,12 @@ int FrameworkState::UpdateNetwork()
 
 void FrameworkState::resetLogger()
 {
-	mpLogger->resetLog();
+	pLogger.resetLog();
 }
 
 void FrameworkState::writeToLogger(std::string message)
 {
-	mpLogger->writeToLog(message);
+	pLogger.writeToLog(message);
 }
 
 bool FrameworkState::SendData(char data[], int length)

@@ -1,7 +1,6 @@
 #ifndef _LIB_H
 #define _LIB_H
 
-
 // tags for exporting or importing function
 #ifdef MULTIUSER_PLUGIN_EXPORT
 #define MULTIUSER_PLUGIN_SYMBOL __declspec(dllexport)

@@ -2,14 +2,6 @@
 
 using namespace std;
 
-LogWriter::LogWriter()
-{
-}
-
-LogWriter::~LogWriter()
-{
-}
-
 void LogWriter::writeToLog(std::string message)
 {
 	ofstream file;

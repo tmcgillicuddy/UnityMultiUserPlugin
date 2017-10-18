@@ -1,5 +1,6 @@
 #ifndef FRAMEWORK_STATE_H
 #define FRAMEWORK_STATE_H
+#define _ITERATOR_DEBUG_LEVEL 0	//For compiling in release mode properly
 // RakNet includes
 #include "RakNet/RakPeerInterface.h"
 #include "RakNet/MessageIdentifiers.h"
@@ -10,6 +11,7 @@
 #include <string>
 #include "LogWriter.h"
 
+class LogWriter;
 struct ConnectedClient	//Used to store connected client information
 {
 	char ip[256];
@@ -47,7 +49,7 @@ private:
 	RakNet::Packet *mpPacket;
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
-	LogWriter * mpLogger = new LogWriter;
+	LogWriter pLogger;
 };
 
 #endif // FRAMEWORK_STATE_H
