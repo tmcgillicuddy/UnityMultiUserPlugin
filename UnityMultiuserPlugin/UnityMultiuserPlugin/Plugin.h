@@ -27,6 +27,12 @@ extern "C"
 
 	MULTIUSER_PLUGIN_SYMBOL int UpdateNetworking();
 
+#define STRLEN 128
+	static char strBufIn[STRLEN];
+	static char strBufOut[STRLEN];
+
+	MULTIUSER_PLUGIN_SYMBOL char GetStrBufOut(int index);
+
 
 
 #ifdef __cplusplus
