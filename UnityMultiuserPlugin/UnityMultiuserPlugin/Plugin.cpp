@@ -41,17 +41,17 @@ int Foo(int bar)
 	return 0;
 }
 
-MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum, char password[])
+int StartServer(int maxClients, int portNum)
 {
 	if (theState != 0)
 	{
 		theState->writeToLogger("Starting a Server");
-		return theState->StartServer(maxClients, portNum, password);
+		return theState->StartServer(maxClients, portNum);
 	}
 	return 0;
 }
 
-MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum)
+int StartClient(char targetIP[], int portNum)
 {
 	if (theState != 0)
 	{
@@ -61,7 +61,7 @@ MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum)
 	return 0;
 }
 
-MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length)
+int SendData(char data[], int length)
 {
 	if (theState != 0)
 	{
@@ -72,7 +72,7 @@ MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length)
 }
 
 
-MULTIUSER_PLUGIN_SYMBOL int UpdateNetworking()
+int UpdateNetworking()
 {
 	if (theState != 0)
 	{

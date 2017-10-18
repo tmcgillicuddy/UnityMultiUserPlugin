@@ -26,7 +26,7 @@ public:
 
 	//Server only Functions
 	bool BroadCastData(char data[], int length, char ip[]);
-	bool StartServer(int maxClients, int portNum, char password[]);
+	bool StartServer(int maxClients, int portNum);
 
 	//Client Only Functions
 	bool StartClient(char targetIP[], int portNum);
@@ -44,8 +44,8 @@ public:
 
 private:
 	bool isServer;
-	RakNet::RakPeerInterface *mpPeer;
-	RakNet::Packet *mpPacket;
+	RakNet::RakPeerInterface *mpPeer = RakNet::RakPeerInterface::GetInstance();
+	RakNet::Packet *mpPacket = new RakNet::Packet();
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	LogWriter pLogger;

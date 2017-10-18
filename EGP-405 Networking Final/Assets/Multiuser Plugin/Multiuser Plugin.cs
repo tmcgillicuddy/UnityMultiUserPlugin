@@ -15,6 +15,8 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
 
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern int StartServer(int maxClients, int portNum);
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -116,8 +118,8 @@ public class MultiuserPlugin
             objCounter++;
         }
 
-        //TODO: Start server with given port num, max clients and password
-
+        //Calls plugin function to start server
+        StartServer(maxConnectedClients, mPortNum); //TODO: Add password varible
 
         mIsServer = true;
         mConnected = true;

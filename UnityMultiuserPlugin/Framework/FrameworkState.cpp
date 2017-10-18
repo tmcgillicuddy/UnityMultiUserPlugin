@@ -5,12 +5,15 @@ int FrameworkState::StateFoo(int bar)
 	return (bar * bar);
 }
 
-bool FrameworkState::StartServer(int maxClients, int portNum, char password[])
+bool FrameworkState::StartServer(int maxClients, int portNum)
 {
+	writeToLogger("In Server Function");
 	RakNet::SocketDescriptor sd(portNum, 0);	//Calls to start server
+	writeToLogger("Made Socket Descriptor");
 	mpPeer->Startup(maxClients, &sd, 1);
+	writeToLogger("Started Peer");
 	mpPeer->SetMaximumIncomingConnections(maxClients);
-	mPassword = password;
+	writeToLogger("Set Max connections");
 	return true;
 }
 

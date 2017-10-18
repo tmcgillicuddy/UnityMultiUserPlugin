@@ -1,1 +1,6 @@
 Startup Complete
+Starting a Server
+In Server Function
+Made Socket Descriptor
+Started Peer
+Set Max connections

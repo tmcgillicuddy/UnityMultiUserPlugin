@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0de21e8de724540891e217f99156a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: Server 1
+  id: Server 0
   isModified: 0
   isLocked: 0
 --- !u!1 &1176079470
@@ -303,6 +303,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0de21e8de724540891e217f99156a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: Server 0
+  id: Server 1
   isModified: 1
   isLocked: 1
