@@ -210,8 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Server 1
-  isModified: 1
-  isLocked: 1
+  isModified: 0
+  isLocked: 0
 --- !u!1 &1176079470
 GameObject:
   m_ObjectHideFlags: 0
