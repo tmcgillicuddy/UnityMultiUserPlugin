@@ -34,7 +34,7 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-       // Debug.Log(Startup());
+        Debug.Log(Startup());
         mConnected = false;
     }
 
