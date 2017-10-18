@@ -1,9 +1,9 @@
 #ifndef FRAMEWORK_STATE_H
 #define FRAMEWORK_STATE_H
 // RakNet includes
-//#include "RakNet/RakPeerInterface.h"
-//#include "RakNet/MessageIdentifiers.h"
-//#include "RakNet/RakNetTypes.h"  // MessageID
+#include "RakNet/RakPeerInterface.h"
+#include "RakNet/MessageIdentifiers.h"
+#include "RakNet/RakNetTypes.h"  // MessageID
 
 //Other includes
 #include <vector>

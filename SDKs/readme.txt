@@ -1,1 +1,0 @@
-This is the single collection of all frequently-used SDKs in one directory for convenience. Organize by accessibility; i.e. if a library has common configs, put it in a higher folder, otherwise make specific directories as needed.
