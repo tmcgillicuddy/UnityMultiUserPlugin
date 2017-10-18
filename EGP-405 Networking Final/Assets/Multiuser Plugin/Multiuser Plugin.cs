@@ -99,11 +99,25 @@ public class MultiuserPlugin
 
     public static void startupServer()
     {
-        //TODO: Name all current gameobjs on server side
+        //Runs through entire scene and setups marker flags
+        objCounter = 0;
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for(int i =0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if(objectFlag == null)
+            {
+                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();                
+            }
+
+            objectFlag.id = "Server " + i;
+
+            objCounter++;
+        }
 
         //TODO: Start server with given port num, max clients and password
 
-        Debug.Log("Starting Server");
+
         toolMode = mode.SERVER;
         mConnected = true;
         ServerUtil.saveScene(); //Save the scene to start with
