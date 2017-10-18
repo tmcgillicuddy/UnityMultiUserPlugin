@@ -22,6 +22,65 @@ bool FrameworkState::StartClient(char targetIP[], int portNum)
 	return true;
 }
 
+int FrameworkState::UpdateNetwork()
+{
+	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
+	{
+		switch (mpPacket->data[0])
+		{
+		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+			printf("Another client has disconnected.\n");
+			break;
+		case ID_REMOTE_CONNECTION_LOST:
+			printf("Another client has lost the connection.\n");
+			break;
+		case ID_REMOTE_NEW_INCOMING_CONNECTION:
+			printf("Another client has connected.\n");
+			break;
+		case ID_CONNECTION_REQUEST_ACCEPTED:
+			printf("Our connection request has been accepted.\n");
+			break;
+		case ID_NEW_INCOMING_CONNECTION:
+			return true;
+			printf("A connection is incoming.\n");
+			break;
+		case ID_NO_FREE_INCOMING_CONNECTIONS:
+			printf("The server is full.\n");
+			break;
+		case ID_DISCONNECTION_NOTIFICATION:
+			if (isServer) {
+				printf("A client has disconnected.\n");
+			}
+			else {
+				printf("We have been disconnected.\n");
+			}
+			break;
+		case ID_CONNECTION_LOST:
+			if (isServer) {
+				printf("A client lost the connection.\n");
+			}
+			else {
+				printf("Connection lost.\n");
+			}
+			break;
+		default:
+			printf("Message with identifier %i has arrived.\n", mpPacket->data[0]);
+			break;
+		}
+	}
+	return false;
+}
+
+void FrameworkState::resetLogger()
+{
+	mpLogger->resetLog();
+}
+
+void FrameworkState::writeToLogger(std::string message)
+{
+	mpLogger->writeToLog(message);
+}
+
 bool FrameworkState::SendData(char data[], int length)
 {
 	//TODO: Either send the data to all connected clients or to the server

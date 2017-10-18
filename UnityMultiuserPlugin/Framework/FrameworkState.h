@@ -8,6 +8,7 @@
 //Other includes
 #include <vector>
 #include <string>
+#include "LogWriter.h"
 
 struct ConnectedClient	//Used to store connected client information
 {
@@ -29,12 +30,24 @@ public:
 	//Client Only Functions
 	bool StartClient(char targetIP[], int portNum);
 
+	//Update the network loop
+	int UpdateNetwork();
+
+	//TODO: Need a way to either call a function in unity to deserlize a char array
+
+	//TODO: Find a way to send char array to c++ and from c++
+
+	//TODO: Find a way to debug the DLL (One option is a log writer that writes out each step as it happens)
+	void resetLogger();
+	void writeToLogger(std::string message);
+
 private:
 	bool isServer;
 	RakNet::RakPeerInterface *mpPeer;
 	RakNet::Packet *mpPacket;
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
+	LogWriter * mpLogger = new LogWriter;
 };
 
 #endif // FRAMEWORK_STATE_H

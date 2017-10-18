@@ -26,6 +26,8 @@ extern "C"
 
 	MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length);
 
+	MULTIUSER_PLUGIN_SYMBOL int UpdateNetworking();
+
 
 
 #ifdef __cplusplus

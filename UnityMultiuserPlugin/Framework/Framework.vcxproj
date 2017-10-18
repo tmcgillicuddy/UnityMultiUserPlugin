@@ -156,9 +156,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameworkState.h" />
+    <ClInclude Include="LogWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameworkState.cpp" />
+    <ClCompile Include="LogWriter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
