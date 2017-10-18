@@ -9,11 +9,11 @@ bool FrameworkState::StartServer(int maxClients, int portNum)
 {
 	writeToLogger("In Framework StartServer Function");
 	RakNet::SocketDescriptor sd(portNum, 0);	//Calls to start server
-	writeToLogger("Made Socket Descriptor on "+ portNum);
+	writeToLogger("Made Socket Descriptor on ");
 	mpPeer->Startup(maxClients, &sd, 1);
 	writeToLogger("Started Peer");
 	mpPeer->SetMaximumIncomingConnections(maxClients);
-	writeToLogger("Set Max connections to " + maxClients);
+	writeToLogger("Set Max connections to ");
 	return true;
 }
 
@@ -30,6 +30,7 @@ bool FrameworkState::StartClient(char * targetIP, int portNum)
 
 int FrameworkState::UpdateNetwork()
 {
+	//writeToLogger("Updating Network");
 	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
 	{
 		switch (mpPacket->data[0])
@@ -47,6 +48,7 @@ int FrameworkState::UpdateNetwork()
 			printf("Our connection request has been accepted.\n");
 			break;
 		case ID_NEW_INCOMING_CONNECTION:
+			writeToLogger("New Connection");
 			return true;
 			printf("A connection is incoming.\n");
 			break;

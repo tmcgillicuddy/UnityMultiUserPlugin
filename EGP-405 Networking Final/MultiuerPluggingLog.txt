@@ -1,4 +1,7 @@
 Startup Complete
-Starting a Client
-PZ
-Connecting to server on ip 1
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 
+Started Peer
+Set Max connections to 
+New Connection

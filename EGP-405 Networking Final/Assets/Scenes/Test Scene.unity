@@ -304,5 +304,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Server 1
-  isModified: 1
-  isLocked: 1
+  isModified: 0
+  isLocked: 0

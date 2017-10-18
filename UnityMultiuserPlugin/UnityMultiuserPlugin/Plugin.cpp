@@ -76,7 +76,7 @@ int UpdateNetworking()
 {
 	if (theState != 0)
 	{
-		theState->writeToLogger("Updating Network");
+		//theState->writeToLogger("Updating Network");
 		return theState->UpdateNetwork();
 	}
 	return 0;

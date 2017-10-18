@@ -20,6 +20,8 @@ public class MultiuserPlugin
     public static extern char GetStrBufOut(int index);
     [DllImport("UnityMultiuserPlugin")]
     public static extern char StartClient(char[] targetIP, int portNum);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern int UpdateNetworking();
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -60,8 +62,10 @@ public class MultiuserPlugin
         if(mIsServer && mConnected)
         {
             ServerUtil.saveScene();
-        }
+            UpdateNetworking();
 
+        }
+        // Debug.Log("Updating network");
     }
 
     static void editMode()
