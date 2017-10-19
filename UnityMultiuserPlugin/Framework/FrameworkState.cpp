@@ -39,7 +39,7 @@ int FrameworkState::UpdateNetwork()
 	//writeToLogger("Updating Network");
 	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
 	{
-		switch (mpPacket->data[0])
+		switch (mpPacket->data[0])	//TODO: Replace all printfs with write to logger calls
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
 			printf("Another client has disconnected.\n");
@@ -51,11 +51,11 @@ int FrameworkState::UpdateNetwork()
 			printf("Another client has connected.\n");
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
+			writeToLogger("Connection is Accepted");
 			printf("Our connection request has been accepted.\n");
 			break;
 		case ID_NEW_INCOMING_CONNECTION:
-			writeToLogger("New Connection");
-			return true;
+			writeToLogger("New Client Is Connecting");
 			printf("A connection is incoming.\n");
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -69,6 +69,11 @@ int FrameworkState::UpdateNetwork()
 				printf("We have been disconnected.\n");
 			}
 			break;
+		case ID_CONNECTION_ATTEMPT_FAILED:
+		{
+			writeToLogger("Failed to connect to server");
+		}
+		break;
 		case ID_CONNECTION_LOST:
 			if (isServer) {
 				printf("A client lost the connection.\n");
@@ -78,11 +83,10 @@ int FrameworkState::UpdateNetwork()
 			}
 			break;
 		default:
-			printf("Message with identifier %i has arrived.\n", mpPacket->data[0]);
+			writeToLogger("Message with identifier "+ std::to_string(mpPacket->data[0]) +" has arrived");
 			break;
 		}
 	}
-	return false;
 }
 
 void FrameworkState::resetLogger()

@@ -50,22 +50,24 @@ public class MultiuserPlugin
     {
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
-            if (toolMode == mode.EDIT) 
+            if (mConnected)
             {
+                if (toolMode == mode.EDIT) 
+                {
                 editMode();
-            }
-            else if (toolMode == mode.VIEW)
-            {
-                viewMode();
-            }
-        }
-        if(mIsServer && mConnected)
-        {
-            ServerUtil.saveScene();
-            UpdateNetworking();
+                }
+                else if (toolMode == mode.VIEW)
+                {
+                    viewMode();
+                }
+                else if(mIsServer)
+                {
+                    ServerUtil.saveScene();
 
+                }
+                UpdateNetworking();
+            }
         }
-        // Debug.Log("Updating network");
     }
 
     static void editMode()
