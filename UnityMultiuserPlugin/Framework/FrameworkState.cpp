@@ -7,8 +7,9 @@ int FrameworkState::StateFoo(int bar)
 
 bool FrameworkState::StartServer(int maxClients, int portNum)
 {
-	std::string temp = std::to_string(portNum);
 	writeToLogger("In Framework StartServer Function");
+
+	std::string temp = std::to_string(portNum);
 	RakNet::SocketDescriptor sd(portNum, 0);	//Calls to start server
 	writeToLogger("Made Socket Descriptor on " + temp);
 	mpPeer->Startup(maxClients, &sd, 1);
@@ -21,6 +22,8 @@ bool FrameworkState::StartServer(int maxClients, int portNum)
 
 bool FrameworkState::StartClient(char * targetIP, int portNum)
 {
+	writeToLogger("In Framework StartClient Function");
+
 	std::string temp = std::to_string(portNum);
 
 	RakNet::SocketDescriptor sd;	//Calls to properly connect to server
@@ -39,34 +42,37 @@ int FrameworkState::UpdateNetwork()
 	//writeToLogger("Updating Network");
 	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
 	{
-		switch (mpPacket->data[0])	//TODO: Replace all printfs with write to logger calls
+		switch (mpPacket->data[0])
 		{
 		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-			printf("Another client has disconnected.\n");
+			writeToLogger("Another client has disconnected");
 			break;
 		case ID_REMOTE_CONNECTION_LOST:
-			printf("Another client has lost the connection.\n");
+			writeToLogger("Another client has lost connection");
 			break;
 		case ID_REMOTE_NEW_INCOMING_CONNECTION:
-			printf("Another client has connected.\n");
+			writeToLogger("Another client has connected");
 			break;
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 			writeToLogger("Connection is Accepted");
-			printf("Our connection request has been accepted.\n");
 			break;
 		case ID_NEW_INCOMING_CONNECTION:
 			writeToLogger("New Client Is Connecting");
-			printf("A connection is incoming.\n");
+			//TODO: Send all the data from the server to the client
+			//TODO: Add the connected client's info to the server list of users, 
+			//TODO: Inform all connected clients that someone else has entered
+			//TODO: Send assingment data BACK to the newly connected Client
+
 			break;
 		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			printf("The server is full.\n");
+			writeToLogger("Connection Failed, Server is FULL");
 			break;
 		case ID_DISCONNECTION_NOTIFICATION:
 			if (isServer) {
-				printf("A client has disconnected.\n");
+				writeToLogger("A client has disconnected");
 			}
 			else {
-				printf("We have been disconnected.\n");
+				writeToLogger("We have been disconnected");
 			}
 			break;
 		case ID_CONNECTION_ATTEMPT_FAILED:
@@ -76,10 +82,10 @@ int FrameworkState::UpdateNetwork()
 		break;
 		case ID_CONNECTION_LOST:
 			if (isServer) {
-				printf("A client lost the connection.\n");
+				writeToLogger("A client has lost connection");
 			}
 			else {
-				printf("Connection lost.\n");
+				writeToLogger("Connection lost");
 			}
 			break;
 		default:
