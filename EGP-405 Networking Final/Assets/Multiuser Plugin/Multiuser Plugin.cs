@@ -19,7 +19,7 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern char GetStrBufOut(int index);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern char StartClient(char[] targetIP, int portNum);
+    public static extern char StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
     public static extern int UpdateNetworking();
 
@@ -41,7 +41,7 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-        Debug.Log(Startup());
+        Startup();
         mConnected = false;
     }
 
@@ -144,7 +144,7 @@ public class MultiuserPlugin
         }
 
         //TODO: Start client with given port num, targetIP and password
-        StartClient(mIP.ToCharArray(), mPortNum);
+        StartClient(mIP, mPortNum);
 
         mIsServer = false;
         mConnected = true;

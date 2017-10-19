@@ -1,7 +1,9 @@
 Startup Complete
-Starting a Server
-In Framework StartServer Function
-Made Socket Descriptor on 
-Started Peer
-Set Max connections to 
-New Connection
+Starting a Client
+127.07.04
+Made Socket Descriptor on 6666
+Connecting to server on ip 127.07.04
+Starting a Client
+212121212121
+Made Socket Descriptor on 6666
+Connecting to server on ip 212121212121

@@ -7,23 +7,29 @@ int FrameworkState::StateFoo(int bar)
 
 bool FrameworkState::StartServer(int maxClients, int portNum)
 {
+	std::string temp = std::to_string(portNum);
 	writeToLogger("In Framework StartServer Function");
 	RakNet::SocketDescriptor sd(portNum, 0);	//Calls to start server
-	writeToLogger("Made Socket Descriptor on ");
+	writeToLogger("Made Socket Descriptor on " + temp);
 	mpPeer->Startup(maxClients, &sd, 1);
 	writeToLogger("Started Peer");
 	mpPeer->SetMaximumIncomingConnections(maxClients);
-	writeToLogger("Set Max connections to ");
+	temp = std::to_string(maxClients);
+	writeToLogger("Set Max connections to " + temp);
 	return true;
 }
 
 bool FrameworkState::StartClient(char * targetIP, int portNum)
 {
+	std::string temp = std::to_string(portNum);
+
 	RakNet::SocketDescriptor sd;	//Calls to properly connect to server
 	mpPeer->Startup(1, &sd, 1);
-	writeToLogger("Made Socket Descriptor on " + portNum);
-	mpPeer->Connect("216.93.149.53", portNum, 0, 0);
-	writeToLogger("Connecting to server on ip 216.93.149.53"); //TODO: Properly send char array to this function
+	writeToLogger("Made Socket Descriptor on " + temp);
+
+	mpPeer->Connect(targetIP, portNum, 0, 0);
+	temp = targetIP;
+	writeToLogger("Connecting to server on ip " + temp); //TODO: Properly send char array to this function
 
 	return true;
 }

@@ -56,6 +56,7 @@ int StartClient(char *targetIP, int portNum)
 	if (theState != 0)
 	{
 		theState->writeToLogger("Starting a Client");
+		theState->writeToLogger(targetIP);
 		return 	theState->StartClient(targetIP, portNum);
 	}
 	return 0;
