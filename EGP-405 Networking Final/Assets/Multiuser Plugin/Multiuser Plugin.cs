@@ -22,6 +22,8 @@ public class MultiuserPlugin
     public static extern int StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe char* GetData();
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int SendData(string data, int length);
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -203,22 +205,21 @@ public class MultiuserPlugin
         MyStringStruct* myString = (MyStringStruct*)tempPtr;
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
         */
-        Debug.Log(data[0]);
-        StructScript.deserialize(data);
+        //Debug.Log(data[0]);
+        StructScript.deserializeMessage(data);
         
     }
 
-    public static void testSerialize()
+    public static void testSerialize(GameObject testObj)
     {
         Debug.Log("Testing selected obj(s)");
+        string temp = StructScript.serialize(testObj);
         if(Selection.gameObjects.Length > 0)
         {
             GameObject[] testObjs = Selection.gameObjects;
             for (int i=0; i < testObjs.Length; ++i)
             {
-                //TODO: CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
-
-                //TODO: IMMEDIARTLY DESERIALIZE IT
+                SendData(temp, temp.Length);
 
             }
         }

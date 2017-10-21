@@ -3,13 +3,22 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Runtime.InteropServices;
 
 public class StructScript {
-
-    public string serialize(GameObject obj)
+    enum Message //TODO: Add all the regular message types that we want to be ready for
     {
-        string serialized = "g";
+        ID_CONNECTION_REQUEST_ACCEPTED = 23313,
+        ID_CONNECTION_ATTEMPT_FAILED = 45329,
+        ID_NEW_INCOMING_CONNECTION = 1043,
+        ID_NO_FREE_INCOMING_CONNECTIONS = 20,
+        CHAT_MESSAGE = 135,
+        GO_UPDATE = 136,
+    }
+
+    public static string serialize(GameObject obj)
+    {
+        string serialized = Message.GO_UPDATE.ToString();
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";
@@ -98,58 +107,41 @@ public class StructScript {
         return serialized;
     }
 
-    public void deserializeMessage(string ser)
+    public unsafe static void deserializeMessage(char* ser)
     {
-        //Component[] components;
-        string mes = ser[0].ToString();
-        ser = ser.Remove(0, 1);
-        switch (mes)
+        Debug.Log((int)ser[0]); //A check for the int value of incoming messages
+        string data = Marshal.PtrToStringAnsi((IntPtr)ser); //The translated char* to a string
+        switch ((Message)ser[0])
         {
-            case "n":
-                Debug.Log("New client is connecting");
+            case Message.CHAT_MESSAGE:
+                Debug.Log("New Message Recieved");
+                //TODO: put message on the message stack for chat system
                 break;
-            case "m":
-                Debug.Log(ser);
-                break;
-            case "d":
-                Debug.Log("Another client has disconnected");
-                break;
-            case "l":
-                Debug.Log("Another client has lost connection");
-                break;
-            case "N":
-                Debug.Log("Another client has connected");
-                break;
-            case "x":
-                Debug.Log("Connection Failed, server is FULL");
-                break;
-            case "D":
-                if (MultiuserPlugin.mIsServer)
-                    Debug.Log("A client has disconnected");
-                else
-                    Debug.Log("We have been disconnected");
-                break;
-            case "f":
+            case Message.ID_CONNECTION_ATTEMPT_FAILED:
                 Debug.Log("Failed to connect to server");
                 break;
-            case "L":
-                if (MultiuserPlugin.mIsServer)
-                    Debug.Log("A client has lost connection");
-                else
-                    Debug.Log("Connection lost");
+            case Message.ID_NEW_INCOMING_CONNECTION:
+                Debug.Log("A new client is connecting");
                 break;
-            case "g":
-                componentSerialize(ser);
+            case Message.ID_CONNECTION_REQUEST_ACCEPTED:
+                Debug.Log("You have connected to the server");
+                break;
+            case Message.ID_NO_FREE_INCOMING_CONNECTIONS:
+                Debug.Log("Connection Failed, server is FULL");
+                break;
+            case Message.GO_UPDATE:
+                Debug.Log("New Gameobject update recieved");
+                componentSerialize(data);
                 break;
             default:
-                Debug.Log("Message with identifier " + mes + " has arrived");
+                Debug.Log("Message with identifier " + ser[0] + " has arrived");
                 break;
         }
         
        
     }
 
-    public void componentSerialize(string ser)
+    public static void componentSerialize(string ser)
     {
         GameObject temp = new GameObject();
         temp.name = deserializeString(ref ser);
@@ -207,7 +199,7 @@ public class StructScript {
         }
     }
 
-    public int deserializeInt(ref string ser)
+    public static int deserializeInt(ref string ser)
     {
         int length = ser.IndexOf("/");
         int ret = int.Parse(ser.Substring(0, length));
@@ -215,7 +207,7 @@ public class StructScript {
         return ret;
     }
 
-    public string deserializeString(ref string ser)
+    public static string deserializeString(ref string ser)
     {
         int length = ser.IndexOf("/");
         string ret = ser.Substring(0, length);
@@ -223,7 +215,7 @@ public class StructScript {
         return ret;
     }
 
-    public float deserializeFloat(ref string ser)
+    public static float deserializeFloat(ref string ser)
     {
         int length = ser.IndexOf("/");
         float ret = float.Parse(ser.Substring(0, length));
@@ -231,7 +223,7 @@ public class StructScript {
         return ret;
     }
 
-    public bool deserializeBool(ref string ser)
+    public static bool deserializeBool(ref string ser)
     {
         int length = ser.IndexOf("/");
         bool ret = bool.Parse(ser.Substring(0, length));
@@ -239,7 +231,7 @@ public class StructScript {
         return ret;
     }
 
-    public Vector3 deserializeVector3(ref string ser)
+    public static Vector3 deserializeVector3(ref string ser)
     {
         Vector3 vec;
         int length = ser.IndexOf("/");
@@ -254,10 +246,10 @@ public class StructScript {
         return vec;
     }
 
-    public Quaternion deserializeQuaternion(ref string ser)
+    public static Quaternion deserializeQuaternion(ref string ser)
     {
         Quaternion vec;
-        int length = ser.IndexOf("/");
+      int length = ser.IndexOf("/");
         vec.x = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length+1);
         length = ser.IndexOf("/");

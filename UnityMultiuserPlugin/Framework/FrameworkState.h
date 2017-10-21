@@ -22,7 +22,7 @@ class FrameworkState
 public:
 	//General Functions
 	int StateFoo(int bar);
-	bool SendData(char data[], int length);
+	bool SendData(char * data, int length);
 
 	//Server only Functions
 	bool BroadCastData(char data[], int length, char ip[]);
@@ -48,6 +48,7 @@ private:
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	LogWriter pLogger;
+	std::string mTargetIP;
 };
 
 #endif // FRAMEWORK_STATE_H
