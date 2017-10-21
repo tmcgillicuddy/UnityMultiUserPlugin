@@ -182,7 +182,11 @@ public class MultiuserPlugin
 
             }
         }
-
+    unsafe struct MyStringStruct
+    {
+        public int id;
+        public fixed char pseudoString[512];
+    }
     static unsafe void checkData()
     {
         
@@ -194,8 +198,9 @@ public class MultiuserPlugin
             Debug.Log(temp);
             return;
         }
-
-        temp = Marshal.PtrToStringAnsi((IntPtr)data);
+        IntPtr tempPtr = (IntPtr)data;
+        MyStringStruct* myString = (MyStringStruct*)tempPtr;
+        temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
 
         StructScript.deserialize(temp);
         

@@ -70,6 +70,7 @@ public class StructScript {
 
     public static void deserialize(string ser)
     {
+        Debug.Log(ser);
         switch ((Message)ser[0])
         {
             case Message.CHAT_MESSAGE:
