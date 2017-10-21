@@ -9,7 +9,7 @@ public class StructScript {
 
     public string serialize(GameObject obj)
     {
-        string serialized = "";
+        string serialized = "g";
         Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
@@ -61,25 +61,70 @@ public class StructScript {
     public void deserialize(string ser)
     {
         //Component[] components;
-        GameObject temp = new GameObject();
-        int index = 0;
-        Debug.Log(ser);
-        while(ser.Length > 0)
+        string mes = ser[0].ToString();
+        ser = ser.Remove(0, 1);
+        switch (mes)
         {
-            int length = ser.IndexOf("/");
-            Debug.Log(length);
-            string tag = ser.Substring(index, length);
-            ser = ser.Remove(index, length+1);
-            Debug.Log(ser);
-            
-            if(tag == "transform")
-            {
-                UnityEngine.Transform trans = temp.transform;
-                trans.position = deserializeVector3(ref ser);
-                trans.rotation = deserializeQuaternion(ref ser);
-                trans.localScale = deserializeVector3(ref ser);
-            }
+            case "n":
+                Debug.Log("New client is connecting");
+                break;
+            case "m":
+                Debug.Log(ser);
+                break;
+            case "d":
+                Debug.Log("Another client has disconnected");
+                break;
+            case "l":
+                Debug.Log("Another client has lost connection");
+                break;
+            case "N":
+                Debug.Log("Another client has connected");
+                break;
+            case "x":
+                Debug.Log("Connection Failed, server is FULL");
+                break;
+            case "D":
+                if (MultiuserPlugin.mIsServer)
+                    Debug.Log("A client has disconnected");
+                else
+                    Debug.Log("We have been disconnected");
+                break;
+            case "f":
+                Debug.Log("Failed to connect to server");
+                break;
+            case "L":
+                if (MultiuserPlugin.mIsServer)
+                    Debug.Log("A client has lost connection");
+                else
+                    Debug.Log("Connection lost");
+                break;
+            case "g":
+                GameObject temp = new GameObject();
+                int index = 0;
+                Debug.Log(ser);
+                while (ser.Length > 0)
+                {
+                    int length = ser.IndexOf("/");
+                    Debug.Log(length);
+                    string tag = ser.Substring(index, length);
+                    ser = ser.Remove(index, length + 1);
+                    Debug.Log(ser);
+
+                    if (tag == "transform")
+                    {
+                        UnityEngine.Transform trans = temp.transform;
+                        trans.position = deserializeVector3(ref ser);
+                        trans.rotation = deserializeQuaternion(ref ser);
+                        trans.localScale = deserializeVector3(ref ser);
+                    }
+                }
+                break;
+            default:
+                Debug.Log("Message with identifier " + mes + " has arrived");
+                break;
         }
+        
+       
     }
 
     public Vector3 deserializeVector3(ref string ser)
