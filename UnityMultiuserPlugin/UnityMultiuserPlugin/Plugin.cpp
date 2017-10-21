@@ -51,11 +51,12 @@ int StartServer(int maxClients, int portNum)
 	return 0;
 }
 
-int StartClient(char targetIP[], int portNum)
+int StartClient(char *targetIP, int portNum)
 {
 	if (theState != 0)
 	{
 		theState->writeToLogger("Starting a Client");
+		theState->writeToLogger(targetIP);
 		return 	theState->StartClient(targetIP, portNum);
 	}
 	return 0;
@@ -76,7 +77,7 @@ int UpdateNetworking()
 {
 	if (theState != 0)
 	{
-		theState->writeToLogger("Updating Network");
+		//theState->writeToLogger("Updating Network");
 		return theState->UpdateNetwork();
 	}
 	return 0;

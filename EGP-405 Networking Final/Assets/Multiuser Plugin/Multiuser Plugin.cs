@@ -14,9 +14,14 @@ public class MultiuserPlugin
     //Importing DLL functions
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
-
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartServer(int maxClients, int portNum);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern char GetStrBufOut(int index);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern char StartClient(string targetIP, int portNum);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern int UpdateNetworking();
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -36,7 +41,7 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-        Debug.Log(Startup());
+        Startup();
         mConnected = false;
     }
 
@@ -45,20 +50,24 @@ public class MultiuserPlugin
     {
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
-            if (toolMode == mode.EDIT) 
+            if (mConnected)
             {
+                if (toolMode == mode.EDIT) 
+                {
                 editMode();
-            }
-            else if (toolMode == mode.VIEW)
-            {
-                viewMode();
-            }
-        }
-        if(mIsServer && mConnected)
-        {
-            ServerUtil.saveScene();
-        }
+                }
+                else if (toolMode == mode.VIEW)
+                {
+                    viewMode();
+                }
+                else if(mIsServer)
+                {
+                    ServerUtil.saveScene();
 
+                }
+                UpdateNetworking();
+            }
+        }
     }
 
     static void editMode()
@@ -137,6 +146,7 @@ public class MultiuserPlugin
         }
 
         //TODO: Start client with given port num, targetIP and password
+        StartClient(mIP, mPortNum);
 
         mIsServer = false;
         mConnected = true;
@@ -211,7 +221,7 @@ public class MultiuserPlugin
         for (int it = 0; it < 128; it++)
         {
             char val = GetStrBufOut(it);
-            if (KeyValuePair == '\0')
+            if (val == '\0')
             {
                 it = 500;
             }

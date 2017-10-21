@@ -1,6 +1,7 @@
 Startup Complete
 Starting a Server
-In Server Function
-Made Socket Descriptor
+In Framework StartServer Function
+Made Socket Descriptor on 6666
 Started Peer
-Set Max connections
+Set Max connections to 10
+New Client Is Connecting

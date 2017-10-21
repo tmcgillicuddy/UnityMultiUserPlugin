@@ -29,7 +29,7 @@ public:
 	bool StartServer(int maxClients, int portNum);
 
 	//Client Only Functions
-	bool StartClient(char targetIP[], int portNum);
+	bool StartClient(char *targetIP, int portNum);
 
 	//Update the network loop
 	int UpdateNetwork();
