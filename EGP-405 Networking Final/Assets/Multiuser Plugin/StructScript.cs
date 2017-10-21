@@ -7,6 +7,16 @@ using UnityEngine;
 
 public class StructScript {
 
+    enum Message //TODO: Add all the regular message types that we want to be ready for
+    {
+        ID_CONNECTION_REQUEST_ACCEPTED = 16,
+        ID_CONNECTION_ATTEMPT_FAILED = 17,
+        ID_NEW_INCOMING_CONNECTION = 19,
+        ID_NO_FREE_INCOMING_CONNECTIONS = 20,
+        CHAT_MESSAGE = 135,
+        GO_UPDATE = 136,
+    }
+
     public string serialize(GameObject obj)
     {
         string serialized = "g";
@@ -60,45 +70,26 @@ public class StructScript {
 
     public void deserialize(string ser)
     {
-        //Component[] components;
-        string mes = ser[0].ToString();
-        ser = ser.Remove(0, 1);
-        switch (mes)
+        switch ((Message)ser[0])
         {
-            case "n":
-                Debug.Log("New client is connecting");
+            case Message.CHAT_MESSAGE:
+                Debug.Log("New Message Recieved");
+                //TODO: put message on the message stack for chat system
                 break;
-            case "m":
-                Debug.Log(ser);
-                break;
-            case "d":
-                Debug.Log("Another client has disconnected");
-                break;
-            case "l":
-                Debug.Log("Another client has lost connection");
-                break;
-            case "N":
-                Debug.Log("Another client has connected");
-                break;
-            case "x":
-                Debug.Log("Connection Failed, server is FULL");
-                break;
-            case "D":
-                if (MultiuserPlugin.mIsServer)
-                    Debug.Log("A client has disconnected");
-                else
-                    Debug.Log("We have been disconnected");
-                break;
-            case "f":
+            case Message.ID_CONNECTION_ATTEMPT_FAILED:
                 Debug.Log("Failed to connect to server");
                 break;
-            case "L":
-                if (MultiuserPlugin.mIsServer)
-                    Debug.Log("A client has lost connection");
-                else
-                    Debug.Log("Connection lost");
+            case Message.ID_NEW_INCOMING_CONNECTION:
+                Debug.Log("A new client is connecting");
                 break;
-            case "g":
+            case Message.ID_CONNECTION_REQUEST_ACCEPTED:
+                Debug.Log("You have connected to the server");
+                break;
+            case Message.ID_NO_FREE_INCOMING_CONNECTIONS:
+                Debug.Log("Connection Failed, server is FULL");
+                break;
+            case Message.GO_UPDATE:
+                Debug.Log("New Gameobject update recieved");
                 GameObject temp = new GameObject();
                 int index = 0;
                 Debug.Log(ser);
@@ -120,7 +111,7 @@ public class StructScript {
                 }
                 break;
             default:
-                Debug.Log("Message with identifier " + mes + " has arrived");
+                Debug.Log("Message with identifier " + ser[0] + " has arrived");
                 break;
         }
         
