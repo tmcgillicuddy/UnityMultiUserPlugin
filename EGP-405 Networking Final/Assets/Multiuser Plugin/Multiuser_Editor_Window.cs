@@ -167,7 +167,7 @@ public class Multiuser_Editor_Window : EditorWindow
         }
         if (GUILayout.Button("Check"))
         {
-            checker.deserialize(checker.serialize(Selection.gameObjects[0]));
+            checker.deserializeMessage(checker.serialize(Selection.gameObjects[0]));
         }
     }
 

@@ -10,6 +10,10 @@ public class StructScript {
     public string serialize(GameObject obj)
     {
         string serialized = "g";
+        serialized += obj.name + "/";
+        serialized += obj.tag + "/";
+        serialized += obj.layer + "/";
+        serialized += obj.isStatic + "/";
         Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
@@ -31,18 +35,54 @@ public class StructScript {
             else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
             {
                 Debug.Log("Has Box Collider");
+                UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
+                BoxCollider serTemp = new BoxCollider();
+                serTemp.center = temp.center;
+                serTemp.size = temp.size;
+                serTemp.isTrigger = temp.isTrigger;
+                string tempString = new string(serTemp.toChar());
+                serialized += tempString;
             }
             else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
             {
-                Debug.Log("Has Shpere Collider");
+                Debug.Log("Has Sphere Collider");
+                UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
+                SphereCollider serTemp = new SphereCollider();
+                serTemp.center = temp.center;
+                serTemp.radius = temp.radius;
+                serTemp.isTrigger = temp.isTrigger;
+                string tempString = new string(serTemp.toChar());
+                serialized += tempString;
             }
             else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
             {
                 Debug.Log("Has Capsule Collider");
+                UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
+                CapsuleCollider serTemp = new CapsuleCollider();
+                serTemp.center = temp.center;
+                serTemp.radius = temp.radius;
+                serTemp.height = temp.height;
+                serTemp.directionAxis = temp.direction;
+                serTemp.isTrigger = temp.isTrigger;
+                string tempString = new string(serTemp.toChar());
+                serialized += tempString;
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
             {
                 Debug.Log("Has Rigidbody");
+                UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
+                RigidBody serTemp = new RigidBody();
+                serTemp.mass = temp.mass;
+                serTemp.drag = temp.drag;
+                serTemp.angularDrag = temp.angularDrag;
+                serTemp.interpolate = (int)temp.interpolation;
+                serTemp.collisionDetection = temp.detectCollisions;
+                serTemp.freeze = (int)temp.constraints;
+                serTemp.isKinematic = temp.isKinematic;
+                serTemp.useGravity = temp.useGravity;
+                serTemp.collisionDetection = temp.detectCollisions;
+                string tempString = new string(serTemp.toChar());
+                serialized += tempString;
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Camera))
             {
@@ -58,7 +98,7 @@ public class StructScript {
         return serialized;
     }
 
-    public void deserialize(string ser)
+    public void deserializeMessage(string ser)
     {
         //Component[] components;
         string mes = ser[0].ToString();
@@ -99,25 +139,7 @@ public class StructScript {
                     Debug.Log("Connection lost");
                 break;
             case "g":
-                GameObject temp = new GameObject();
-                int index = 0;
-                Debug.Log(ser);
-                while (ser.Length > 0)
-                {
-                    int length = ser.IndexOf("/");
-                    Debug.Log(length);
-                    string tag = ser.Substring(index, length);
-                    ser = ser.Remove(index, length + 1);
-                    Debug.Log(ser);
-
-                    if (tag == "transform")
-                    {
-                        UnityEngine.Transform trans = temp.transform;
-                        trans.position = deserializeVector3(ref ser);
-                        trans.rotation = deserializeQuaternion(ref ser);
-                        trans.localScale = deserializeVector3(ref ser);
-                    }
-                }
+                componentSerialize(ser);
                 break;
             default:
                 Debug.Log("Message with identifier " + mes + " has arrived");
@@ -125,6 +147,96 @@ public class StructScript {
         }
         
        
+    }
+
+    public void componentSerialize(string ser)
+    {
+        GameObject temp = new GameObject();
+        temp.name = deserializeString(ref ser);
+        temp.tag = deserializeString(ref ser);
+        temp.layer = deserializeInt(ref ser);
+        temp.isStatic = deserializeBool(ref ser);
+        Debug.Log(ser);
+        while (ser.Length > 0)
+        {
+            string tag = deserializeString(ref ser);
+
+            if (tag == "transform")
+            {
+                UnityEngine.Transform trans = temp.transform;
+                trans.position = deserializeVector3(ref ser);
+                trans.rotation = deserializeQuaternion(ref ser);
+                trans.localScale = deserializeVector3(ref ser);
+            }
+            else if(tag == "boxCollider")
+            {
+                UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
+                col.center = deserializeVector3(ref ser);
+                col.size = deserializeVector3(ref ser);
+                col.isTrigger = deserializeBool(ref ser);
+            }
+            else if(tag == "sphereCollider")
+            {
+                UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
+                col.center = deserializeVector3(ref ser);
+                col.radius = deserializeFloat(ref ser);
+                col.isTrigger = deserializeBool(ref ser);
+            }
+            else if (tag == "capsuleCollider")
+            {
+                UnityEngine.CapsuleCollider col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                col.center = deserializeVector3(ref ser);
+                col.radius = deserializeFloat(ref ser);
+                col.height = deserializeFloat(ref ser);
+                col.direction = deserializeInt(ref ser);
+                col.isTrigger = deserializeBool(ref ser);
+            }
+            else if (tag == "rigidbody")
+            {
+                UnityEngine.Rigidbody col = temp.AddComponent<UnityEngine.Rigidbody>();
+                col.mass = deserializeFloat(ref ser);
+                col.drag = deserializeFloat(ref ser);
+                col.angularDrag = deserializeFloat(ref ser);
+                col.interpolation = (RigidbodyInterpolation)deserializeInt(ref ser);
+                col.constraints = (RigidbodyConstraints)deserializeInt(ref ser);
+                col.useGravity = deserializeBool(ref ser);
+                col.isKinematic = deserializeBool(ref ser);
+                col.detectCollisions = deserializeBool(ref ser);
+            }
+
+        }
+    }
+
+    public int deserializeInt(ref string ser)
+    {
+        int length = ser.IndexOf("/");
+        int ret = int.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return ret;
+    }
+
+    public string deserializeString(ref string ser)
+    {
+        int length = ser.IndexOf("/");
+        string ret = ser.Substring(0, length);
+        ser = ser.Remove(0, length + 1);
+        return ret;
+    }
+
+    public float deserializeFloat(ref string ser)
+    {
+        int length = ser.IndexOf("/");
+        float ret = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return ret;
+    }
+
+    public bool deserializeBool(ref string ser)
+    {
+        int length = ser.IndexOf("/");
+        bool ret = bool.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return ret;
     }
 
     public Vector3 deserializeVector3(ref string ser)
@@ -242,12 +354,12 @@ public class Transform : serializedComponent
 
 public class BoxCollider : serializedComponent
 {
-    Vector3 center;
-    Vector3 size;
-    bool isTrigger;
+    public Vector3 center;
+    public Vector3 size;
+    public bool isTrigger;
     public virtual char[] toChar()
     {
-        string temp = "transform/";
+        string temp = "boxCollider/";
         temp += center.x + "/";
         temp += center.y + "/";
         temp += center.z + "/";
@@ -259,46 +371,64 @@ public class BoxCollider : serializedComponent
     }
 }
 
-/*public class SphereCollider : serializedComponent
+public class SphereCollider : serializedComponent
 {
-    Vector3 center;
-    float radius;
-    bool isTrigger;
+    public Vector3 center;
+    public float radius;
+    public bool isTrigger;
+    public virtual char[] toChar()
+    {
+        string temp = "sphereCollider/";
+        temp += center.x + "/";
+        temp += center.y + "/";
+        temp += center.z + "/";
+        temp += radius + "/";
+        temp += isTrigger + "/";
+        return temp.ToCharArray();
+    }
 }
 
 public class CapsuleCollider : serializedComponent
 {
-    Vector3 center;
-    float radius, height;
-    enum directionAxis
+    public Vector3 center;
+    public float radius, height;
+    public int directionAxis;
+    public bool isTrigger;
+    public virtual char[] toChar()
     {
-        X_AXIS,
-        Y_AXIS,
-        Z_AXIS
+        string temp = "capsuleCollider/";
+        temp += center.x + "/";
+        temp += center.y + "/";
+        temp += center.z + "/";
+        temp += radius + "/";
+        temp += height + "/";
+        temp += directionAxis + "/";
+        temp += isTrigger + "/";
+        return temp.ToCharArray();
     }
-    bool isTrigger;
 }
 
 public class RigidBody : serializedComponent
 {
-    float mass, drag, angularDrag;
-    bool useGravity, isKinematic;
-    enum interpolate
+    public float mass, drag, angularDrag;
+    public int interpolate, freeze;
+    public bool useGravity, isKinematic, collisionDetection;
+    public virtual char[] toChar()
     {
-        NONE,
-        INTERPOLATE,
-        EXTRAPOLATE
+        string temp = "rigidbody/";
+        temp += mass + "/";
+        temp += drag + "/";
+        temp += angularDrag + "/";
+        temp += interpolate + "/";
+        temp += freeze + "/";
+        temp += useGravity + "/";
+        temp += isKinematic + "/";
+        temp += collisionDetection + "/";
+        return temp.ToCharArray();
     }
-    enum collisionDetection
-    {
-        DISCRETE,
-        CONTINUOUS,
-        CONTINUOUS_DYNAMIC
-    }
-    Vector3 freezepos, freezeRot;
 }
 
-public class Camera : serializedComponent
+/*public class Camera : serializedComponent
 {
     enum clearFlags
     {
