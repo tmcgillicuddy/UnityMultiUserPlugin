@@ -62,7 +62,8 @@ public class MultiuserPlugin
                 }
                 else if(mIsServer)
                 {
-                    ServerUtil.saveScene();
+                    //ServerUtil.saveScene();
+                    ServerUtil.saveToNewScene();
 
                 }
                 UpdateNetworking();
@@ -133,6 +134,7 @@ public class MultiuserPlugin
         mIsServer = true;
         mConnected = true;
         ServerUtil.forceSave(); //Save the scene to start with
+        ServerUtil.saveToNewScene();
     }
 
     public static void startupClient()
