@@ -81,3 +81,11 @@ int UpdateNetworking()
 	}
 	return 0;
 }
+
+MULTIUSER_PLUGIN_SYMBOL char GetStrBufOut(int index)
+{
+	if (theState != 0)
+	{
+		return strBufOut[index];
+	}
+}
