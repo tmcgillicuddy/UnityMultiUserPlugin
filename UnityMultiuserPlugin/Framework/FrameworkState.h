@@ -32,7 +32,7 @@ public:
 	bool StartClient(char *targetIP, int portNum);
 
 	//Update the network loop
-	int UpdateNetwork();
+	char* UpdateNetwork();
 
 	//TODO: Need a way to either call a function in unity to deserlize a char array
 
@@ -41,10 +41,10 @@ public:
 	void resetLogger();
 	void writeToLogger(std::string message);
 
+
 private:
 	bool isServer;
 	RakNet::RakPeerInterface *mpPeer = RakNet::RakPeerInterface::GetInstance();
-	RakNet::Packet *mpPacket = new RakNet::Packet();
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	LogWriter pLogger;

@@ -37,9 +37,25 @@ bool FrameworkState::StartClient(char * targetIP, int portNum)
 	return true;
 }
 
-int FrameworkState::UpdateNetwork()
+char* FrameworkState::UpdateNetwork()
 {
+
+	RakNet::Packet *packet;
+
+	packet = mpPeer->Receive();
+	if (packet)
+	{
+		writeToLogger("There is data");
+		return (char*)packet->data;
+	}
+	else
+	{
+		writeToLogger("No Data");
+		return NULL;	
+	}
+	
 	//writeToLogger("Updating Network");
+	/*
 	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
 	{
 		switch (mpPacket->data[0])
@@ -93,6 +109,7 @@ int FrameworkState::UpdateNetwork()
 			break;
 		}
 	}
+	*/
 }
 
 void FrameworkState::resetLogger()
@@ -104,6 +121,7 @@ void FrameworkState::writeToLogger(std::string message)
 {
 	pLogger.writeToLog(message);
 }
+
 
 bool FrameworkState::SendData(char data[], int length)
 {
