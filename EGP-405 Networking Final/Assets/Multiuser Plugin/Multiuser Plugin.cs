@@ -196,8 +196,8 @@ public class MultiuserPlugin
         }
 
         temp = Marshal.PtrToStringAnsi((IntPtr)data);
-        
-        Debug.Log(temp);
+
+        StructScript.deserialize(temp);
         
     }
 

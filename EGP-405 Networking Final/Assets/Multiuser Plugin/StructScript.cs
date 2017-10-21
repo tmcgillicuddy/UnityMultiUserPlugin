@@ -68,7 +68,7 @@ public class StructScript {
         return serialized;
     }
 
-    public void deserialize(string ser)
+    public static void deserialize(string ser)
     {
         switch ((Message)ser[0])
         {
@@ -118,7 +118,7 @@ public class StructScript {
        
     }
 
-    public Vector3 deserializeVector3(ref string ser)
+    public static Vector3 deserializeVector3(ref string ser)
     {
         Vector3 vec;
         int length = ser.IndexOf("/");
@@ -133,7 +133,7 @@ public class StructScript {
         return vec;
     }
 
-    public Quaternion deserializeQuaternion(ref string ser)
+    public static Quaternion deserializeQuaternion(ref string ser)
     {
         Quaternion vec;
         int length = ser.IndexOf("/");
