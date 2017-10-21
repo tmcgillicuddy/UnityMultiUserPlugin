@@ -11,7 +11,7 @@ public class StructScript {
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 16,
         ID_CONNECTION_ATTEMPT_FAILED = 17,
-        ID_NEW_INCOMING_CONNECTION = 19,
+        ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 136,
@@ -68,9 +68,9 @@ public class StructScript {
         return serialized;
     }
 
-    public static void deserialize(string ser)
+    public static unsafe void deserialize(char* ser)
     {
-        Debug.Log(ser);
+        Debug.Log((Message)ser[0]);
         switch ((Message)ser[0])
         {
             case Message.CHAT_MESSAGE:
@@ -91,25 +91,6 @@ public class StructScript {
                 break;
             case Message.GO_UPDATE:
                 Debug.Log("New Gameobject update recieved");
-                GameObject temp = new GameObject();
-                int index = 0;
-                Debug.Log(ser);
-                while (ser.Length > 0)
-                {
-                    int length = ser.IndexOf("/");
-                    Debug.Log(length);
-                    string tag = ser.Substring(index, length);
-                    ser = ser.Remove(index, length + 1);
-                    Debug.Log(ser);
-
-                    if (tag == "transform")
-                    {
-                        UnityEngine.Transform trans = temp.transform;
-                        trans.position = deserializeVector3(ref ser);
-                        trans.rotation = deserializeQuaternion(ref ser);
-                        trans.localScale = deserializeVector3(ref ser);
-                    }
-                }
                 break;
             default:
                 Debug.Log("Message with identifier " + ser[0] + " has arrived");

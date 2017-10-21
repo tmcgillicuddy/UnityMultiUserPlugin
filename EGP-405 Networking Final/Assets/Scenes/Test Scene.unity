@@ -140,8 +140,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Server 0
-  isModified: 1
-  isLocked: 1
+  isModified: 0
+  isLocked: 0
 --- !u!81 &1214527890
 AudioListener:
   m_ObjectHideFlags: 0
@@ -241,8 +241,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: Server 1
-  isModified: 1
-  isLocked: 1
+  isModified: 0
+  isLocked: 0
 --- !u!108 &1980734667
 Light:
   m_ObjectHideFlags: 0

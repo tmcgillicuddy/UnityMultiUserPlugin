@@ -198,11 +198,13 @@ public class MultiuserPlugin
             Debug.Log(temp);
             return;
         }
+        /*
         IntPtr tempPtr = (IntPtr)data;
         MyStringStruct* myString = (MyStringStruct*)tempPtr;
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
-
-        StructScript.deserialize(temp);
+        */
+        Debug.Log(data[0]);
+        StructScript.deserialize(data);
         
     }
 
