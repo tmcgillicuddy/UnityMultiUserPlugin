@@ -17,11 +17,11 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartServer(int maxClients, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern char GetStrBufOut(int index);
+    public static extern int GetStrBufOut(int index);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern char StartClient(string targetIP, int portNum);
+    public static extern int StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern int UpdateNetworking();
+    public static extern unsafe char* GetData();
 
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
@@ -65,7 +65,7 @@ public class MultiuserPlugin
                     ServerUtil.saveScene();
 
                 }
-                UpdateNetworking();
+                checkData();
             }
         }
     }
@@ -183,21 +183,23 @@ public class MultiuserPlugin
             }
         }
 
-    public static void ReceiveGOData(/*char[]*/)  //Called by C plugin to tell Unity to read in some new gameobject data
+    static unsafe void checkData()
     {
-        //TODO: DESERIALIZE GAMEOBJ DATA
-    }
+        
+        char * data = GetData();
+        string temp = "";
+        if (data == null)
+        {
+            temp = "No Data";
+            Debug.Log(temp);
+            return;
+        }
 
-    public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
-    {
-        //TODO: Deserialize the message data
+        temp = Marshal.PtrToStringAnsi((IntPtr)data);
+        
+        Debug.Log(temp);
+        
     }
-
-    public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
-    {
-        //TODO: Send handshake message, which will have the ENTIRE scene data from the server
-    }
-
 
     public static void testSerialize()
     {
@@ -215,23 +217,6 @@ public class MultiuserPlugin
         }
     }
 
-    private string GetDllOut()
-    {
-        string ret = "";
-        for (int it = 0; it < 128; it++)
-        {
-            char val = GetStrBufOut(it);
-            if (val == '\0')
-            {
-                it = 500;
-            }
-            else
-            {
-                ret += val;
-            }
-        }
-        return ret;
-    }
 
 }
 
