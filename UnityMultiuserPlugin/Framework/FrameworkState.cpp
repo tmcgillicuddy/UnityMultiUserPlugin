@@ -67,12 +67,21 @@ void FrameworkState::writeToLogger(std::string message)
 	pLogger.writeToLog(message);
 }
 
+struct dataBuffer
+{
+	char buffer[512];
+};
 
 bool FrameworkState::SendData(char* data, int length)
 {
 	writeToLogger(data);
+	
+	writeToLogger("Sending data to " + mTargetIP);
+
+	dataBuffer* tempBuffer;
+	strcpy(tempBuffer->buffer, data);
 	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mTargetIP.c_str());	//Convert passed string into raknet IP address
-	mpPeer->Send(data, sizeof(data), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+	mpPeer->Send((char*) tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
 	return true;
 }
 

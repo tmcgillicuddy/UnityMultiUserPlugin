@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 public class StructScript {
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
-        ID_CONNECTION_REQUEST_ACCEPTED = 23313,
+        ID_CONNECTION_REQUEST_ACCEPTED = 1040,
         ID_CONNECTION_ATTEMPT_FAILED = 45329,
         ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
