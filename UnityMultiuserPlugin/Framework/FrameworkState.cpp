@@ -67,10 +67,13 @@ void FrameworkState::writeToLogger(std::string message)
 	pLogger.writeToLog(message);
 }
 
+#pragma pack(push,1)
 struct dataBuffer
 {
 	char buffer[512];
 };
+
+#pragma pack(pop)
 
 bool FrameworkState::SendData(char* data, int length)
 {
