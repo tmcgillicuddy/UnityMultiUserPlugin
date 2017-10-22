@@ -81,11 +81,20 @@ bool FrameworkState::SendData(char* data, int length)
 	
 	writeToLogger("Sending data to " + mTargetIP);
 
-	dataBuffer* tempBuffer;
+	dataBuffer* tempBuffer = new dataBuffer();
 	strcpy(tempBuffer->buffer, data);
 	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mTargetIP.c_str());	//Convert passed string into raknet IP address
-	mpPeer->Send((char*) tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
-	return true;
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+		writeToLogger("Sent data");
+		return true;
+	}
 }
 
 bool FrameworkState::BroadCastData(char data[], int length, char ip[])
