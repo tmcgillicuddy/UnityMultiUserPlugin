@@ -1,13 +1,6 @@
 Startup Complete
-Starting a Client
-216.93.149.105
-In Framework StartClient Function
+Starting a Server
+In Framework StartServer Function
 Made Socket Descriptor on 6666
-Connecting to server on ip 216.93.149.105
-There is data
-'¢jù›™
-Sending Data
-GO_UPDATEDirectional Light/Untagged/0/False/transform/0/3/0/0.4082179/-0.2345697/0.1093816/0.8754261/1/1/1/
-Sending data to 216.93.149.105
-There is data
-$LB
+Started Peer
+Set Max connections to 10

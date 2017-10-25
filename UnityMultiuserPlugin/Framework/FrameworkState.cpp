@@ -97,9 +97,27 @@ bool FrameworkState::SendData(char* data, int length)
 	}
 }
 
-bool FrameworkState::BroadCastData(char data[], int length, char ip[])
+bool FrameworkState::BroadCastData(char * data, int length, char* ownerIP)
 {
-	//TODO: Relay data to all connected client EXCEPT the client with the given ip, prevents ghosting
+	writeToLogger(data);
 
-	return false;
+	std::string tempDebug = ownerIP;
+
+	writeToLogger("Sending data to " + tempDebug);
+
+	dataBuffer* tempBuffer = new dataBuffer();
+	strcpy(tempBuffer->buffer, data);
+	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);	//Convert passed string into raknet IP address
+
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+		writeToLogger("Sent data");
+		return true;
+	}
 }

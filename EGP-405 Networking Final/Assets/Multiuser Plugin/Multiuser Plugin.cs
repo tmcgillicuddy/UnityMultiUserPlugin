@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 public class MultiuserPlugin
 {
     //Importing DLL functions
+    
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
     [DllImport("UnityMultiuserPlugin")]
@@ -24,7 +25,10 @@ public class MultiuserPlugin
     public static extern unsafe char* GetData();
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe int SendData(string data, int length);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int BroadcastData(string data, int length, string ownerIP);
 
+    //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
@@ -33,6 +37,15 @@ public class MultiuserPlugin
     public static mode toolMode;
     public static string objectId;
     public static int objCounter = 0;
+
+    struct ConnectedClientInfo  //For storing connected client information
+    {
+       public string IP;
+       public string userName;
+       public string ID;
+    }
+
+    static List<ConnectedClientInfo> mConnectedClients = new List<ConnectedClientInfo>();
 
     public enum mode
     {
@@ -189,7 +202,7 @@ public class MultiuserPlugin
         public int id;
         public fixed char pseudoString[512];
     }
-    static unsafe void checkData()
+    static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
         
         char * data = GetData();
@@ -219,8 +232,22 @@ public class MultiuserPlugin
             GameObject[] testObjs = Selection.gameObjects;
             for (int i=0; i < testObjs.Length; ++i)
             {
-                SendData(temp, temp.Length);
-
+                if (!mIsServer)
+                {
+                    Debug.Log("Test Sending to server"); 
+                    SendData(temp, temp.Length);
+                }
+                else
+                {
+                    Debug.Log("Test Broadcasting");
+                    for (int j = 0; j < mConnectedClients.Count; ++j)
+                    {
+                        if (mConnectedClients[j].IP != "")
+                        {
+                            BroadcastData(temp, temp.Length, mConnectedClients[j].IP);
+                        }
+                    }
+                }
             }
         }
     }
