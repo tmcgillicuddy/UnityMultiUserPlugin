@@ -13,7 +13,7 @@ public class StructScript {
         ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         CHAT_MESSAGE = 135,
-        GO_UPDATE = 136,
+        GO_UPDATE = 12680,
     }
 
     public static string serialize(GameObject obj)
@@ -131,7 +131,8 @@ public class StructScript {
                 break;
             case Message.GO_UPDATE:
                 Debug.Log("New Gameobject update recieved");
-                componentSerialize(data);
+                Debug.Log(ser[0]);
+                //componentSerialize(ser);
                 break;
             default:
                 Debug.Log("Message with identifier " + ser[0] + " has arrived");
@@ -143,6 +144,7 @@ public class StructScript {
 
     public static void componentSerialize(string ser)
     {
+        deserializeString(ref ser);
         GameObject temp = new GameObject();
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
@@ -289,7 +291,7 @@ public class serializedComponent
 {
 
     public serializedComponent() { }
-    enum typeID
+    /*enum typeID
     {
         TRANSFORM,
         BOXCOLLIDER,
@@ -299,7 +301,7 @@ public class serializedComponent
         CAMERA,
         MESHFILTER
     }
-    typeID id;
+    typeID id;*/
 
     public virtual char[] toChar() { return null; }
 
@@ -327,7 +329,7 @@ public class Transform : serializedComponent
     public Vector3 pos;
     public Quaternion rot;
     public Vector3 scale;
-    public virtual char[] toChar()
+    override public char[] toChar()
     {
         string temp = "transform/";
         temp += pos.x + "/";
@@ -349,7 +351,7 @@ public class BoxCollider : serializedComponent
     public Vector3 center;
     public Vector3 size;
     public bool isTrigger;
-    public virtual char[] toChar()
+    override public char[] toChar()
     {
         string temp = "boxCollider/";
         temp += center.x + "/";
@@ -368,7 +370,7 @@ public class SphereCollider : serializedComponent
     public Vector3 center;
     public float radius;
     public bool isTrigger;
-    public virtual char[] toChar()
+    override public char[] toChar()
     {
         string temp = "sphereCollider/";
         temp += center.x + "/";
@@ -386,7 +388,7 @@ public class CapsuleCollider : serializedComponent
     public float radius, height;
     public int directionAxis;
     public bool isTrigger;
-    public virtual char[] toChar()
+    override public char[] toChar()
     {
         string temp = "capsuleCollider/";
         temp += center.x + "/";
@@ -405,7 +407,7 @@ public class RigidBody : serializedComponent
     public float mass, drag, angularDrag;
     public int interpolate, freeze;
     public bool useGravity, isKinematic, collisionDetection;
-    public virtual char[] toChar()
+    override public char[] toChar()
     {
         string temp = "rigidbody/";
         temp += mass + "/";
