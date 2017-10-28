@@ -64,6 +64,7 @@ public class MultiuserPlugin
                 {
                     //ServerUtil.saveScene();
                     ServerUtil.saveToNewScene();
+                    ServerUtil.checkTooManyScenes();
 
                 }
                 UpdateNetworking();
