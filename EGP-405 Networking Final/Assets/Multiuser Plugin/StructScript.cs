@@ -18,7 +18,7 @@ public class StructScript {
 
     public static string serialize(GameObject obj)
     {
-        string serialized = Message.GO_UPDATE.ToString();
+        string serialized = "";//Message.GO_UPDATE.ToString();
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";

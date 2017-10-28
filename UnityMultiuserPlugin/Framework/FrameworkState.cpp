@@ -70,6 +70,7 @@ void FrameworkState::writeToLogger(std::string message)
 #pragma pack(push,1)
 struct dataBuffer
 {
+	char messageID = 136;	//Should be the game object update message
 	char buffer[512];
 };
 
@@ -77,12 +78,13 @@ struct dataBuffer
 
 bool FrameworkState::SendData(char* data, int length)
 {
-	writeToLogger(data);
+
 	
 	writeToLogger("Sending data to " + mTargetIP);
 
-	dataBuffer* tempBuffer = new dataBuffer();
+	dataBuffer * tempBuffer = new dataBuffer();
 	strcpy(tempBuffer->buffer, data);
+	writeToLogger((char*)&tempBuffer);
 	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mTargetIP.c_str());	//Convert passed string into raknet IP address
 	if (mpPeer == NULL)
 	{
@@ -91,7 +93,7 @@ bool FrameworkState::SendData(char* data, int length)
 	}
 	else
 	{
-		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, true);
 		writeToLogger("Sent data");
 		return true;
 	}
