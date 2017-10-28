@@ -41,7 +41,7 @@ int Foo(int bar)
 	return 0;
 }
 
-int StartServer(int maxClients, int portNum)
+int StartServer(int maxClients, int portNum, char* password)
 {
 	if (theState != 0)
 	{
@@ -62,7 +62,7 @@ int StartClient(char *targetIP, int portNum)
 	return 0;
 }
 
-int SendData(char data[], int length)
+int SendData(char* data, int length)
 {
 	if (theState != 0)
 	{
@@ -72,21 +72,22 @@ int SendData(char data[], int length)
 	return 0;
 }
 
-
-int UpdateNetworking()
+int BroadcastData(char * data, int length, char* ownerIP)
 {
 	if (theState != 0)
 	{
-		//theState->writeToLogger("Updating Network");
-		return theState->UpdateNetwork();
+		theState->writeToLogger("Broadcasting Data");
+		return theState->BroadCastData(data, length, ownerIP);
 	}
 	return 0;
 }
 
-MULTIUSER_PLUGIN_SYMBOL char GetStrBufOut(int index)
+char* GetData()
 {
 	if (theState != 0)
 	{
-		return strBufOut[index];
+		//theState->writeToLogger("Getting data");
+		return theState->UpdateNetwork();
 	}
+	return 0;
 }

@@ -22,17 +22,17 @@ class FrameworkState
 public:
 	//General Functions
 	int StateFoo(int bar);
-	bool SendData(char data[], int length);
+	bool SendData(char * data, int length);
 
 	//Server only Functions
-	bool BroadCastData(char data[], int length, char ip[]);
+	bool BroadCastData(char * data, int length, char * ownerIP);
 	bool StartServer(int maxClients, int portNum);
 
 	//Client Only Functions
 	bool StartClient(char *targetIP, int portNum);
 
 	//Update the network loop
-	int UpdateNetwork();
+	char* UpdateNetwork();
 
 	//TODO: Need a way to either call a function in unity to deserlize a char array
 
@@ -41,13 +41,13 @@ public:
 	void resetLogger();
 	void writeToLogger(std::string message);
 
+
 private:
-	bool isServer;
 	RakNet::RakPeerInterface *mpPeer = RakNet::RakPeerInterface::GetInstance();
-	RakNet::Packet *mpPacket = new RakNet::Packet();
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	LogWriter pLogger;
+	std::string mTargetIP;
 };
 
 #endif // FRAMEWORK_STATE_H

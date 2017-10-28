@@ -34,64 +34,26 @@ bool FrameworkState::StartClient(char * targetIP, int portNum)
 	temp = targetIP;
 	writeToLogger("Connecting to server on ip " + temp); //TODO: Properly send char array to this function
 
+	mTargetIP = targetIP; 
 	return true;
 }
 
-int FrameworkState::UpdateNetwork()
+char* FrameworkState::UpdateNetwork()
 {
-	//writeToLogger("Updating Network");
-	for (mpPacket = mpPeer->Receive(); mpPacket; mpPeer->DeallocatePacket(mpPacket), mpPacket = mpPeer->Receive())
-	{
-		switch (mpPacket->data[0])
-		{
-		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-			writeToLogger("Another client has disconnected");
-			break;
-		case ID_REMOTE_CONNECTION_LOST:
-			writeToLogger("Another client has lost connection");
-			break;
-		case ID_REMOTE_NEW_INCOMING_CONNECTION:
-			writeToLogger("Another client has connected");
-			break;
-		case ID_CONNECTION_REQUEST_ACCEPTED:
-			writeToLogger("Connection is Accepted");
-			break;
-		case ID_NEW_INCOMING_CONNECTION:
-			writeToLogger("New Client Is Connecting");
-			//TODO: Send all the data from the server to the client
-			//TODO: Add the connected client's info to the server list of users, 
-			//TODO: Inform all connected clients that someone else has entered
-			//TODO: Send assingment data BACK to the newly connected Client
 
-			break;
-		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			writeToLogger("Connection Failed, Server is FULL");
-			break;
-		case ID_DISCONNECTION_NOTIFICATION:
-			if (isServer) {
-				writeToLogger("A client has disconnected");
-			}
-			else {
-				writeToLogger("We have been disconnected");
-			}
-			break;
-		case ID_CONNECTION_ATTEMPT_FAILED:
-		{
-			writeToLogger("Failed to connect to server");
-		}
-		break;
-		case ID_CONNECTION_LOST:
-			if (isServer) {
-				writeToLogger("A client has lost connection");
-			}
-			else {
-				writeToLogger("Connection lost");
-			}
-			break;
-		default:
-			writeToLogger("Message with identifier "+ std::to_string(mpPacket->data[0]) +" has arrived");
-			break;
-		}
+	RakNet::Packet *packet;
+
+	packet = mpPeer->Receive();
+	if (packet)
+	{
+		writeToLogger("There is data");
+		writeToLogger((char*)packet->data);
+		return (char*)packet->data;
+	}
+	else
+	{
+		//writeToLogger("No Data");
+		return NULL;	
 	}
 }
 
@@ -105,16 +67,59 @@ void FrameworkState::writeToLogger(std::string message)
 	pLogger.writeToLog(message);
 }
 
-bool FrameworkState::SendData(char data[], int length)
+#pragma pack(push,1)
+struct dataBuffer
 {
-	//TODO: Either send the data to all connected clients or to the server
+	char messageID = 136;	//Should be the game object update message
+	char buffer[512];
+};
 
-	return false;
+#pragma pack(pop)
+
+bool FrameworkState::SendData(char* data, int length)
+{
+
+	
+	writeToLogger("Sending data to " + mTargetIP);
+
+	dataBuffer * tempBuffer = new dataBuffer();
+	strcpy(tempBuffer->buffer, data);
+	writeToLogger((char*)&tempBuffer);
+	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mTargetIP.c_str());	//Convert passed string into raknet IP address
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, true);
+		writeToLogger("Sent data");
+		return true;
+	}
 }
 
-bool FrameworkState::BroadCastData(char data[], int length, char ip[])
+bool FrameworkState::BroadCastData(char * data, int length, char* ownerIP)
 {
-	//TODO: Relay data to all connected client EXCEPT the client with the given ip, prevents ghosting
+	writeToLogger(data);
 
-	return false;
+	std::string tempDebug = ownerIP;
+
+	writeToLogger("Sending data to " + tempDebug);
+
+	dataBuffer* tempBuffer = new dataBuffer();
+	strcpy(tempBuffer->buffer, data);
+	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);	//Convert passed string into raknet IP address
+
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+		writeToLogger("Sent data");
+		return true;
+	}
 }
