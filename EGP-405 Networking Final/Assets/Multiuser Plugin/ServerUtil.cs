@@ -5,7 +5,9 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.IO;
 
 /*
   This is used to run certain fetures only the server has access to
@@ -18,8 +20,8 @@ using System.Runtime.InteropServices;
 public  class ServerUtil {
     static DateTime lastSaveTime = DateTime.Now;
     public static int saveInterval = 2;
-    //public static int numSavedScenes = EditorSceneManager.loadedSceneCount;
     public const int MAX_SAVED_SCENES = 10;
+
 
     public void Update()
     {
@@ -48,8 +50,6 @@ public  class ServerUtil {
 
     public static void saveToNewScene()
     {
-        // TODO: if there are more than x (probably gonna be 10) scenes
-        // Begin deleting oldest scene upon saving of new scene
         String newTimestamp = getTimestamp(DateTime.Now);
         if (DateTime.Now >= lastSaveTime)
         {
@@ -72,7 +72,7 @@ public  class ServerUtil {
             // copied everything from old scene into new scene
 
             // save new scene
-            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/Autosaved Scenes/" + newSceneName + ".unity");
+            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/Autosaved Scenes/" + newSceneName + ".unity", false);
             // saved new scene
         }
     }
@@ -80,33 +80,49 @@ public  class ServerUtil {
     public string[] scenes;
     public static void checkTooManyScenes()
     {
-        int numSavedScenes = 0;
-        SceneSetup[] tmpScenes = EditorSceneManager.GetSceneManagerSetup();
-        string[] tmp = new string[MAX_SAVED_SCENES];
-        for (int i = 0; i < tmpScenes.Length; i++)
+        EditorSceneManager.preventCrossSceneReferences = false;
+        Debug.Log("checkTooManyScenes()");
+        string path = "Assets/Scenes/Autosaved Scenes/";
+
+        DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);
+        FileInfo[] scenesInfo = levelDirectoryPath.GetFiles();
+
+        Queue<string> sceneNames = new Queue<string>();
+
+        EditorSceneManager.SaveOpenScenes();
+        Debug.Log(EditorSceneManager.sceneCount);
+
+        int i = 0;
+        foreach (FileInfo fi in scenesInfo)
         {
-            Debug.Log("Scene: " + tmpScenes[i].path);
-            tmp[i] = tmpScenes[i].path.Substring(tmpScenes[i].path.LastIndexOf('/') + 1);
-            numSavedScenes++;
+            if (fi.Name.Contains(".meta") == false)
+            {
+                sceneNames.Enqueue(fi.Name);//.Substring(0, fi.Name.Length - 6)); // add name to queue without .unity extension
+                //Debug.Log("Found Scene " + fi.Name + " at " + i);
+                i++;
+            }
         }
 
-        Debug.Log(numSavedScenes + " saved scenes");
-
-        string earliestScene = tmp[0];
-        int j = 0;
-        while (earliestScene[j] != ' ')
-            j++;
-        string earliestSceneTimestamp = earliestScene.Substring(j + 1, earliestScene.Length - 1);
-        for (int i = 0; i < numSavedScenes; ++i)
+        if (sceneNames.Count > 10)
         {
-            string currentSceneTimestamp = tmp[i].Substring(j + 1, tmp[i].Length);
-            if (Convert.ToDouble(currentSceneTimestamp) < Convert.ToDouble(earliestSceneTimestamp))
-                earliestScene = tmp[i];
+            while (sceneNames.Count > 10)
+            {
+                Debug.Log("sceneNames.Count = " + sceneNames.Count);
+                string earliestScene = sceneNames.Dequeue();
+                Debug.Log(earliestScene);
+
+                Scene scene = EditorSceneManager.GetSceneByName(earliestScene);
+
+                //Debug.Log(EditorSceneManager.CloseScene(scene, true));
+                //EditorSceneManager.Destroy(scene);
+                EditorSceneManager.OpenScene(path + earliestScene, OpenSceneMode.Single);
+                Debug.Log("Active Scene: " + EditorSceneManager.GetActiveScene().name);
+                Debug.Log("Deleted Scene: " + EditorSceneManager.CloseScene(SceneManager.GetActiveScene(), true));
+
+                Debug.Log(path + earliestScene + " was Deleted");
+            }
+
         }
-
-        EditorSceneManager.UnloadSceneAsync(earliestScene);
-
-        Debug.Log(earliestScene + " was Deleted");
     }
 
     public static String getTimestamp(DateTime val)

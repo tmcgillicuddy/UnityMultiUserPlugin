@@ -80,7 +80,6 @@ public class MultiuserPlugin
                     //ServerUtil.saveScene();
                     ServerUtil.saveToNewScene();
                     ServerUtil.checkTooManyScenes();
-
                 }
                 checkData();
             }
@@ -151,6 +150,7 @@ public class MultiuserPlugin
         mConnected = true;
         ServerUtil.forceSave(); //Save the scene to start with
         ServerUtil.saveToNewScene();
+        ServerUtil.checkTooManyScenes();
     }
 
     public static void startupClient()
