@@ -12,17 +12,23 @@ using System.Runtime.InteropServices;
 public class MultiuserPlugin
 {
     //Importing DLL functions
+    
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Startup();
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartServer(int maxClients, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern char GetStrBufOut(int index);
+    public static extern int GetStrBufOut(int index);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern char StartClient(string targetIP, int portNum);
+    public static extern int StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern int UpdateNetworking();
+    public static extern unsafe char* GetData();
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int SendData(string data, int length);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int BroadcastData(string data, int length, string ownerIP);
 
+    //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
     public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
     public static string mIP = "127.07.04"; //Which IP to connect to
@@ -31,6 +37,15 @@ public class MultiuserPlugin
     public static mode toolMode;
     public static string objectId;
     public static int objCounter = 0;
+
+    struct ConnectedClientInfo  //For storing connected client information
+    {
+       public string IP;
+       public string userName;
+       public string ID;
+    }
+
+    static List<ConnectedClientInfo> mConnectedClients = new List<ConnectedClientInfo>();
 
     public enum mode
     {
@@ -67,7 +82,7 @@ public class MultiuserPlugin
                     ServerUtil.checkTooManyScenes();
 
                 }
-                UpdateNetworking();
+                checkData();
             }
         }
     }
@@ -185,56 +200,61 @@ public class MultiuserPlugin
 
             }
         }
-
-    public static void ReceiveGOData(/*char[]*/)  //Called by C plugin to tell Unity to read in some new gameobject data
+    unsafe struct MyStringStruct
     {
-        //TODO: DESERIALIZE GAMEOBJ DATA
+        public int id;
+        public fixed char pseudoString[512];
+    }
+    static unsafe void checkData()  //Checks the plugin network loop for a packet
+    {
+        
+        char * data = GetData();
+        string temp = "";
+        if (data == null)
+        {
+            temp = "No Data";
+            Debug.Log(temp);
+            return;
+        }
+        /*
+        IntPtr tempPtr = (IntPtr)data;
+        MyStringStruct* myString = (MyStringStruct*)tempPtr;
+        temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
+        */
+        //Debug.Log(data[0]);
+        StructScript.deserializeMessage(data);
+        
     }
 
-    public static void ReceiveMessageData(/*char[]*/)   //Called by C plugin to tell unity to receive some message data
-    {
-        //TODO: Deserialize the message data
-    }
-
-    public static void ReceiveIncomingConnection(/*char[]*/)    //Called by C plugin to tell unity that new connection is incoming
-    {
-        //TODO: Send handshake message, which will have the ENTIRE scene data from the server
-    }
-
-
-    public static void testSerialize()
+    public static void testSerialize(GameObject testObj)
     {
         Debug.Log("Testing selected obj(s)");
+        string temp = StructScript.serialize(testObj);
         if(Selection.gameObjects.Length > 0)
         {
             GameObject[] testObjs = Selection.gameObjects;
             for (int i=0; i < testObjs.Length; ++i)
             {
-                //TODO: CALL THE SERLIAZE FUNCTION FOR GAMEOBJECT[i]
-
-                //TODO: IMMEDIARTLY DESERIALIZE IT
-
+                if (!mIsServer)
+                {
+                    Debug.Log("Test Sending to server"); 
+                    SendData(temp, temp.Length);
+                }
+                else
+                {
+                    Debug.Log("Test Broadcasting");
+                    for (int j = 0; j < mConnectedClients.Count; ++j)
+                    {
+                        if (mConnectedClients[j].IP != "")
+                        {
+                            BroadcastData(temp, temp.Length, mConnectedClients[j].IP);
+                        }
+                    }
+                }
             }
         }
     }
 
-    private string GetDllOut()
-    {
-        string ret = "";
-        for (int it = 0; it < 128; it++)
-        {
-            char val = GetStrBufOut(it);
-            if (val == '\0')
-            {
-                it = 500;
-            }
-            else
-            {
-                ret += val;
-            }
-        }
-        return ret;
-    }
 
 }
 

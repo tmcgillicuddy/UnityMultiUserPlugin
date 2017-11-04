@@ -20,20 +20,15 @@ extern "C"
 	// c style declaration for framework wrappers
 	MULTIUSER_PLUGIN_SYMBOL int Foo(int bar);
 
-	MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum, char password[]);
+	MULTIUSER_PLUGIN_SYMBOL int StartServer(int maxClients, int portNum, char* password);
 
-	MULTIUSER_PLUGIN_SYMBOL int StartClient(char targetIP[], int portNum);
+	MULTIUSER_PLUGIN_SYMBOL int StartClient(char* targetIP, int portNum);
 
-	MULTIUSER_PLUGIN_SYMBOL int SendData(char data[], int length);
+	MULTIUSER_PLUGIN_SYMBOL int SendData(char* data, int length);
 
-#define STRLEN 128
-	static char strBufIn[STRLEN];
-	static char strBufOut[STRLEN];
+	MULTIUSER_PLUGIN_SYMBOL int BroadcastData(char* data, int length, char* ownerIP);
 
-	MULTIUSER_PLUGIN_SYMBOL char GetStrBufOut(int index);
-
-
-
+	MULTIUSER_PLUGIN_SYMBOL char* GetData();
 #ifdef __cplusplus
 }
 #endif // __cplusplus
