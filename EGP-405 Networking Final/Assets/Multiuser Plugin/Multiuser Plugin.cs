@@ -22,7 +22,7 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe string GetData();
+    public static extern unsafe char* GetData();
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe int SendData(string data, int length);
     [DllImport("UnityMultiuserPlugin")]
@@ -45,6 +45,7 @@ public class MultiuserPlugin
        public string ID;
     }
 
+    
     static List<ConnectedClientInfo> mConnectedClients = new List<ConnectedClientInfo>();
 
     public enum mode
@@ -65,6 +66,7 @@ public class MultiuserPlugin
     {
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
+            Debug.Log(mConnected);
             if (mConnected)
             {
                 if (toolMode == mode.EDIT) 
@@ -205,12 +207,13 @@ public class MultiuserPlugin
     static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
         
-        string data = GetData();
+        char* data = GetData();
         string temp = "";
-        if (data == "")
+       // Debug.Log(data[0]);
+        if (data == null)
         {
             temp = "No Data";
-            Debug.Log(temp);
+            //Debug.Log(temp);
             return;
         }
         /*
@@ -218,9 +221,14 @@ public class MultiuserPlugin
         MyStringStruct* myString = (MyStringStruct*)tempPtr;
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
         */
-        //Debug.Log(data[0]);
         StructScript.deserializeMessage(data);
-        
+        //if (data != null)
+        //{
+        //    for (int i = 0; i < data.Length; i++)
+         //       Debug.Log(data[i]);
+            // StructScript.deserializeMessage(data);
+        //}
+
     }
 
     public static void testSerialize(GameObject testObj)
