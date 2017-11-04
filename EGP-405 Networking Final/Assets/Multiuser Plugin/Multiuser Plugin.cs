@@ -20,6 +20,8 @@ public class MultiuserPlugin
     public static extern unsafe char* GetData();
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe int SendData(string data, int length, string ownerIP);
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern int Shutdown();
 
 
     //Unity Varibles
@@ -54,7 +56,7 @@ public class MultiuserPlugin
     //Update Loop
     static void Update()
     {
-        /*
+        
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
             if (mConnected)
@@ -75,7 +77,7 @@ public class MultiuserPlugin
                 checkData();
             }
         }
-        */
+        
     }
 
     static void editMode()
@@ -245,6 +247,10 @@ public class MultiuserPlugin
         }
     }
 
-
+    public static void Disconnect()
+    {
+        Shutdown();
+        mConnected = false; 
+    }
 }
 

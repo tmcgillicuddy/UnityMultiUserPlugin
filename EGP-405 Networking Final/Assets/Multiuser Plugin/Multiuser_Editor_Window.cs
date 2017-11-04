@@ -161,7 +161,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
             if (GUILayout.Button("Disconnect"))
             {
-                MultiuserPlugin.mConnected = false;
+                MultiuserPlugin.Disconnect();
             }
 
             if (GUILayout.Button("Manual Sync"))
