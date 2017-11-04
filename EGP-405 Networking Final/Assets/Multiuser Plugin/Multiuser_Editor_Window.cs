@@ -171,7 +171,6 @@ public class Multiuser_Editor_Window : EditorWindow
         }
     }
 
-
     void sendMessage()
     {
         //CALL SEND MESSAGE OVER NETWORK THING HERE

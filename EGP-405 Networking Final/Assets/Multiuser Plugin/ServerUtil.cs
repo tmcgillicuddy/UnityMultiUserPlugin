@@ -72,7 +72,7 @@ public  class ServerUtil {
             // copied everything from old scene into new scene
 
             // save new scene
-            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/" + newSceneName + ".unity");
+            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/Autosaved Scenes/" + newSceneName + ".unity");
             // saved new scene
         }
     }
@@ -81,19 +81,6 @@ public  class ServerUtil {
     public static void checkTooManyScenes()
     {
         int numSavedScenes = 0;
-        /*
-        List<string> tmp = new List<string>();
-        foreach (UnityEditor.EditorBuildSettingsScene S in UnityEditor.EditorBuildSettings.scenes)
-        {
-            if (S.enabled)
-            {
-                string name = S.path.Substring(S.path.LastIndexOf('/') + 1);
-                name = name.Substring(0, name.Length - 6);
-                tmp.Add(name);
-            }
-            numSavedScenes++;
-        }
-        */
         SceneSetup[] tmpScenes = EditorSceneManager.GetSceneManagerSetup();
         string[] tmp = new string[MAX_SAVED_SCENES];
         for (int i = 0; i < tmpScenes.Length; i++)
