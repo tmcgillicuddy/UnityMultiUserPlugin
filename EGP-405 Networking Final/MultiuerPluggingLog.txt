@@ -1,0 +1,11 @@
+Startup Complete
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+'¢jâ
+?W•þõ]?Wþõ]'¢j;õ]ÿÿÿÿ
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
