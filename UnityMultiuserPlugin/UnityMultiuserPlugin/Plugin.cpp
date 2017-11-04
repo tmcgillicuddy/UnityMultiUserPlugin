@@ -1,22 +1,11 @@
 #include "Plugin.h"
+#include "../Framework/ServerState.h"
+#include "../Framework/ClientState.h"
 
 // STUFF TO BE WRAPPED
 #include "../Framework/FrameworkState.h"
 
 MULTIUSER_PLUGIN_SYMBOL FrameworkState *theState = 0;
-
-
-int Startup()
-{
-	if (theState == 0)
-	{
-		theState = new FrameworkState;
-		theState->resetLogger();
-		theState->writeToLogger("Startup Complete");
-		return 1;
-	}
-	return 0;
-}
 
 int Shutdown()
 {
@@ -31,53 +20,43 @@ int Shutdown()
 	return 0;
 }
 
-int Foo(int bar)
+int StartServer(char* password, int portNum, int maxClients)
 {
-	if (theState != 0)
+	if (theState == 0)
 	{
-		theState->writeToLogger("Running Test FOO function " + bar);
-		return theState->StateFoo(bar);
-	}
-	return 0;
-}
-
-int StartServer(int maxClients, int portNum, char* password)
-{
-	if (theState != 0)
-	{
+		theState = new ServerState;
+		theState->resetLogger();
+		theState->drawLineOnLogger();
 		theState->writeToLogger("Starting a Server");
-		return theState->StartServer(maxClients, portNum);
+		bool temp = theState->init("", portNum, maxClients);
+		theState->drawLineOnLogger();
+		return temp;
 	}
 	return 0;
 }
 
 int StartClient(char *targetIP, int portNum)
 {
-	if (theState != 0)
+	if (theState == 0)
 	{
+		theState = new ClientState;
+		theState->resetLogger();
+		theState->drawLineOnLogger();
 		theState->writeToLogger("Starting a Client");
 		theState->writeToLogger(targetIP);
-		return 	theState->StartClient(targetIP, portNum);
+		bool temp = theState->init(targetIP, portNum, 0);
+		theState->drawLineOnLogger();
+		return temp;
 	}
 	return 0;
 }
 
-int SendData(char* data, int length)
+int SendData(char* data, int length, char* ownerIP)
 {
 	if (theState != 0)
 	{
 		theState->writeToLogger("Sending Data");
-		return theState->SendData(data, length);
-	}
-	return 0;
-}
-
-int BroadcastData(char * data, int length, char* ownerIP)
-{
-	if (theState != 0)
-	{
-		theState->writeToLogger("Broadcasting Data");
-		return theState->BroadCastData(data, length, ownerIP);
+		return theState->SendData(data, length, ownerIP);
 	}
 	return 0;
 }

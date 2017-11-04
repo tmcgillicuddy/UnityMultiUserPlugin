@@ -12,26 +12,18 @@ using System.Runtime.InteropServices;
 public class MultiuserPlugin
 {
     //Importing DLL functions
-    
     [DllImport("UnityMultiuserPlugin")]
-    public static extern int Startup();
+    public static extern int StartServer(string targetIP,int portNum, int maxClients);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern int StartServer(int maxClients, int portNum);
-    [DllImport("UnityMultiuserPlugin")]
-    public static extern int GetStrBufOut(int index);
-    [DllImport("UnityMultiuserPlugin")]
-    public static extern int StartClient(string targetIP, int portNum);
+    public static extern int StartClient(string targetIP, int portNum, int maxClients);
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe char* GetData();
     [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe int SendData(string data, int length);
-    [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe int BroadcastData(string data, int length, string ownerIP);
+    public static extern unsafe int SendData(string data, int length, string ownerIP);
+
 
     //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
-    public static int mPortNum = 6666, maxConnectedClients = 10;      //Which port to connect through
-    public static string mIP = "127.07.04"; //Which IP to connect to
     public static float syncInterval = 0f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
@@ -56,13 +48,13 @@ public class MultiuserPlugin
     static MultiuserPlugin()
     {
         EditorApplication.update += Update;
-        Startup();
         mConnected = false;
     }
 
     //Update Loop
     static void Update()
     {
+        /*
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
             if (mConnected)
@@ -83,6 +75,7 @@ public class MultiuserPlugin
                 checkData();
             }
         }
+        */
     }
 
     static void editMode()
@@ -123,7 +116,7 @@ public class MultiuserPlugin
         
     }
 
-    public static void startupServer()
+    public static void startupServer(int portNum, int maxClients)
     {
         objectId = "Server ";
         //Runs through entire scene and setups marker flags
@@ -143,14 +136,14 @@ public class MultiuserPlugin
         }
 
         //Calls plugin function to start server
-        StartServer(maxConnectedClients, mPortNum); //TODO: Add password varible
+        StartServer("",portNum, maxClients);
 
         mIsServer = true;
         mConnected = true;
         ServerUtil.forceSave(); //Save the scene to start with
     }
 
-    public static void startupClient()
+    public static void startupClient(string targetIP, int portNum)
     {
         //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
         objCounter = 0;
@@ -161,7 +154,7 @@ public class MultiuserPlugin
         }
 
         //TODO: Start client with given port num, targetIP and password
-        StartClient(mIP, mPortNum);
+        StartClient(targetIP, portNum, 0);
 
         mIsServer = false;
         mConnected = true;
@@ -235,7 +228,7 @@ public class MultiuserPlugin
                 if (!mIsServer)
                 {
                     Debug.Log("Test Sending to server"); 
-                    SendData(temp, temp.Length);
+                    SendData(temp, temp.Length, "");
                 }
                 else
                 {
@@ -244,7 +237,7 @@ public class MultiuserPlugin
                     {
                         if (mConnectedClients[j].IP != "")
                         {
-                            BroadcastData(temp, temp.Length, mConnectedClients[j].IP);
+                            SendData(temp, temp.Length, mConnectedClients[j].IP);
                         }
                     }
                 }

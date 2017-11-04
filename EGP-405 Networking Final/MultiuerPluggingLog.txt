@@ -1,67 +1,8 @@
-Startup Complete
-Starting a Client
-216.93.149.128
-In Framework StartClient Function
+----------------------------------------------------------------------
+Starting a Server
+In Framework StartServer Function
 Made Socket Descriptor on 6666
-Connecting to server on ip 216.93.149.128
-There is data
-'¢jõõö
-Sending Data
-Sending data to 216.93.149.128
-p´m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-—m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-@®m
-Sent data
-Starting a Client
-216.93.149.128
-In Framework StartClient Function
-Made Socket Descriptor on 6666
-Connecting to server on ip 216.93.149.128
-Starting a Client
-216.93.149.128
-In Framework StartClient Function
-Made Socket Descriptor on 6666
-Connecting to server on ip 216.93.149.128
-Sending Data
-Sending data to 216.93.149.128
-ğ£m
-Sent data
-Starting a Client
-216.93.149.128
-In Framework StartClient Function
-Made Socket Descriptor on 6666
-Connecting to server on ip 216.93.149.128
-Sending Data
-Sending data to 216.93.149.128
-€¶m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-0¬m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-À|m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-Ğ~m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
- ™m
-Sent data
-Sending Data
-Sending data to 216.93.149.128
-Àm
-Sent data
+10
+Started Peer
+Set Max connections to 10
+----------------------------------------------------------------------

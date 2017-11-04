@@ -11,6 +11,15 @@ void LogWriter::writeToLog(std::string message)
 	file.close();
 }
 
+void LogWriter::drawLine()
+{
+	ofstream file;
+	file.open(directory + fileName, ofstream::app);	//Try to open the file and append to it
+
+	file << "----------------------------------------------------------------------\n";	//Add the new line of text to the file with time stamp TODO:Add time stamp
+	file.close();
+}
+
 void LogWriter::resetLog()
 {
 	ofstream file;

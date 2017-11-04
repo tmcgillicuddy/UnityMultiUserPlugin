@@ -20,7 +20,8 @@ public class Multiuser_Editor_Window : EditorWindow
         messageStack.Clear();
         window.Show();
     }
-   
+    int mPortNum = 6666, mMaxClients = 10;
+    string mTargetIP = "127.0.0.1";
     private void OnGUI()
     {
         if (!MultiuserPlugin.mConnected)
@@ -39,7 +40,13 @@ public class Multiuser_Editor_Window : EditorWindow
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Connection Port Number");
-            MultiuserPlugin.mPortNum = EditorGUILayout.IntField(MultiuserPlugin.mPortNum);
+            mPortNum = EditorGUILayout.IntField(mPortNum);
+
+            if(mode == 1)
+            {
+                GUILayout.Label("Max Connected Clients");
+                mMaxClients = EditorGUILayout.IntField(mMaxClients);
+            }
 
             EditorGUILayout.EndHorizontal();
 
@@ -48,7 +55,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 EditorGUILayout.BeginHorizontal();
 
                 GUILayout.Label("Connection IP");
-                MultiuserPlugin.mIP = EditorGUILayout.TextField(MultiuserPlugin.mIP);
+                mTargetIP = EditorGUILayout.TextField(mTargetIP);
 
                 EditorGUILayout.EndHorizontal();
                 MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
@@ -73,7 +80,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Connect"))
                 {
                     //CALL CONNECT TO SERVER FUNCTION HERE
-                    MultiuserPlugin.startupClient();
+                    MultiuserPlugin.startupClient(mTargetIP, mPortNum);
                 }
             }
             else
@@ -81,7 +88,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Start Server"))
                 {
                     //CALL START SERVER FUNCTION HERE
-                    MultiuserPlugin.startupServer();
+                    MultiuserPlugin.startupServer(mPortNum, mMaxClients);
                 }
             }
 

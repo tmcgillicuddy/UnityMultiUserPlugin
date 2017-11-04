@@ -11,43 +11,34 @@
 #include "LogWriter.h"
 
 class LogWriter;
-struct ConnectedClient	//Used to store connected client information
+
+#pragma pack(push,1)
+struct dataBuffer
 {
-	char ip[256];
-	char userName[256];
+	char messageID = 136;	//Should be the game object update message
+	char buffer[512];
 };
 
-class FrameworkState
+#pragma pack(pop)
+
+class FrameworkState abstract
 {
 public:
-	//General Functions
-	int StateFoo(int bar);
-	bool SendData(char * data, int length);
+	//Startup Functions
+	virtual bool init(char *targetIP, int portNum, int maxClients) = 0;
 
-	//Server only Functions
-	bool BroadCastData(char * data, int length, char * ownerIP);
-	bool StartServer(int maxClients, int portNum);
-
-	//Client Only Functions
-	bool StartClient(char *targetIP, int portNum);
-
-	//Update the network loop
-	char* UpdateNetwork();
-
-	//TODO: Need a way to either call a function in unity to deserlize a char array
-
-	//TODO: Find a way to send char array to c++ and from c++
+	//Data Handeling
+	virtual bool SendData(char * data, int length, char * ownerIP) = 0;
+	virtual char* UpdateNetwork() = 0;
 
 	void resetLogger();
 	void writeToLogger(std::string message);
+	void drawLineOnLogger() { pLogger.drawLine(); };
 
-
-private:
+protected:
 	RakNet::RakPeerInterface *mpPeer = RakNet::RakPeerInterface::GetInstance();
 	std::string mPassword; //Only used if the intial startup settings have a non-null password
-	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	LogWriter pLogger;
-	std::string mTargetIP;
 };
 
 #endif // FRAMEWORK_STATE_H
