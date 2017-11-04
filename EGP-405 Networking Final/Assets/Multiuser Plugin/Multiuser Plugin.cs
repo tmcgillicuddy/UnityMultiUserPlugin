@@ -22,7 +22,7 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartClient(string targetIP, int portNum);
     [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe char* GetData();
+    public static extern unsafe string GetData();
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe int SendData(string data, int length);
     [DllImport("UnityMultiuserPlugin")]
@@ -205,9 +205,9 @@ public class MultiuserPlugin
     static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
         
-        char * data = GetData();
+        string data = GetData();
         string temp = "";
-        if (data == null)
+        if (data == "")
         {
             temp = "No Data";
             Debug.Log(temp);

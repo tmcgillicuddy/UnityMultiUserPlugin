@@ -107,10 +107,9 @@ public class StructScript {
         return serialized;
     }
 
-    public unsafe static void deserializeMessage(char* ser)
+    public static void deserializeMessage(string ser)
     {
-        Debug.Log((int)ser[0]); //A check for the int value of incoming messages
-        string data = Marshal.PtrToStringAnsi((IntPtr)ser); //The translated char* to a string
+        Debug.Log(ser); //A check for the int value of incoming messages
         switch ((Message)ser[0])
         {
             case Message.CHAT_MESSAGE:
