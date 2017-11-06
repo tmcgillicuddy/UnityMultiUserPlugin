@@ -81,25 +81,31 @@ public  class ServerUtil {
 
             Debug.Log(isNewDay);
 
+            string newFolderName = folderName + folderTimestamp;
+            string newPath = basePath;
+
+
+            if (isFolderFull(newPath + newFolderName))
+            {
+                Debug.Log("Folder is full");
+
+                ++folderIteration;
+                newFolderName += " (" + folderIteration + ")";
+                Debug.Log(newFolderName);
+                AssetDatabase.CreateFolder(basePath, newFolderName);
+            }
+
             if (isNewDay)
             {
                 Debug.Log("is new day");
-                string guid = AssetDatabase.CreateFolder(basePath, folderName + folderTimestamp);
-                string newPath = AssetDatabase.GUIDToAssetPath(guid);
-                Debug.Log(guid);
-                Debug.Log(newPath);
-                //if (isFolderFull(newPath))
-                {
-                    /*
-                    ++folderIteration;
-                    guid = AssetDatabase.CreateFolder(basePath, folderName + folderTimestamp + "(" + folderIteration + ")");
-                    newPath = AssetDatabase.GUIDToAssetPath(guid);
-                    */
-                }
-                // save new scene
-                EditorSceneManager.SaveScene(newScene, newPath + newSceneName + ".unity", false);
-                // saved new scene
+
+                AssetDatabase.CreateFolder(basePath, newFolderName);
             }
+
+            newPath += newFolderName + '/';
+
+            EditorSceneManager.SaveScene(newScene, newPath + newSceneName + ".unity", false);
+            Debug.Log(newPath + newSceneName);
         }
     }
 
