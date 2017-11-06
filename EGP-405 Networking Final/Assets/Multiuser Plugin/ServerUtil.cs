@@ -22,6 +22,7 @@ public  class ServerUtil {
     public static int folderIteration = 0;
     public static int saveInterval = 2;
     public const int MAX_SAVED_SCENES = 10;
+    public static string currentFolderPath = "Assets/Scenes/";
 
 
     public void Update()
@@ -79,11 +80,70 @@ public  class ServerUtil {
             EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
             // copied everything from old scene into new scene
 
+            
             Debug.Log(isNewDay);
 
-            string newFolderName = folderName + folderTimestamp;
-            string newPath = basePath;
+            string newFolderName = folderName + " " + folderTimestamp;
+            string newPath = basePath + newFolderName;
+            currentFolderPath += newFolderName;
 
+            /*
+            if (isFolderFull(newPath + newFolderName))
+            {
+                Debug.Log("Folder is full");
+
+                ++folderIteration;
+                newFolderName += " (" + folderIteration + ")";
+                Debug.Log(newFolderName);
+                AssetDatabase.CreateFolder(basePath, newFolderName);
+            }
+
+            if (isNewDay)
+            {
+                Debug.Log("is new day");
+
+                AssetDatabase.CreateFolder(basePath, newFolderName);
+            }
+
+            newPath += newFolderName + '/';
+            Debug.Log(newPath + newSceneName);
+
+            */
+            //EditorSceneManager.SaveScene(newScene, newPath + newSceneName + ".unity", false);
+            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/Autosaved Scenes/" + newSceneName + ".unity", false);
+        }
+    }
+
+    public static void saveAndSortScenes()
+    {
+        string folderName = "Autosaved Scenes ";
+        string basePath = "Assets/Scenes/";
+        string folderTimestamp = getTimestamp(DateTime.Now, true, false);
+        String newTimestamp = getTimestamp(DateTime.Now, true, true);
+
+        bool isNewDay = isLastFileOld();
+
+        if (DateTime.Now >= lastSaveTime)
+        {
+            Debug.Log(lastSaveTime);
+            Debug.Log("saveToNewScene()::Server side saving");
+
+            // Get the new scene name
+            String oldSceneName = EditorSceneManager.GetActiveScene().name;
+            int i = 0;
+            while (oldSceneName[i] != ' ')
+                i++;
+            String newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
+
+            Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
+
+            EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
+
+
+            Debug.Log(isNewDay);
+
+            string newFolderName = folderName + " " + folderTimestamp;
+            string newPath = basePath + newFolderName;
 
             if (isFolderFull(newPath + newFolderName))
             {
@@ -103,9 +163,10 @@ public  class ServerUtil {
             }
 
             newPath += newFolderName + '/';
-
-            EditorSceneManager.SaveScene(newScene, newPath + newSceneName + ".unity", false);
             Debug.Log(newPath + newSceneName);
+
+            //EditorSceneManager.SaveScene(newScene, newPath + newSceneName + ".unity", false);
+            EditorSceneManager.SaveScene(newScene, "Assets/Scenes/Autosaved Scenes/" + newSceneName + ".unity", false);
         }
     }
 
@@ -128,8 +189,7 @@ public  class ServerUtil {
         {
             if (fi.Name.Contains(".meta") == false)
             {
-                sceneNames.Enqueue(fi.Name);//.Substring(0, fi.Name.Length - 6)); // add name to queue without .unity extension
-                //Debug.Log("Found Scene " + fi.Name + " at " + i);
+                sceneNames.Enqueue(fi.Name);
                 i++;
             }
         }
@@ -140,16 +200,8 @@ public  class ServerUtil {
             {
                 Debug.Log("sceneNames.Count = " + sceneNames.Count);
                 string earliestScene = sceneNames.Dequeue();
-                Debug.Log(earliestScene);
 
-                Scene scene = EditorSceneManager.GetSceneByName(earliestScene);
-
-                Debug.Log(EditorSceneManager.CloseScene(scene, true));
-                Debug.Log("Opening scene " + EditorSceneManager.OpenScene(path + earliestScene).name);
-                Debug.Log("Current open scene is " + EditorSceneManager.GetActiveScene().name);
-                EditorSceneManager.OpenScene(path + earliestScene);
-
-                Debug.Log(EditorSceneManager.CloseScene(SceneManager.GetSceneByName(earliestScene), true));
+                Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
 
                 Debug.Log(path + earliestScene + " was Deleted");
             }
