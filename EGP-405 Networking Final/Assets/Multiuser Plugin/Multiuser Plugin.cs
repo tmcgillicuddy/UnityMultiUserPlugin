@@ -78,8 +78,7 @@ public class MultiuserPlugin
                 else if(mIsServer)
                 {
                     //ServerUtil.saveScene();
-                    ServerUtil.saveToNewScene();
-                    ServerUtil.checkTooManyScenes();
+                   // ServerUtil.saveToNewScene();
                 }
                 checkData();
             }
@@ -148,9 +147,12 @@ public class MultiuserPlugin
 
         mIsServer = true;
         mConnected = true;
-        ServerUtil.forceSave(); //Save the scene to start with
-        ServerUtil.saveToNewScene();
-        ServerUtil.checkTooManyScenes();
+        //ServerUtil.forceSave(); //Save the scene to start with
+
+        if (Multiuser_Editor_Window.limitAutosave)
+            ServerUtil.saveToNewScene();
+        else
+            ServerUtil.saveAndSortScenes();
     }
 
     public static void startupClient()
