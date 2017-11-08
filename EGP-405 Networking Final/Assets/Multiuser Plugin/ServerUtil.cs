@@ -86,6 +86,8 @@ public  class ServerUtil {
 
     public static void saveAndSortScenes()
     {
+        string newFolderName;
+        string newPath;
         string folderName = "Autosaved Scenes ";
         string basePath = "Assets/Scenes/";
         string folderTimestamp = getTimestamp(DateTime.Now, true, false);
@@ -109,45 +111,55 @@ public  class ServerUtil {
         EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
         // all the scene stuff
 
-        string newFolderName;
-        string newPath;
         if (isNewDay)
         {
             Debug.Log("is new day");
             // all the folder stuff
+
+
             newFolderName = folderName + folderTimestamp + "/";
             Debug.Log("newFolderName: " + newFolderName);
             newPath = basePath + newFolderName;
             Debug.Log("newPath: " + newPath);
+            AssetDatabase.CreateFolder(basePath, newFolderName);
 
-            Debug.Log(AssetDatabase.CreateFolder(basePath, newFolderName));
+            Debug.Log("basePath + newFolderName: " + basePath + newFolderName);
+
+            AssetDatabase.CreateFolder(basePath, newFolderName + "/");
 
             Debug.Log("newPath: " + newPath);
-
 
             Debug.Log("currentFolderPath + newFolderName + newSceneName: " + currentFolderPath + newFolderName + newSceneName);
 
             todaysFolder = newPath;
             Debug.Log("Today's folder: " + todaysFolder);
 
-            if (isFolderFull(newPath))
-            {
-                Debug.Log("Folder is full");
+            //if (isFolderFull(newPath))
+            //{
+            //    Debug.Log("Folder is full");
 
-                ++folderIteration;
-                newFolderName += " (" + folderIteration + ")";
-                Debug.Log(newFolderName);
-                todaysFolder = newFolderName;
-                AssetDatabase.CreateFolder(basePath, newFolderName);
-            }
+            //    ++folderIteration;
+            //    newFolderName += " (" + folderIteration + ")";
+            //    Debug.Log(newFolderName);
+            //    todaysFolder = newFolderName;
+            //    AssetDatabase.CreateFolder(basePath, newFolderName);
+            //}
+
+            Debug.Log("Saving new scene");
+            isNewDay = false;
+            Directory.SetCreationTime(basePath + newFolderName, DateTime.Today);
         }
         else
         {
+            Debug.Log(Directory.GetCurrentDirectory() + basePath);
+            todaysFolder = Directory.GetCurrentDirectory() + "/" + basePath;
             newFolderName = todaysFolder;
+
             Debug.Log("Todays folder: " + todaysFolder);
         }
 
-            EditorSceneManager.SaveScene(newScene, currentFolderPath + newFolderName + newSceneName + ".unity", false);
+        Debug.Log("currentFolderPath + newFolderName + newSceneName: " + currentFolderPath + newFolderName + newSceneName);
+        EditorSceneManager.SaveScene(newScene, currentFolderPath + newFolderName + newSceneName + ".unity", false);
     }
 
     public static void checkTooManyScenes()
@@ -216,21 +228,8 @@ public  class ServerUtil {
                     return val;
                 }
             }
-            string lastFolderName = folderInfo[folderInfo.Count() - 1].Name;
-            //string lastFolderName = folderInfo[0].Name;
-            Debug.Log(lastFolderName);
-            int i = 0;
-            int numSpaces = 0;
-            Debug.Log(lastFolderName.Length);
-            while (numSpaces < 2)
-            {
-                if (lastFolderName[i] == ' ')
-                    numSpaces++;
-                ++i;
-            }
 
-            Debug.Log(lastFolderName.Substring(i));
-            if (lastFolderName.Substring(i) == getTimestamp(DateTime.Now, true, false))
+            if (folderInfo[folderInfo.Length - 1].CreationTime == DateTime.Today)
                 val = false;
             else
                 val = true;
@@ -242,6 +241,8 @@ public  class ServerUtil {
     public static bool isFolderFull(string path)
     {
         bool val = false;
+
+        Debug.Log("isFolderFull()");
 
         DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);
         DirectoryInfo[] folderInfo = levelDirectoryPath.GetDirectories();
