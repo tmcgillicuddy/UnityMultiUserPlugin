@@ -65,7 +65,7 @@ char* GetData()
 {
 	if (theState != 0)
 	{
-		//theState->writeToLogger("Getting data");
+		theState->writeToLogger(theState->UpdateNetwork());
 		return theState->UpdateNetwork();
 	}
 	return 0;

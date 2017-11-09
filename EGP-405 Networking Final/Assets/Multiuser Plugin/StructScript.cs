@@ -5,6 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public unsafe struct CharPointer
+{
+    public byte mId;
+    public fixed char mes[512];
+}
+
 public class StructScript {
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
@@ -109,32 +116,36 @@ public class StructScript {
 
     public unsafe static void deserializeMessage(char* ser)
     {
-        Debug.Log((int)ser[0]); //A check for the int value of incoming messages
-        string data = Marshal.PtrToStringAnsi((IntPtr)ser); //The translated char* to a string
-        switch ((Message)ser[0])
+        IntPtr care = (IntPtr)ser;
+        CharPointer* data = (CharPointer*)care;
+        string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
+        switch ((byte)ser[0])
         {
-            case Message.CHAT_MESSAGE:
+            case (byte)Message.CHAT_MESSAGE:
                 Debug.Log("New Message Recieved");
                 //TODO: put message on the message stack for chat system
                 break;
-            case Message.ID_CONNECTION_ATTEMPT_FAILED:
+            case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
                 Debug.Log("Failed to connect to server");
                 break;
-            case Message.ID_NEW_INCOMING_CONNECTION:
+            case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
                 Debug.Log("A new client is connecting");
                 break;
-            case Message.ID_CONNECTION_REQUEST_ACCEPTED:
+            case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
                 break;
-            case Message.ID_NO_FREE_INCOMING_CONNECTIONS:
+
+            case (byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
-            case Message.GO_UPDATE:
-                Debug.Log("New Gameobject update recieved");
+            case unchecked((byte)Message.GO_UPDATE):
+                Debug.Log("Game Object Received");
+                componentSerialize(output);
                 Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
             default:
+                Debug.Log(output);
                 Debug.Log("Message with identifier " + ser[0] + " has arrived");
                 break;
         }
@@ -144,9 +155,11 @@ public class StructScript {
 
     public static void componentSerialize(string ser)
     {
-        deserializeString(ref ser);
+        Debug.Log(ser);
         GameObject temp = new GameObject();
         temp.name = deserializeString(ref ser);
+        Debug.Log(temp.name);
+        temp.name = "test";
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
@@ -199,6 +212,8 @@ public class StructScript {
             }
 
         }
+        temp.name = "test";
+
     }
 
     public static int deserializeInt(ref string ser)

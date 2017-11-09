@@ -1,8 +1,525 @@
-----------------------------------------------------------------------
+Startup Complete
 Starting a Server
 In Framework StartServer Function
 Made Socket Descriptor on 6666
-10
 Started Peer
 Set Max connections to 10
-----------------------------------------------------------------------
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+'¢jâ
+?W•þå?Wþå'¢j;åÿÿÿÿ
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/0/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/8.45/1/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/8.45/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/MainCamera/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/MainCamera/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆGameObject/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆGameObject/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆfghjdfghjf/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ0/Untagged/0/False/transform/0/3/0/0.4082179/-0.2345697/0.1093816/0.8754261/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+There is data
+ˆ1/Finish/0/False/transform/1.82/3.32/-10/0/0/0/1/1/1/1/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+Started Peer
+Set Max connections to 10
+There is data
+ˆhjgkhk/Untagged/0/False/transform/0/0/0/0/0/0/1/90/1/1/boxCollider/0/0/0/1/1/1/False/sphereCollider/0/0/0/0.5/False/rigidbody/1/0/0.05/0/0/True/False/True/
