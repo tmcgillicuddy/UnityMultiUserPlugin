@@ -146,7 +146,8 @@ public class StructScript {
                 break;
             default:
                 Debug.Log(output);
-                Debug.Log("Message with identifier " + ser[0] + " has arrived");
+                int identifier = ser[0] - '0';
+                Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
         

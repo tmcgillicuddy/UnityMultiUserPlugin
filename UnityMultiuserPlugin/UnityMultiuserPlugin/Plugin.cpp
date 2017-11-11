@@ -12,6 +12,7 @@ int Shutdown()
 	if (theState != 0)
 	{
 		theState->writeToLogger("Shutting Down");
+		theState->cleanup();
 		delete theState;
 		theState = 0;
 
