@@ -86,7 +86,6 @@ public  class ServerUtil {
     public static void checkTooManyScenes()
     {
         EditorSceneManager.preventCrossSceneReferences = false;
-        Debug.Log("checkTooManyScenes()");
         String path = "Assets/Scenes/Autosaved Scenes/";
 
         DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);

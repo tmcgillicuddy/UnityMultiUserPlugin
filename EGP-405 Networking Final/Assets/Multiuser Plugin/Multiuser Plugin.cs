@@ -259,6 +259,11 @@ public class MultiuserPlugin
         }
     }
 
+    public static void SendMessageOverNetwork(string msg)
+    {
+        SendData(msg, msg.Length, "216.93.149.196");
+    }
+
     public static void Disconnect()
     {
         Shutdown();
