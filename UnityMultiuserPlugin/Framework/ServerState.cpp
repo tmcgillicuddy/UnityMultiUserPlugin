@@ -7,7 +7,7 @@ ServerState::ServerState()
 
 ServerState::~ServerState()
 {
-	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	
 }
 
 bool ServerState::init(char *targetIP, int portNum, int maxClients)
@@ -52,17 +52,26 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
+bool ServerState::cleanup()
+{
+	writeToLogger("Shutting down server");
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	drawLineOnLogger();
+	return true;
+}
+
 char * ServerState::UpdateNetwork()
 {
 	
 	RakNet::Packet *packet;
 
 	packet = mpPeer->Receive();
-	writeToLogger("Got Packet");
+	//writeToLogger("Got Packet");
 	if (packet)
 	{
 		writeToLogger("There is data");
 		writeToLogger((char*)packet->data);
+		drawLineOnLogger();
 		return (char*)packet->data;
 	}
 	else

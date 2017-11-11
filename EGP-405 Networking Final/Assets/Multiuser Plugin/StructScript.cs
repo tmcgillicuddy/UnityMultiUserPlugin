@@ -19,13 +19,22 @@ public class StructScript {
         ID_CONNECTION_ATTEMPT_FAILED = 45329,
         ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
+        ID_DISCONNECTION = 57877,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 12680,
+
     }
 
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
+
+
+        serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
+        markTemp.flag = obj.GetComponent<MarkerFlag>();
+        string flagData = new string(markTemp.toChar());
+        serialized += flagData;
+
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";
@@ -144,9 +153,21 @@ public class StructScript {
                 Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
+            case unchecked((byte)Message.ID_DISCONNECTION):
+                if(MultiuserPlugin.mIsServer)
+                {
+                    Debug.Log("Client has disconnected");
+                    //TODO: remove this client from client list
+                }
+                else
+                {
+                    Debug.Log("You have disconnected");
+                }
+                break;
             default:
                 Debug.Log(output);
-                Debug.Log("Message with identifier " + ser[0] + " has arrived");
+                int identifier = ser[0].GetHashCode();
+                Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
         
@@ -156,10 +177,38 @@ public class StructScript {
     public static void componentSerialize(string ser)
     {
         Debug.Log(ser);
-        GameObject temp = new GameObject();
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        GameObject temp = null;
+
+        MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
+
+        bool newObj = true;
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag thisFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if(thisFlag.id == objMarker.id)
+            {
+                temp = allGameobjects[i];
+
+                if (thisFlag.parentID != objMarker.parentID) //The networked objects parent is different from local one
+                {
+
+                }
+
+                newObj = false;
+                break;
+            }
+        }
+
+        if(newObj == true) //Make a new game object with given flag if you need to
+        {
+            temp = new GameObject();
+            MarkerFlag newFlag = temp.AddComponent<MarkerFlag>();
+            newFlag.id = objMarker.id;
+            newFlag.parentID = objMarker.parentID;
+        }
+
         temp.name = deserializeString(ref ser);
-        Debug.Log(temp.name);
-        temp.name = "test";
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
@@ -212,8 +261,15 @@ public class StructScript {
             }
 
         }
-        temp.name = "test";
 
+    }
+
+    public static MarkerFlag deserializeMarkerFlag(ref string ser)
+    {
+        MarkerFlag temp = new MarkerFlag();
+        string trash = deserializeString(ref ser);
+        temp.id = deserializeString(ref ser);
+        return temp;
     }
 
     public static int deserializeInt(ref string ser)
@@ -338,6 +394,18 @@ struct Color
 {
     float r, g, b, a;
 }*/
+
+public class serMarkerFlag : serializedComponent
+{
+    public MarkerFlag flag;
+
+    override public char[] toChar()
+    {
+        string temp = "markerFlag/";
+        temp += flag.id + "/";
+        return temp.ToCharArray();
+    }
+}
 
 public class Transform : serializedComponent
 {

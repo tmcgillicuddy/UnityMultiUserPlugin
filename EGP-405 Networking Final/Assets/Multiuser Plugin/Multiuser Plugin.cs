@@ -65,7 +65,7 @@ public class MultiuserPlugin
             {
                 if (toolMode == mode.EDIT) 
                 {
-                editMode();
+                    editMode();
                 }
                 else if (toolMode == mode.VIEW)
                 {
@@ -73,6 +73,23 @@ public class MultiuserPlugin
                 }
                 else if(mIsServer)
                 {
+                    if (Selection.gameObjects.Length > 0)
+                    {
+                        GameObject[] selectedObjects = Selection.gameObjects;
+
+                        for (int i = 0; i < selectedObjects.Length; ++i)
+                        {
+                            MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
+                            if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
+                            {                                                           //it will be added
+                                selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
+                                selectedObjFlags.id = objectId + objCounter.ToString();
+                                objCounter++;
+                            }
+                            selectedObjFlags.isModified = true;
+                            selectedObjFlags.isLocked = true;
+                        }
+                    }
                     ServerUtil.saveScene();
 
                 }
@@ -94,6 +111,8 @@ public class MultiuserPlugin
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
                 {                                                           //it will be added
                     selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
+                    selectedObjFlags.id = objectId + objCounter.ToString();
+                    objCounter++;
                 }
                 selectedObjFlags.isModified = true;
                 selectedObjFlags.isLocked = true;
@@ -150,6 +169,7 @@ public class MultiuserPlugin
     public static void startupClient(string targetIP, int portNum)
     {
         //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
+        objectId = "Client ";
         objCounter = 0;
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
         for (int i = 0; i < allGameobjects.Length; ++i)
@@ -182,10 +202,23 @@ public class MultiuserPlugin
 
                 if (objectFlag.isModified)    //If this object's marker flag has been modified
                 {
-                     //TODO: CALL SERIALIZE DATA STUFF
-                     //TODO: SEND THAT DATA VIA PLUGIN
-                    objectFlag.isModified = false;
+                string temp = StructScript.serialize(allGameobjects[i]);
+                        if (!mIsServer)
+                        {
+                            SendData(temp, temp.Length, "216.93.149.105");
+                        }
+                        else
+                        {
+                            for (int j = 0; j < mConnectedClients.Count; ++j)
+                            {
+                                if (mConnectedClients[j].IP != "")
+                                {
+                                    SendData(temp, temp.Length, mConnectedClients[j].IP);
+                                }
+                            }
+                        }
                 }
+                objectFlag.isModified = false;
 
                 if (!Selection.Contains(allGameobjects[i]))
                 {

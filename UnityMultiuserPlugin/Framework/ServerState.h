@@ -18,6 +18,10 @@ public:
 
 	//Data Handeling
 	bool SendData(char * data, int length, char * ownerIP);
+
+	//Shutdown
+	bool cleanup();
+
 	char* UpdateNetwork();
 
 private:
