@@ -7,7 +7,9 @@ ClientState::ClientState()
 
 ClientState::~ClientState()
 {
+	writeToLogger("Shutting down client");
 	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	drawLineOnLogger();
 }
 
 bool ClientState::init(char *targetIP, int portNum, int maxClients)
