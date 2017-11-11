@@ -13,4 +13,14 @@ public class MarkerFlag : MonoBehaviour {
     {
         //this.hideFlags = HideFlags.HideInInspector;
     }
+    private void OnDrawGizmos()
+    {
+        if (isLocked)
+        {
+            Vector3 size = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            Gizmos.color = new Color(1, 1, 0, 0.75f);
+            Gizmos.DrawWireCube(transform.position, size);
+            Debug.Log("Test");
+        }
+    }
 }
