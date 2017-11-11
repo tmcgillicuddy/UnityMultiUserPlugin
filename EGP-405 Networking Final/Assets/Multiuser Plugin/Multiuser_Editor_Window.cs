@@ -204,7 +204,8 @@ public class Multiuser_Editor_Window : EditorWindow
 
     void sendMessage()
     {
-        string fullMessage = nickName + ": " + message;
+        char msgByte = (char)135;
+        string fullMessage = msgByte + nickName + ": " + message;
         //CALL SEND MESSAGE OVER NETWORK THING HERE
         messageStack.Add(fullMessage);
 

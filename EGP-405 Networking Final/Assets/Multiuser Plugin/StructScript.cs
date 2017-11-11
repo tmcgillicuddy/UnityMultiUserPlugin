@@ -119,6 +119,7 @@ public class StructScript {
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
+        Debug.Log(ser[0]);
         switch ((byte)ser[0])
         {
             case (byte)Message.CHAT_MESSAGE:
@@ -141,16 +142,15 @@ public class StructScript {
             case unchecked((byte)Message.GO_UPDATE):
                 Debug.Log("Game Object Received");
                 componentSerialize(output);
-                Debug.Log(ser[0]);
+
                 //componentSerialize(ser);
                 break;
+
             default:
                 Debug.Log(output);
                 Debug.Log("Message with identifier " + ser[0] + " has arrived");
                 break;
         }
-        
-       
     }
 
     public static void componentSerialize(string ser)
