@@ -254,13 +254,13 @@ public class StructScript {
             }
 
         }
-        temp.name = "test";
 
     }
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
         MarkerFlag temp = new MarkerFlag();
+        string trash = deserializeString(ref ser);
         temp.id = deserializeString(ref ser);
         return temp;
     }
