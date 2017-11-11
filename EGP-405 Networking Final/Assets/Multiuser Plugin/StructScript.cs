@@ -189,6 +189,12 @@ public class StructScript {
             if(thisFlag.id == objMarker.id)
             {
                 temp = allGameobjects[i];
+
+                if (thisFlag.parentID != objMarker.parentID) //The networked objects parent is different from local one
+                {
+
+                }
+
                 newObj = false;
                 break;
             }
@@ -199,6 +205,7 @@ public class StructScript {
             temp = new GameObject();
             MarkerFlag newFlag = temp.AddComponent<MarkerFlag>();
             newFlag.id = objMarker.id;
+            newFlag.parentID = objMarker.parentID;
         }
 
         temp.name = deserializeString(ref ser);

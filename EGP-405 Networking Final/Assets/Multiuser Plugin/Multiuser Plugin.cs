@@ -202,10 +202,23 @@ public class MultiuserPlugin
 
                 if (objectFlag.isModified)    //If this object's marker flag has been modified
                 {
-                     //TODO: CALL SERIALIZE DATA STUFF
-                     //TODO: SEND THAT DATA VIA PLUGIN
-                    objectFlag.isModified = false;
+                string temp = StructScript.serialize(allGameobjects[i]);
+                        if (!mIsServer)
+                        {
+                            SendData(temp, temp.Length, "216.93.149.105");
+                        }
+                        else
+                        {
+                            for (int j = 0; j < mConnectedClients.Count; ++j)
+                            {
+                                if (mConnectedClients[j].IP != "")
+                                {
+                                    SendData(temp, temp.Length, mConnectedClients[j].IP);
+                                }
+                            }
+                        }
                 }
+                objectFlag.isModified = false;
 
                 if (!Selection.Contains(allGameobjects[i]))
                 {
