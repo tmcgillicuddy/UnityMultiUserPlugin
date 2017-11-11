@@ -7,9 +7,7 @@ ServerState::ServerState()
 
 ServerState::~ServerState()
 {
-	writeToLogger("Shutting down server");
-	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
-	drawLineOnLogger();
+	
 }
 
 bool ServerState::init(char *targetIP, int portNum, int maxClients)
@@ -52,6 +50,14 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 		writeToLogger("Sent data");
 		return true;
 	}
+}
+
+bool ServerState::cleanup()
+{
+	writeToLogger("Shutting down server");
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	drawLineOnLogger();
+	return true;
 }
 
 char * ServerState::UpdateNetwork()
