@@ -60,7 +60,7 @@ public class MultiuserPlugin
         
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
-            Debug.Log(mConnected);
+            //Debug.Log(mConnected);
             if (mConnected)
             {
                 if (toolMode == mode.EDIT) 
@@ -206,14 +206,14 @@ public class MultiuserPlugin
     }
     static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
-        
+        //char* data = null;
         char* data = GetData();
         string temp = "";
        // Debug.Log(data[0]);
         if (data == null)
         {
             temp = "No Data";
-            //Debug.Log(temp);
+            Debug.Log(temp);
             return;
         }
         /*
