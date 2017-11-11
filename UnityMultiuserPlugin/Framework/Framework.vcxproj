@@ -163,12 +163,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientState.h" />
     <ClInclude Include="FrameworkState.h" />
     <ClInclude Include="LogWriter.h" />
+    <ClInclude Include="ServerState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClientState.cpp" />
     <ClCompile Include="FrameworkState.cpp" />
     <ClCompile Include="LogWriter.cpp" />
+    <ClCompile Include="ServerState.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

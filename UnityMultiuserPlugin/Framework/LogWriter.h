@@ -8,7 +8,7 @@ class LogWriter
 {
 public:
 	void writeToLog(std::string message);	//Appends to the current Log file
-
+	void drawLine();
 	void resetLog();	//Clears the current log file
 
 private:
