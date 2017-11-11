@@ -328,3 +328,5 @@ __pycache__/
 # should be stored in the .pubxml.user file.
 
 # End of https://www.gitignore.io/api/unity,visualstudio
+/EGP-405 Networking Final/MultiuerPluggingLog.txt
+*.asset
