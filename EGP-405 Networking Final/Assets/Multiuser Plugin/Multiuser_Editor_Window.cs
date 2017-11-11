@@ -11,8 +11,10 @@ public class Multiuser_Editor_Window : EditorWindow
     string message;
     static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
     int mode = 0;
-    int bottomBuffer = 10, topBuffer = 10;
+    //int bottomBuffer = 10, topBuffer = 10;
     public static bool limitAutosave = false;
+    public Vector2 scrollPos = Vector2.zero;
+    public string nickName;
 
     [MenuItem("Window/Multiuser Network")]
     static void init()
@@ -27,6 +29,7 @@ public class Multiuser_Editor_Window : EditorWindow
     {
         if (!MultiuserPlugin.mConnected)
         {
+            messageStack.Clear();
             if(mode == 1)
             {
                 GUILayout.Label("Server Settings:", EditorStyles.boldLabel);
@@ -35,7 +38,6 @@ public class Multiuser_Editor_Window : EditorWindow
             {
                 GUILayout.Label("Client Settings:", EditorStyles.boldLabel);
             }
-
 
 
             EditorGUILayout.BeginHorizontal();
@@ -59,6 +61,13 @@ public class Multiuser_Editor_Window : EditorWindow
                 mTargetIP = EditorGUILayout.TextField(mTargetIP);
 
                 EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+
+                GUILayout.Label("Enter nickname:");
+                nickName = EditorGUILayout.TextField(nickName);
+
+                EditorGUILayout.EndHorizontal();
                 MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
             }
             else
@@ -72,6 +81,15 @@ public class Multiuser_Editor_Window : EditorWindow
                 GUILayout.Label("Autosave interval");
                 ServerUtil.saveInterval = EditorGUILayout.IntField(ServerUtil.saveInterval);
                 EditorGUILayout.EndHorizontal();
+
+
+                EditorGUILayout.BeginHorizontal();
+
+                GUILayout.Label("Enter nickname:");
+                nickName = EditorGUILayout.TextField(nickName);
+
+                EditorGUILayout.EndHorizontal();
+
                 limitAutosave = EditorGUILayout.Toggle("Limit Autosave", limitAutosave);
             }
 
@@ -124,8 +142,12 @@ public class Multiuser_Editor_Window : EditorWindow
                 display = display + messageStack[i] + "\n";
             }
 
-            GUILayout.Label(display, "textfield");
-
+            EditorGUILayout.BeginHorizontal();
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width), GUILayout.Height(75));//, GUILayout.ExpandHeight(false));
+            //EditorGUILayout.LabelField(display, "textfield");//, GUILayout.Height(75));
+            EditorGUILayout.TextArea(display, GUILayout.Width(Screen.width), GUILayout.ExpandHeight(true));
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
             message = EditorGUILayout.TextField("Message", message);
@@ -183,7 +205,7 @@ public class Multiuser_Editor_Window : EditorWindow
     void sendMessage()
     {
         //CALL SEND MESSAGE OVER NETWORK THING HERE
-        messageStack.Add(message);
+        messageStack.Add(nickName + ": " + message);
 
         //Clean up selection and GUI
         message = null;

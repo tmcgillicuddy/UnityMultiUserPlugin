@@ -146,10 +146,9 @@ public class MultiuserPlugin
         mConnected = true;
         //ServerUtil.forceSave(); //Save the scene to start with
 
+        ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
-            ServerUtil.saveToNewScene();
-        else
-            ServerUtil.saveAndSortScenes();
+            ServerUtil.checkTooManyScenes();
     }
 
     public static void startupClient(string targetIP, int portNum)

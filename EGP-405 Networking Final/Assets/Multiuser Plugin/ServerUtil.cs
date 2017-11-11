@@ -54,8 +54,7 @@ public  class ServerUtil {
 
     public static void saveToNewScene()
     {
-        string folderName = "Autosaved Scenes ";
-        string folderTimestamp = getTimestamp(DateTime.Now, true, false);
+        string folderName = "Autosaved Scenes";
         String newTimestamp = getTimestamp(DateTime.Now, true, true);
 
         if (DateTime.Now >= lastSaveTime)
@@ -79,87 +78,9 @@ public  class ServerUtil {
             EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
             // copied everything from old scene into new scene
 
-            EditorSceneManager.SaveScene(newScene, currentFolderPath + folderName + newSceneName + ".unity", false);
-            checkTooManyScenes();
+            Debug.Log("currentFolderPath + folderName + newSceneName: " + currentFolderPath + folderName + newSceneName);
+            Debug.Log(EditorSceneManager.SaveScene(newScene, currentFolderPath + folderName + "/" + newSceneName + ".unity", false));
         }
-    }
-
-    public static void saveAndSortScenes()
-    {
-        string newFolderName;
-        string newPath;
-        string folderName = "Autosaved Scenes ";
-        string basePath = "Assets/Scenes/";
-        string folderTimestamp = getTimestamp(DateTime.Now, true, false);
-        String newTimestamp = getTimestamp(DateTime.Now, true, true);
-
-        bool isNewDay = isLastFileOld();
-
-        Debug.Log(lastSaveTime);
-        Debug.Log("saveAndSortScenes()::Server side saving");
-
-        // Get the new scene name
-        String oldSceneName = EditorSceneManager.GetActiveScene().name;
-        Debug.Log("Old scene name: " + oldSceneName);
-        int i = 0;
-        while (oldSceneName[i] != ' ')
-            i++;
-        String newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
-
-        Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
-
-        EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
-        // all the scene stuff
-
-        if (isNewDay)
-        {
-            Debug.Log("is new day");
-            // all the folder stuff
-
-
-            newFolderName = folderName + folderTimestamp + "/";
-            Debug.Log("newFolderName: " + newFolderName);
-            newPath = basePath + newFolderName;
-            Debug.Log("newPath: " + newPath);
-            AssetDatabase.CreateFolder(basePath, newFolderName);
-
-            Debug.Log("basePath + newFolderName: " + basePath + newFolderName);
-
-            AssetDatabase.CreateFolder(basePath, newFolderName + "/");
-
-            Debug.Log("newPath: " + newPath);
-
-            Debug.Log("currentFolderPath + newFolderName + newSceneName: " + currentFolderPath + newFolderName + newSceneName);
-
-            todaysFolder = newPath;
-            Debug.Log("Today's folder: " + todaysFolder);
-
-            //if (isFolderFull(newPath))
-            //{
-            //    Debug.Log("Folder is full");
-
-            //    ++folderIteration;
-            //    newFolderName += " (" + folderIteration + ")";
-            //    Debug.Log(newFolderName);
-            //    todaysFolder = newFolderName;
-            //    AssetDatabase.CreateFolder(basePath, newFolderName);
-            //}
-
-            Debug.Log("Saving new scene");
-            isNewDay = false;
-            Directory.SetCreationTime(basePath + newFolderName, DateTime.Today);
-        }
-        else
-        {
-            Debug.Log(Directory.GetCurrentDirectory() + basePath);
-            todaysFolder = Directory.GetCurrentDirectory() + "/" + basePath;
-            newFolderName = todaysFolder;
-
-            Debug.Log("Todays folder: " + todaysFolder);
-        }
-
-        Debug.Log("currentFolderPath + newFolderName + newSceneName: " + currentFolderPath + newFolderName + newSceneName);
-        EditorSceneManager.SaveScene(newScene, currentFolderPath + newFolderName + newSceneName + ".unity", false);
     }
 
     public static void checkTooManyScenes()
@@ -172,9 +93,6 @@ public  class ServerUtil {
         FileInfo[] scenesInfo = levelDirectoryPath.GetFiles();
 
         Queue<String> sceneNames = new Queue<String>();
-
-       // EditorSceneManager.SaveOpenScenes();
-        Debug.Log(EditorSceneManager.sceneCount);
 
         int i = 0;
         foreach (FileInfo fi in scenesInfo)
@@ -199,71 +117,6 @@ public  class ServerUtil {
             }
 
         }
-    }
-
-    public static bool isLastFileOld()
-    {
-        bool val = false;
-
-        string path = "Assets/Scenes/";
-
-        DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);
-
-        DirectoryInfo[] folderInfo = levelDirectoryPath.GetDirectories();
-
-        foreach (DirectoryInfo d in folderInfo)
-        {
-            Debug.Log(d.Name);
-        }
-
-        if (folderInfo.Length == 0)
-            val = true;
-        else
-        {
-            if (folderInfo.Length == 1)
-            {
-                if (folderInfo[0].Name == "Autosaved Scenes")
-                {
-                    val = true;
-                    return val;
-                }
-            }
-
-            if (folderInfo[folderInfo.Length - 1].CreationTime == DateTime.Today)
-                val = false;
-            else
-                val = true;
-        }
-
-        return val;
-    }
-
-    public static bool isFolderFull(string path)
-    {
-        bool val = false;
-
-        Debug.Log("isFolderFull()");
-
-        DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);
-        DirectoryInfo[] folderInfo = levelDirectoryPath.GetDirectories();
-
-        int i = 0;
-        foreach (DirectoryInfo d in folderInfo)
-        {
-            Debug.Log(d.Name);
-            if (d.Name.Contains(".meta") == false)
-            {
-                i++;
-            }
-        }
-
-        if (i < 10)
-            val = false;
-        else
-            val = true;
-
-        return val;
-
     }
 
     public static String getTimestamp(DateTime val, bool date, bool time)
