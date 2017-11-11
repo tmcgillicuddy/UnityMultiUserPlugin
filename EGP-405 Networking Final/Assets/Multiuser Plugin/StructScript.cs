@@ -13,6 +13,9 @@ public unsafe struct CharPointer
 }
 
 public class StructScript {
+
+    static MarkerFlag[,] objectMap = new MarkerFlag[100,100];
+
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 1040,
@@ -35,19 +38,27 @@ public class StructScript {
         string flagData = new string(markTemp.toChar());
         serialized += flagData;
 
+
+        int hashLoc = genHashCode(markTemp.flag.id);
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+        Debug.Log(xLoc +" "+ yLoc);
+
+        objectMap[xLoc, yLoc] = markTemp.flag;
+
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";
         serialized += obj.isStatic + "/";
-        Debug.Log("Checking");
+       // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
-        Debug.Log(comps.Length);
+       // Debug.Log(comps.Length);
         for(int i = 0; i < comps.Length; i++)
         {
             if (comps[i].GetType() == typeof(UnityEngine.Transform))
             {
-                Debug.Log("Has Transform");
+                //        Debug.Log("Has Transform");
                 UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
                 Transform serTemp = new Transform();
                 serTemp.pos = temp.position;
@@ -55,11 +66,11 @@ public class StructScript {
                 serTemp.scale = temp.localScale; //Look here for scaling issues
                 string tempString = new string(serTemp.toChar());
                 serialized += tempString;
-                
+
             }
             else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
             {
-                Debug.Log("Has Box Collider");
+                //   Debug.Log("Has Box Collider");
                 UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
                 BoxCollider serTemp = new BoxCollider();
                 serTemp.center = temp.center;
@@ -70,7 +81,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
             {
-                Debug.Log("Has Sphere Collider");
+                //    Debug.Log("Has Sphere Collider");
                 UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
                 SphereCollider serTemp = new SphereCollider();
                 serTemp.center = temp.center;
@@ -81,7 +92,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
             {
-                Debug.Log("Has Capsule Collider");
+                //  Debug.Log("Has Capsule Collider");
                 UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
                 CapsuleCollider serTemp = new CapsuleCollider();
                 serTemp.center = temp.center;
@@ -94,7 +105,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
             {
-                Debug.Log("Has Rigidbody");
+                //  Debug.Log("Has Rigidbody");
                 UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
                 RigidBody serTemp = new RigidBody();
                 serTemp.mass = temp.mass;
@@ -111,14 +122,16 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Camera))
             {
-                Debug.Log("Has Camera");
+                //    Debug.Log("Has Camera");
             }
             else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
             {
-                Debug.Log("Has Mesh Filter");
+                //   Debug.Log("Has Mesh Filter");
             }
             else
-                Debug.Log(comps[i].GetType());
+            {
+                //    Debug.Log(comps[i].GetType());
+            }
         }
         return serialized;
     }
@@ -174,40 +187,43 @@ public class StructScript {
        
     }
 
+    static int genHashCode(string id)
+    {
+        const int primeNum = 31;
+        int temp = 0;
+        int length = id.IndexOf(" ");
+        for (int i = 0; i < id.Length; ++i)
+        {
+            temp += id[i].GetHashCode();
+        }
+        return temp*primeNum;
+    }
+
     public static void componentSerialize(string ser)
     {
         Debug.Log(ser);
-        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
         GameObject temp = null;
 
         MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
 
-        bool newObj = true;
-        for (int i = 0; i < allGameobjects.Length; ++i)
-        {
-            MarkerFlag thisFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-            if(thisFlag.id == objMarker.id)
-            {
-                temp = allGameobjects[i];
+        int hashLoc = genHashCode(objMarker.id);
 
-                if (thisFlag.parentID != objMarker.parentID) //The networked objects parent is different from local one
-                {
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
 
-                }
+        MarkerFlag thisFlag = objectMap[xLoc, yLoc];
 
-                newObj = false;
-                break;
-            }
-        }
-
-        if(newObj == true) //Make a new game object with given flag if you need to
+        if(thisFlag == null) //Make a new game object with given flag if you need to
         {
             temp = new GameObject();
             MarkerFlag newFlag = temp.AddComponent<MarkerFlag>();
             newFlag.id = objMarker.id;
             newFlag.parentID = objMarker.parentID;
         }
-
+        else
+        {
+            temp = thisFlag.gameObject;
+        }
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);

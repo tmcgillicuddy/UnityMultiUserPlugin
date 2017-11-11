@@ -261,7 +261,7 @@ public class MultiuserPlugin
 
     public static void testSerialize(GameObject testObj)
     {
-        Debug.Log("Testing selected obj(s)");
+      //  Debug.Log("Testing selected obj(s)");
         string temp = StructScript.serialize(testObj);
         if(Selection.gameObjects.Length > 0)
         {
@@ -270,12 +270,12 @@ public class MultiuserPlugin
             {
                 if (!mIsServer)
                 {
-                    Debug.Log("Test Sending to server"); 
+                 //   Debug.Log("Test Sending to server"); 
                     SendData(temp, temp.Length, "");
                 }
                 else
                 {
-                    Debug.Log("Test Broadcasting");
+                  //  Debug.Log("Test Broadcasting");
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
                         if (mConnectedClients[j].IP != "")

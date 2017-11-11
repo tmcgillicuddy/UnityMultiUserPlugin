@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0de21e8de724540891e217f99156a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: Server 1
+  id: Server 0
   isModified: 0
   isLocked: 0
   parentID: 
@@ -223,8 +223,8 @@ GameObject:
   - component: {fileID: 1956213766}
   - component: {fileID: 1956213765}
   m_Layer: 0
-  m_Name: NewThing
-  m_TagString: Untagged
+  m_Name: Ballz
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f0de21e8de724540891e217f99156a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: Server 0
+  id: Server 1
   isModified: 0
   isLocked: 1
   parentID: 
@@ -251,7 +251,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1956213764}
   m_LocalRotation: {x: -0.217293, y: 0.3737536, z: -0.00454664, w: 0.9017047}
-  m_LocalPosition: {x: 0, y: 0.17, z: -10}
+  m_LocalPosition: {x: 6.43, y: 3.5, z: -30.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
