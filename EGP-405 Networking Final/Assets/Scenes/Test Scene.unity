@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Server 1
   isModified: 0
-  isLocked: 1
+  isLocked: 0
 --- !u!108 &1980734667
 Light:
   m_ObjectHideFlags: 0

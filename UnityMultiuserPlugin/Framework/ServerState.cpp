@@ -54,9 +54,11 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 
 char * ServerState::UpdateNetwork()
 {
+	
 	RakNet::Packet *packet;
 
 	packet = mpPeer->Receive();
+	writeToLogger("Got Packet");
 	if (packet)
 	{
 		writeToLogger("There is data");
