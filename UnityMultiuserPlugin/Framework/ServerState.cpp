@@ -7,6 +7,7 @@ ServerState::ServerState()
 
 ServerState::~ServerState()
 {
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
 }
 
 bool ServerState::init(char *targetIP, int portNum, int maxClients)

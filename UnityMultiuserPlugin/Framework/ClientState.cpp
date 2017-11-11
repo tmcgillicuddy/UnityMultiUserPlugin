@@ -7,6 +7,7 @@ ClientState::ClientState()
 
 ClientState::~ClientState()
 {
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
 }
 
 bool ClientState::init(char *targetIP, int portNum, int maxClients)
