@@ -19,8 +19,10 @@ public class StructScript {
         ID_CONNECTION_ATTEMPT_FAILED = 45329,
         ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
+        ID_DISCONNECTION = 57877,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 12680,
+
     }
 
     public static string serialize(GameObject obj)
@@ -144,9 +146,19 @@ public class StructScript {
                 Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
+            case unchecked((byte)Message.ID_DISCONNECTION):
+                if(MultiuserPlugin.mIsServer)
+                {
+                    Debug.Log("Client has disconnected");
+                }
+                else
+                {
+                    Debug.Log("You have disconnected");
+                }
+                break;
             default:
                 Debug.Log(output);
-                int identifier = ser[0] - '0';
+                int identifier = ser[0].GetHashCode();
                 Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
