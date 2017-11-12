@@ -65,7 +65,7 @@ public  class ServerUtil {
             // Get the new scene name
             String oldSceneName = EditorSceneManager.GetActiveScene().name;
             int i = 0;
-            while (oldSceneName[i] != 0)
+            while (oldSceneName[i] != ' ')
             {
                 i++;
             }
@@ -81,7 +81,7 @@ public  class ServerUtil {
             EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
             // copied everything from old scene into new scene
 
-            Debug.Log("currentFolderPath + folderName + newSceneName: " + currentFolderPath + folderName + newSceneName);
+            //Debug.Log("currentFolderPath + folderName + newSceneName: " + currentFolderPath + folderName + newSceneName);
             Debug.Log(EditorSceneManager.SaveScene(newScene, currentFolderPath + folderName + "/" + newSceneName + ".unity", false));
         }
     }

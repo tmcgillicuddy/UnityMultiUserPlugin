@@ -49,6 +49,13 @@ bool ClientState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
+char * ClientState::GetLastPacketIP()
+{
+	char * serverIP;
+	strcpy(serverIP, mServerIP.c_str());
+	return serverIP;
+}
+
 bool ClientState::cleanup()
 {
 	writeToLogger("Shutting down client");

@@ -30,6 +30,8 @@ public:
 	//Data Handeling
 	virtual bool SendData(char * data, int length, char * ownerIP) = 0;
 	virtual char* UpdateNetwork() = 0;
+	virtual char* GetLastPacketIP() = 0;
+
 
 	//Shutdown
 	virtual bool cleanup()=0;

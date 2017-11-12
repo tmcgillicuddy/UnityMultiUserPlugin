@@ -143,15 +143,13 @@ public class StructScript {
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
         switch ((byte)ser[0])
         {
-            case (byte)Message.CHAT_MESSAGE:
-                Debug.Log("New Message Recieved");
-                //TODO: put message on the message stack for chat system
-                break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
                 Debug.Log("Failed to connect to server");
                 break;
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
                 Debug.Log("A new client is connecting");
+                MultiuserPlugin.addClient();
+                
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
@@ -191,7 +189,6 @@ public class StructScript {
     {
         const int primeNum = 31;
         int temp = 0;
-        int length = id.IndexOf(" ");
         for (int i = 0; i < id.Length; ++i)
         {
             temp += id[i].GetHashCode();

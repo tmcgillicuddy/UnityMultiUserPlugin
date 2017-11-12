@@ -73,3 +73,17 @@ char* GetData()
 	}
 	return 0;
 }
+
+char * GetLastPacketIP()
+{
+	if (theState != 0)
+	{
+		theState->writeToLogger("Getting last packet IP");
+		char *data = theState->GetLastPacketIP();
+		theState->writeToLogger(data);
+		theState->drawLineOnLogger();
+		return data;
+	}
+
+	return 0;
+}
