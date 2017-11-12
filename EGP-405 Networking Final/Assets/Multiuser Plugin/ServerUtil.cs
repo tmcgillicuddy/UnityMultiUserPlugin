@@ -59,14 +59,17 @@ public  class ServerUtil {
 
         if (DateTime.Now >= lastSaveTime)
         {
-            Debug.Log(lastSaveTime);
-            Debug.Log("saveToNewScene()::Server side saving");
+           // Debug.Log(lastSaveTime);
+            //Debug.Log("saveToNewScene()::Server side saving");
 
             // Get the new scene name
             String oldSceneName = EditorSceneManager.GetActiveScene().name;
             int i = 0;
             while (oldSceneName[i] != ' ')
+            {
                 i++;
+            }
+
             String newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
             // got the new scene name
 
@@ -78,7 +81,7 @@ public  class ServerUtil {
             EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
             // copied everything from old scene into new scene
 
-            Debug.Log("currentFolderPath + folderName + newSceneName: " + currentFolderPath + folderName + newSceneName);
+            //Debug.Log("currentFolderPath + folderName + newSceneName: " + currentFolderPath + folderName + newSceneName);
             Debug.Log(EditorSceneManager.SaveScene(newScene, currentFolderPath + folderName + "/" + newSceneName + ".unity", false));
         }
     }
@@ -108,12 +111,12 @@ public  class ServerUtil {
         {
             while (sceneNames.Count > 10)
             {
-                Debug.Log("sceneNames.Count = " + sceneNames.Count);
+               // Debug.Log("sceneNames.Count = " + sceneNames.Count);
                 string earliestScene = sceneNames.Dequeue();
 
-                Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
+               // Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
 
-                Debug.Log(path + earliestScene + " was Deleted");
+                //Debug.Log(path + earliestScene + " was Deleted");
             }
 
         }

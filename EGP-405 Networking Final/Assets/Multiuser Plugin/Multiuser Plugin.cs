@@ -22,7 +22,8 @@ public class MultiuserPlugin
     public static extern unsafe int SendData(string data, int length, string ownerIP);
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Shutdown();
-
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe char* GetLastPacketIP();
 
     //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
@@ -136,6 +137,8 @@ public class MultiuserPlugin
 
             objectFlag.id = objectId + objCounter;
 
+            StructScript.addToMap(objectFlag);
+
             objCounter++;
         }
 
@@ -215,18 +218,7 @@ public class MultiuserPlugin
             Debug.Log(temp);
             return;
         }
-        /*
-        IntPtr tempPtr = (IntPtr)data;
-        MyStringStruct* myString = (MyStringStruct*)tempPtr;
-        temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
-        */
         StructScript.deserializeMessage(data);
-        //if (data != null)
-        //{
-        //    for (int i = 0; i < data.Length; i++)
-         //       Debug.Log(data[i]);
-            // StructScript.deserializeMessage(data);
-        //}
 
     }
 
@@ -234,6 +226,7 @@ public class MultiuserPlugin
     {
       //  Debug.Log("Testing selected obj(s)");
         string temp = StructScript.serialize(testObj);
+        Debug.Log(temp);
         if(Selection.gameObjects.Length > 0)
         {
             GameObject[] testObjs = Selection.gameObjects;
@@ -246,9 +239,11 @@ public class MultiuserPlugin
                 }
                 else
                 {
-                  //  Debug.Log("Test Broadcasting");
+                    //  Debug.Log("Test Broadcasting");
+
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
+                        Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
                             SendData(temp, temp.Length, mConnectedClients[j].IP);
@@ -257,6 +252,19 @@ public class MultiuserPlugin
                 }
             }
         }
+    }
+
+    public static unsafe void addClient()
+    {
+        char * ip = GetLastPacketIP();
+        IntPtr careTwo = (IntPtr)ip;
+        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
+        //string start = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mId);
+        string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
+        Debug.Log(newIP);
+        ConnectedClientInfo newClient = new ConnectedClientInfo();
+        newClient.IP = newIP;
+        mConnectedClients.Add(newClient);
     }
 
     public static void Disconnect()

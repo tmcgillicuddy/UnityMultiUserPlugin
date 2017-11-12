@@ -52,6 +52,21 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
+char * ServerState::GetLastPacketIP()
+{
+	std::string ip = lastPacket->systemAddress.ToString();
+	char* tempIP = new char[ip.length()+1];
+	//writeToLogger(lastPacket->systemAddress.ToString());
+	if (lastPacket == nullptr)
+	{
+		writeToLogger("No Last Packet");
+		return 0;
+	}
+	strcpy(tempIP,ip.c_str());
+
+	return tempIP;
+}
+
 bool ServerState::cleanup()
 {
 	writeToLogger("Shutting down server");
@@ -69,6 +84,7 @@ char * ServerState::UpdateNetwork()
 	//writeToLogger("Got Packet");
 	if (packet)
 	{
+		lastPacket = packet;
 		writeToLogger("There is data");
 		writeToLogger((char*)packet->data);
 		drawLineOnLogger();

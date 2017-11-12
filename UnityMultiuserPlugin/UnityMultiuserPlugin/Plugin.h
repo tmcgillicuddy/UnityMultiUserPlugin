@@ -21,6 +21,8 @@ extern "C"
 	MULTIUSER_PLUGIN_SYMBOL int SendData(char* data, int length, char* ownerIP);
 
 	MULTIUSER_PLUGIN_SYMBOL char* GetData();
+
+	MULTIUSER_PLUGIN_SYMBOL char* GetLastPacketIP();
 #ifdef __cplusplus
 }
 #endif // __cplusplus

@@ -12,6 +12,7 @@ public:
 
 	//Data Handeling
 	bool SendData(char * data, int length, char * ownerIP);
+	char* GetLastPacketIP();
 
 	//Shutdown
 	bool cleanup();

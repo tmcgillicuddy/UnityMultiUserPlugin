@@ -12,6 +12,11 @@ public unsafe struct CharPointer
     public fixed char mes[512];
 }
 
+public unsafe struct StraightCharPointer //No mId so all stuffed content can be read out at once
+{
+    public fixed char mes[512];
+}
+
 public class StructScript {
 
     static MarkerFlag[,] objectMap = new MarkerFlag[100,100];
@@ -143,15 +148,13 @@ public class StructScript {
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
         switch ((byte)ser[0])
         {
-            case (byte)Message.CHAT_MESSAGE:
-                Debug.Log("New Message Recieved");
-                //TODO: put message on the message stack for chat system
-                break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
                 Debug.Log("Failed to connect to server");
                 break;
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
                 Debug.Log("A new client is connecting");
+                MultiuserPlugin.addClient();
+                
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
@@ -191,7 +194,6 @@ public class StructScript {
     {
         const int primeNum = 31;
         int temp = 0;
-        int length = id.IndexOf(" ");
         for (int i = 0; i < id.Length; ++i)
         {
             temp += id[i].GetHashCode();
@@ -216,14 +218,15 @@ public class StructScript {
         if(thisFlag == null) //Make a new game object with given flag if you need to
         {
             temp = new GameObject();
-            MarkerFlag newFlag = temp.AddComponent<MarkerFlag>();
-            newFlag.id = objMarker.id;
-            newFlag.parentID = objMarker.parentID;
+            thisFlag = temp.AddComponent<MarkerFlag>();
+            thisFlag.id = objMarker.id;
+            thisFlag.parentID = objMarker.parentID;
         }
         else
         {
             temp = thisFlag.gameObject;
         }
+
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
@@ -277,7 +280,16 @@ public class StructScript {
             }
 
         }
+        addToMap(thisFlag);
+    }
 
+    public static void addToMap(MarkerFlag flag)
+    {
+        Debug.Log("Adding to map");
+        int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
+        int xLoc = hashCode % 10;
+        int yLoc = hashCode % 100;
+        objectMap[xLoc,yLoc] = flag;
     }
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
