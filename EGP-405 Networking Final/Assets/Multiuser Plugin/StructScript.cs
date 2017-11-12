@@ -218,9 +218,9 @@ public class StructScript {
         if(thisFlag == null) //Make a new game object with given flag if you need to
         {
             temp = new GameObject();
-            MarkerFlag newFlag = temp.AddComponent<MarkerFlag>();
-            newFlag.id = objMarker.id;
-            newFlag.parentID = objMarker.parentID;
+            thisFlag = temp.AddComponent<MarkerFlag>();
+            thisFlag.id = objMarker.id;
+            thisFlag.parentID = objMarker.parentID;
         }
         else
         {
@@ -280,14 +280,15 @@ public class StructScript {
             }
 
         }
-        objectMap[xLoc, yLoc] = thisFlag;
+        addToMap(thisFlag);
     }
 
     public static void addToMap(MarkerFlag flag)
     {
-        int hasCode = genHashCode(flag.id);
-        int xLoc = hasCode % 10;
-        int yLoc = hasCode % 100;
+        Debug.Log("Adding to map");
+        int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
+        int xLoc = hashCode % 10;
+        int yLoc = hashCode % 100;
         objectMap[xLoc,yLoc] = flag;
     }
 
