@@ -256,7 +256,8 @@ public class MultiuserPlugin
     {
         char * ip = GetLastPacketIP();
         IntPtr careTwo = (IntPtr)ip;
-        CharPointer* dataTwo = (CharPointer*)careTwo;
+        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
+        //string start = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mId);
         string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
         Debug.Log(newIP);
         ConnectedClientInfo newClient = new ConnectedClientInfo();

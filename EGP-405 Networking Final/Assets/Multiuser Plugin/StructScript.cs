@@ -12,6 +12,11 @@ public unsafe struct CharPointer
     public fixed char mes[512];
 }
 
+public unsafe struct StraightCharPointer //No mId so all stuffed content can be read out at once
+{
+    public fixed char mes[512];
+}
+
 public class StructScript {
 
     static MarkerFlag[,] objectMap = new MarkerFlag[100,100];

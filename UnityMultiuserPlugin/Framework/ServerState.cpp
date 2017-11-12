@@ -54,10 +54,8 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 
 char * ServerState::GetLastPacketIP()
 {
-	writeToLogger("Getting");
 	std::string ip = lastPacket->systemAddress.ToString();
 	char* tempIP = new char[ip.length()+1];
-	
 	//writeToLogger(lastPacket->systemAddress.ToString());
 	if (lastPacket == nullptr)
 	{
