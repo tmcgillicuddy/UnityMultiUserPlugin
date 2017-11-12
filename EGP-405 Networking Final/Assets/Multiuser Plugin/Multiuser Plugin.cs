@@ -137,6 +137,8 @@ public class MultiuserPlugin
 
             objectFlag.id = objectId + objCounter;
 
+            StructScript.addToMap(objectFlag);
+
             objCounter++;
         }
 

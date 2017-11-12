@@ -59,8 +59,8 @@ public  class ServerUtil {
 
         if (DateTime.Now >= lastSaveTime)
         {
-            Debug.Log(lastSaveTime);
-            Debug.Log("saveToNewScene()::Server side saving");
+           // Debug.Log(lastSaveTime);
+            //Debug.Log("saveToNewScene()::Server side saving");
 
             // Get the new scene name
             String oldSceneName = EditorSceneManager.GetActiveScene().name;
@@ -111,12 +111,12 @@ public  class ServerUtil {
         {
             while (sceneNames.Count > 10)
             {
-                Debug.Log("sceneNames.Count = " + sceneNames.Count);
+               // Debug.Log("sceneNames.Count = " + sceneNames.Count);
                 string earliestScene = sceneNames.Dequeue();
 
-                Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
+               // Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
 
-                Debug.Log(path + earliestScene + " was Deleted");
+                //Debug.Log(path + earliestScene + " was Deleted");
             }
 
         }

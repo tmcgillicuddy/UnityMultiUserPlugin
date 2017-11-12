@@ -283,6 +283,14 @@ public class StructScript {
         objectMap[xLoc, yLoc] = thisFlag;
     }
 
+    public static void addToMap(MarkerFlag flag)
+    {
+        int hasCode = genHashCode(flag.id);
+        int xLoc = hasCode % 10;
+        int yLoc = hasCode % 100;
+        objectMap[xLoc,yLoc] = flag;
+    }
+
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
         MarkerFlag temp = new MarkerFlag();
