@@ -226,6 +226,7 @@ public class StructScript {
         {
             temp = thisFlag.gameObject;
         }
+
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
@@ -279,7 +280,7 @@ public class StructScript {
             }
 
         }
-
+        objectMap[xLoc, yLoc] = thisFlag;
     }
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
