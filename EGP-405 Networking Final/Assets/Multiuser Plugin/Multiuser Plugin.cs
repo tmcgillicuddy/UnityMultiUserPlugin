@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System.Net;
 
 
 [InitializeOnLoad]
@@ -32,6 +33,7 @@ public class MultiuserPlugin
     public static mode toolMode;
     public static string objectId;
     public static int objCounter = 0;
+    public static string serverIP;
 
     struct ConnectedClientInfo  //For storing connected client information
     {
@@ -142,8 +144,23 @@ public class MultiuserPlugin
             objCounter++;
         }
 
+        // get server ip address
+        string hostName = System.Net.Dns.GetHostName();
+        IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(hostName);
+        IPAddress[] addr = ipEntry.AddressList;
+
+        int index = 0;
+        foreach (IPAddress i in addr)
+        {
+            Debug.Log("Address " + index + ": " + i.ToString() + " ");
+            index++;
+        }
+        serverIP = addr[3].ToString();
+        Debug.Log("Server IP: " + serverIP);
+
+
         //Calls plugin function to start server
-        StartServer("", portNum, maxClients);
+        StartServer(serverIP, portNum, maxClients);
 
         mIsServer = true;
         mConnected = true;
@@ -281,6 +298,27 @@ public class MultiuserPlugin
         ConnectedClientInfo newClient = new ConnectedClientInfo();
         newClient.IP = newIP;
         mConnectedClients.Add(newClient);
+    }
+
+    public static void SendMessageOverNetwork(string message)
+    {
+        switch (mIsServer)
+        {
+            case true:
+                {
+                    foreach (ConnectedClientInfo c in mConnectedClients)
+                    {
+                        SendData(message, message.Length, c.IP);
+                    }
+                    break;
+                }
+
+            case false:
+                {
+                    SendData(message, message.Length, serverIP);
+                    break;
+                }
+        }
     }
 
     public static void Disconnect()
