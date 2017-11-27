@@ -226,9 +226,11 @@ public class StructScript {
 
     public static string deserializeString(ref string ser)
     {
-        int length = ser.IndexOf("/");
+        Debug.Log(ser);
+        int length = ser.Length;// ser.IndexOf("/");
+        Debug.Log("deserializeString() length: " + length);
         string ret = ser.Substring(0, length);
-        ser = ser.Remove(0, length + 1);
+        ser = ser.Remove(0, length);// + 1);
         return ret;
     }
 
