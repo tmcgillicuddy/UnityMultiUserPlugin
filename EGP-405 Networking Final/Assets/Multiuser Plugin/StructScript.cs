@@ -47,7 +47,7 @@ public class StructScript {
         int hashLoc = genHashCode(markTemp.flag.id);
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
-        Debug.Log(xLoc +" "+ yLoc);
+        //Debug.Log(xLoc +" "+ yLoc);
 
         objectMap[xLoc, yLoc] = markTemp.flag;
 
