@@ -27,7 +27,7 @@ public class MultiuserPlugin
 
     //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
-    public static float syncInterval = 0f;   //How often system should sync
+    public static float syncInterval = 0.5f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
     public static string objectId;
@@ -281,6 +281,15 @@ public class MultiuserPlugin
         ConnectedClientInfo newClient = new ConnectedClientInfo();
         newClient.IP = newIP;
         mConnectedClients.Add(newClient);
+
+        //Send a data buffer of all the objects currently in the scene to the newly connected client
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i=0; i < allGameobjects.Length; ++i)
+        {
+            string temp = StructScript.serialize(allGameobjects[i]);
+            SendData(temp, temp.Length, newIP);
+        }
+
     }
 
     public static void Disconnect()
