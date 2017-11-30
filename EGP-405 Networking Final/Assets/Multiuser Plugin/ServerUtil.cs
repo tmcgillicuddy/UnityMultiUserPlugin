@@ -57,26 +57,38 @@ public  class ServerUtil {
         string folderName = "Autosaved Scenes";
         String newTimestamp = getTimestamp(DateTime.Now, true, true);
 
+        string newSceneName, oldSceneName;
+        Scene newScene;
+
         if (DateTime.Now >= lastSaveTime)
         {
-//           Debug.Log(lastSaveTime);
-//           Debug.Log("saveToNewScene()::Server side saving");
+            // create the new scene
+            // if we are not currently in a scene
+            if (EditorSceneManager.GetActiveScene().name == "")
+            {
+                newSceneName = "Test Scene " + newTimestamp;
+            
+                // create new scene
+                newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            }
+            // if we are currently in a scene
+            else
+            {
+                // Get the new scene name
+                oldSceneName = EditorSceneManager.GetActiveScene().name;
+                int i = 0;
+                while (oldSceneName[i] != ' ')
+                    i++;
+                newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
+                // got the new scene name
 
-            // Get the new scene name
-            String oldSceneName = EditorSceneManager.GetActiveScene().name;
-            int i = 0;
-            while (oldSceneName[i] != ' ')
-                i++;
-            String newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
-            // got the new scene name
+                // create new scene
+                newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
 
-            // create a new scene 
-            Scene newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Additive);
-            // created a new scene
-
-            // copy everything from old scene into new scene
-            EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
-            // copied everything from old scene into new scene
+                // copy everything from old scene into new scene
+                EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
+                // copied everything from old scene into new scene
+            }
 
             string savedScene = currentFolderPath + folderName + "/" + newSceneName + ".unity";
             EditorSceneManager.SaveScene(newScene, savedScene, false);
