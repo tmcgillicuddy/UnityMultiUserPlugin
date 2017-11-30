@@ -262,20 +262,16 @@ public class MultiuserPlugin
     public static void SendMessageOverNetwork(string msg)
     {
         string targetIP;
-        if (mIsServer)
+        Debug.Log(mConnectedClients.Count);
+        for (int i = 0; i < mConnectedClients.Count; ++i)
         {
-            for (int i = 0; i < mConnectedClients.Count; ++i)
-            {
-                targetIP = mConnectedClients[i].IP;
-                Debug.Log("Client " + i + " IP: " + targetIP);
-                Debug.Log(SendData(msg, msg.Length, targetIP));
-            }
+            Debug.Log(mConnectedClients[i].IP);
+            targetIP = mConnectedClients[i].IP;
+            Debug.Log("Client " + i + " IP: " + targetIP);
+            Debug.Log(SendData(msg, msg.Length, targetIP));
         }
-        else
-        {
-            Debug.Log(SendData(msg, msg.Length, ""));
-        }
-        //Debug.Log(SendData(msg, msg.Length, "216.93.149.196"));
+        Debug.Log(SendData(msg, msg.Length, "216.93.149.98"));
+        //SendData(msg, msg.Length, mConnectedClients[1].IP);
     }
 
     public static void Disconnect()

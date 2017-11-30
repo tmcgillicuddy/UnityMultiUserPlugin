@@ -119,7 +119,7 @@ public class StructScript {
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
-        Debug.Log(ser[0]);
+        Debug.Log((int)ser[0]);
         switch ((byte)ser[0])
         {
             case (byte)Message.CHAT_MESSAGE:
@@ -130,7 +130,7 @@ public class StructScript {
                 Debug.Log("Failed to connect to server");
                 break;
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
-                Debug.Log("A new client is connecting");
+                Debug.Log("A new client is connecting with IP " );
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
