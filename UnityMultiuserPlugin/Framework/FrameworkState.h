@@ -16,7 +16,7 @@ class LogWriter;
 struct dataBuffer
 {
 	char messageID = 136;	//Should be the game object update message
-	char buffer[512];
+	char buffer[1024];
 };
 
 #pragma pack(pop)

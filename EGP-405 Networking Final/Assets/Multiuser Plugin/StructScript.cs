@@ -17,9 +17,10 @@ public unsafe struct StraightCharPointer //No mId so all stuffed content can be 
     public fixed char mes[512];
 }
 
-public class StructScript {
+public class StructScript
+{
 
-    static MarkerFlag[,] objectMap = new MarkerFlag[100,100];
+    static MarkerFlag[,] objectMap = new MarkerFlag[100, 100];
 
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
@@ -36,7 +37,7 @@ public class StructScript {
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
-
+        //Debug.Log(obj.name);
 
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
@@ -55,89 +56,99 @@ public class StructScript {
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";
         serialized += obj.isStatic + "/";
-       // Debug.Log("Checking");
+        // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
-       // Debug.Log(comps.Length);
-        for(int i = 0; i < comps.Length; i++)
+        //Debug.Log(comps.Length);
+        for (int i = 0; i < comps.Length; i++)
         {
-            if (comps[i].GetType() == typeof(UnityEngine.Transform))
+            if (comps[i] != null)
             {
-                //        Debug.Log("Has Transform");
-                UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
-                Transform serTemp = new Transform();
-                serTemp.pos = temp.position;
-                serTemp.rot = temp.rotation;
-                serTemp.scale = temp.localScale; //Look here for scaling issues
-                string tempString = new string(serTemp.toChar());
-                serialized += tempString;
+                if (comps[i].GetType() == typeof(UnityEngine.Transform))
+                {
+                    //        Debug.Log("Has Transform");
+                    UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
+                    Transform serTemp = new Transform();
+                    serTemp.pos = temp.position;
+                    serTemp.rot = temp.rotation;
+                    serTemp.scale = temp.localScale; //Look here for scaling issues
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
+                {
+                    //   Debug.Log("Has Box Collider");
+                    UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
+                    BoxCollider serTemp = new BoxCollider();
+                    serTemp.center = temp.center;
+                    serTemp.size = temp.size;
+                    serTemp.isTrigger = temp.isTrigger;
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
+                {
+                    //    Debug.Log("Has Sphere Collider");
+                    UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
+                    SphereCollider serTemp = new SphereCollider();
+                    serTemp.center = temp.center;
+                    serTemp.radius = temp.radius;
+                    serTemp.isTrigger = temp.isTrigger;
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
+                {
+                    //  Debug.Log("Has Capsule Collider");
+                    UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
+                    CapsuleCollider serTemp = new CapsuleCollider();
+                    serTemp.center = temp.center;
+                    serTemp.radius = temp.radius;
+                    serTemp.height = temp.height;
+                    serTemp.directionAxis = temp.direction;
+                    serTemp.isTrigger = temp.isTrigger;
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
+                {
+                    //  Debug.Log("Has Rigidbody");
+                    UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
+                    RigidBody serTemp = new RigidBody();
+                    serTemp.mass = temp.mass;
+                    serTemp.drag = temp.drag;
+                    serTemp.angularDrag = temp.angularDrag;
+                    serTemp.interpolate = (int)temp.interpolation;
+                    serTemp.collisionDetection = temp.detectCollisions;
+                    serTemp.freeze = (int)temp.constraints;
+                    serTemp.isKinematic = temp.isKinematic;
+                    serTemp.useGravity = temp.useGravity;
+                    serTemp.collisionDetection = temp.detectCollisions;
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.Camera))
+                {
+                    //    Debug.Log("Has Camera");
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
+                {
+                    UnityEngine.MeshFilter temp = comps[i] as UnityEngine.MeshFilter;
+                    MeshFilter meshTemp = new MeshFilter();
+                    Mesh tempMesh = temp.sharedMesh;
+                    meshTemp.fileName = tempMesh.name;
+                    string tempString = new string(meshTemp.toChar());
+                    serialized += tempString;
+                }
+                else
+                {
+                    //    Debug.Log(comps[i].GetType());
+                }
 
             }
-            else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
-            {
-                //   Debug.Log("Has Box Collider");
-                UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
-                BoxCollider serTemp = new BoxCollider();
-                serTemp.center = temp.center;
-                serTemp.size = temp.size;
-                serTemp.isTrigger = temp.isTrigger;
-                string tempString = new string(serTemp.toChar());
-                serialized += tempString;
-            }
-            else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
-            {
-                //    Debug.Log("Has Sphere Collider");
-                UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
-                SphereCollider serTemp = new SphereCollider();
-                serTemp.center = temp.center;
-                serTemp.radius = temp.radius;
-                serTemp.isTrigger = temp.isTrigger;
-                string tempString = new string(serTemp.toChar());
-                serialized += tempString;
-            }
-            else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
-            {
-                //  Debug.Log("Has Capsule Collider");
-                UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
-                CapsuleCollider serTemp = new CapsuleCollider();
-                serTemp.center = temp.center;
-                serTemp.radius = temp.radius;
-                serTemp.height = temp.height;
-                serTemp.directionAxis = temp.direction;
-                serTemp.isTrigger = temp.isTrigger;
-                string tempString = new string(serTemp.toChar());
-                serialized += tempString;
-            }
-            else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
-            {
-                //  Debug.Log("Has Rigidbody");
-                UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
-                RigidBody serTemp = new RigidBody();
-                serTemp.mass = temp.mass;
-                serTemp.drag = temp.drag;
-                serTemp.angularDrag = temp.angularDrag;
-                serTemp.interpolate = (int)temp.interpolation;
-                serTemp.collisionDetection = temp.detectCollisions;
-                serTemp.freeze = (int)temp.constraints;
-                serTemp.isKinematic = temp.isKinematic;
-                serTemp.useGravity = temp.useGravity;
-                serTemp.collisionDetection = temp.detectCollisions;
-                string tempString = new string(serTemp.toChar());
-                serialized += tempString;
-            }
-            else if (comps[i].GetType() == typeof(UnityEngine.Camera))
-            {
-                //    Debug.Log("Has Camera");
-            }
-            else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
-            {
-                //   Debug.Log("Has Mesh Filter");
-            }
-            else
-            {
-                //    Debug.Log(comps[i].GetType());
-            }
         }
+
         return serialized;
     }
 
@@ -154,7 +165,7 @@ public class StructScript {
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
                 Debug.Log("A new client is connecting");
                 MultiuserPlugin.addClient();
-                
+
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
@@ -170,7 +181,7 @@ public class StructScript {
                 //componentSerialize(ser);
                 break;
             case unchecked((byte)Message.ID_DISCONNECTION):
-                if(MultiuserPlugin.mIsServer)
+                if (MultiuserPlugin.mIsServer)
                 {
                     Debug.Log("Client has disconnected");
                     //TODO: remove this client from client list
@@ -186,8 +197,8 @@ public class StructScript {
                 Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
-        
-       
+
+
     }
 
     static int genHashCode(string id)
@@ -198,7 +209,7 @@ public class StructScript {
         {
             temp += id[i].GetHashCode();
         }
-        return temp*primeNum;
+        return temp * primeNum;
     }
 
     public static void componentSerialize(string ser)
@@ -215,7 +226,7 @@ public class StructScript {
 
         MarkerFlag thisFlag = objectMap[xLoc, yLoc];
 
-        if(thisFlag == null) //Make a new game object with given flag if you need to
+        if (thisFlag == null) //Make a new game object with given flag if you need to
         {
             temp = new GameObject();
             thisFlag = temp.AddComponent<MarkerFlag>();
@@ -243,14 +254,14 @@ public class StructScript {
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
             }
-            else if(tag == "boxCollider")
+            else if (tag == "boxCollider")
             {
                 UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
-            else if(tag == "sphereCollider")
+            else if (tag == "sphereCollider")
             {
                 UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
                 col.center = deserializeVector3(ref ser);
@@ -278,6 +289,14 @@ public class StructScript {
                 col.isKinematic = deserializeBool(ref ser);
                 col.detectCollisions = deserializeBool(ref ser);
             }
+            else if (tag == "meshfilter")
+            {
+                string meshName = deserializeString(ref ser);
+                Mesh loadedMesh = ((GameObject)Resources.Load(meshName)).GetComponent<UnityEngine.MeshFilter>().mesh;
+                Debug.Log(meshName);
+                UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>();
+                col.mesh = loadedMesh;
+            }
 
         }
         addToMap(thisFlag);
@@ -289,7 +308,7 @@ public class StructScript {
         int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
-        objectMap[xLoc,yLoc] = flag;
+        objectMap[xLoc, yLoc] = flag;
     }
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
@@ -337,31 +356,31 @@ public class StructScript {
         Vector3 vec;
         int length = ser.IndexOf("/");
         vec.x = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         length = ser.IndexOf("/");
         vec.y = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         length = ser.IndexOf("/");
         vec.z = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         return vec;
     }
 
     public static Quaternion deserializeQuaternion(ref string ser)
     {
         Quaternion vec;
-      int length = ser.IndexOf("/");
+        int length = ser.IndexOf("/");
         vec.x = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         length = ser.IndexOf("/");
         vec.y = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         length = ser.IndexOf("/");
         vec.z = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         length = ser.IndexOf("/");
         vec.w = float.Parse(ser.Substring(0, length));
-        ser = ser.Remove(0, length+1);
+        ser = ser.Remove(0, length + 1);
         return vec;
     }
 
@@ -529,6 +548,18 @@ public class RigidBody : serializedComponent
         temp += useGravity + "/";
         temp += isKinematic + "/";
         temp += collisionDetection + "/";
+        return temp.ToCharArray();
+    }
+}
+
+public class MeshFilter: serializedComponent
+{
+    public string fileName;
+
+    override public char[] toChar()
+    {
+        string temp = "meshfilter/";
+        temp += fileName + "/";
         return temp.ToCharArray();
     }
 }
