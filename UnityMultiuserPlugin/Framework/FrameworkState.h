@@ -29,6 +29,7 @@ public:
 
 	//Data Handeling
 	virtual bool SendData(char * data, int length, char * ownerIP) = 0;
+	virtual bool SendMessageData(char * data, int length, char * ownerIP) = 0;
 	virtual char* UpdateNetwork() = 0;
 
 	void resetLogger();

@@ -204,12 +204,11 @@ public class Multiuser_Editor_Window : EditorWindow
 
     void sendMessage()
     {
-        char msgByte = (char)135;
-        string fullMessage = msgByte + nickName + ": " + message;
+        string fullMessage = nickName + ": " + message;
         //CALL SEND MESSAGE OVER NETWORK THING HERE
         messageStack.Add(fullMessage);
 
-       // MultiuserPlugin.SendMessageOverNetwork(fullMessage);
+        MultiuserPlugin.SendMessageData(fullMessage, fullMessage.Length, "");
 
         //Clean up selection and GUI
         message = null;

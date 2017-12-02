@@ -18,6 +18,7 @@ public:
 
 	//Data Handeling
 	bool SendData(char * data, int length, char * ownerIP);
+	bool SendMessageData(char * data, int length, char * ownerIP);
 	char* UpdateNetwork();
 
 private:

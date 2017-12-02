@@ -22,6 +22,8 @@ public class MultiuserPlugin
     public static extern unsafe int SendData(string data, int length, string ownerIP);
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Shutdown();
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int SendMessageData(string data, int length, string ownerIP);
 
 
     //Unity Varibles
@@ -221,6 +223,8 @@ public class MultiuserPlugin
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
         */
 
+        Debug.Log(data[0]);
+
         StructScript.deserializeMessage(data);
         //if (data != null)
         //{
@@ -262,17 +266,6 @@ public class MultiuserPlugin
 
     public static void SendMessageOverNetwork(string msg)
     {
-        string targetIP;
-        Debug.Log(mConnectedClients.Count);
-        for (int i = 0; i < mConnectedClients.Count; ++i)
-        {
-            Debug.Log(mConnectedClients[i].IP);
-            targetIP = mConnectedClients[i].IP;
-            Debug.Log("Client " + i + " IP: " + targetIP);
-            Debug.Log(SendData(msg, msg.Length, targetIP));
-        }
-        Debug.Log(SendData(msg, msg.Length, "216.93.149.98"));
-        //SendData(msg, msg.Length, mConnectedClients[1].IP);
     }
 
     public static void Disconnect()

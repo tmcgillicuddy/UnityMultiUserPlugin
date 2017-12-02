@@ -125,15 +125,7 @@ public class StructScript {
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
         Debug.Log((int)ser[0]);
-
         Debug.Log(output);
-
-        if (output != null)
-        {
-            int length = output.IndexOf("/");
-            if (length <= 0)
-                ser[0] = (char)135;
-        }
 
         switch ((byte)ser[0])
         {

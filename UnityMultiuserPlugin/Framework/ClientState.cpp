@@ -49,6 +49,28 @@ bool ClientState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
+bool ClientState::SendMessageData(char * data, int length, char * ownerIP)
+{
+	writeToLogger("Sending data to " + mServerIP);
+
+	dataBuffer * tmpBuffer = new dataBuffer();
+	tmpBuffer->messageID = 135;
+	strcpy(tmpBuffer->buffer, data);
+	writeToLogger((char*)&tmpBuffer);
+	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mServerIP.c_str());
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char *)tmpBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, true);
+		writeToLogger("Sent data");
+		return true;
+	}
+}
+
 char * ClientState::UpdateNetwork()
 {
 	RakNet::Packet *packet;
