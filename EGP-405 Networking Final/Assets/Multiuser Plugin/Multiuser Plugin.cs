@@ -266,6 +266,7 @@ public class MultiuserPlugin
 
     public static void SendMessageOverNetwork(string msg)
     {
+        SendMessageData(msg, msg.Length, "");
     }
 
     public static void Disconnect()

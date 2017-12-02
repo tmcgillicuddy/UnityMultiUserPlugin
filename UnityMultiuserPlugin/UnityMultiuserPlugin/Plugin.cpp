@@ -61,6 +61,17 @@ int SendData(char* data, int length, char* ownerIP)
 	return 0;
 }
 
+int SendMessageData(char * data, int length, char * ownerIP)
+{
+	if (theState != 0)
+	{
+		theState->writeToLogger("Sending Data");
+		return theState->SendMessageData(data, length, ownerIP);
+	}
+
+	return 0;
+}
+
 char* GetData()
 {
 	if (theState != 0)

@@ -208,7 +208,7 @@ public class Multiuser_Editor_Window : EditorWindow
         //CALL SEND MESSAGE OVER NETWORK THING HERE
         messageStack.Add(fullMessage);
 
-        MultiuserPlugin.SendMessageData(fullMessage, fullMessage.Length, "");
+        MultiuserPlugin.SendMessageOverNetwork(fullMessage);//, fullMessage.Length, "");
 
         //Clean up selection and GUI
         message = null;
