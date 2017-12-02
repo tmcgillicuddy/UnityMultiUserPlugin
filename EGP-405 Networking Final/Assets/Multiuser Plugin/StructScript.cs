@@ -25,13 +25,13 @@ public class StructScript
 
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
-        ID_CONNECTION_REQUEST_ACCEPTED = 1040,
-        ID_CONNECTION_ATTEMPT_FAILED = 45329,
-        ID_NEW_INCOMING_CONNECTION = 1043,
+        ID_CONNECTION_REQUEST_ACCEPTED = 16,
+        ID_CONNECTION_ATTEMPT_FAILED = 17,
+        ID_NEW_INCOMING_CONNECTION = 18,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
-        ID_DISCONNECTION = 57877,
+        ID_DISCONNECTION = 21,
         CHAT_MESSAGE = 135,
-        GO_UPDATE = 12680,
+        GO_UPDATE = 136,
 
     }
 
@@ -159,30 +159,30 @@ public class StructScript
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
-        switch ((byte)ser[0])
+        switch ((Byte)ser[0])
         {
-            case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
+            case (Byte)Message.ID_CONNECTION_ATTEMPT_FAILED:
                 Debug.Log("Failed to connect to server");
                 break;
-            case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
+            case (Byte)Message.ID_NEW_INCOMING_CONNECTION:
                 Debug.Log("A new client is connecting");
                 MultiuserPlugin.addClient();
 
                 break;
-            case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
+            case (Byte)Message.ID_CONNECTION_REQUEST_ACCEPTED:
                 Debug.Log("You have connected to the server");
                 break;
 
-            case (byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
+            case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
-            case unchecked((byte)Message.GO_UPDATE):
+            case (Byte)Message.GO_UPDATE:
                 Debug.Log("Game Object Received");
                 componentSerialize(output);
                 Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
-            case unchecked((byte)Message.ID_DISCONNECTION):
+            case (Byte)Message.ID_DISCONNECTION:
                 if (MultiuserPlugin.mIsServer)
                 {
                     Debug.Log("Client has disconnected");
