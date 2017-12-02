@@ -41,12 +41,12 @@ public class StructScript {
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
         string flagData = new string(markTemp.toChar());
+        serialized += flagData;
         serialized += "/";
         if (obj.transform.parent != null)
             markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
         else
             markTemp.flag.parentID = "_";
-        serialized += flagData;
 
 
         int hashLoc = genHashCode(markTemp.flag.id);
