@@ -141,11 +141,6 @@ public class StructScript {
         return serialized;
     }
 
-    public static void handleChatMessage(string msg)
-    {
-        Multiuser_Editor_Window.messageStack.Add(msg);
-    }
-
     public unsafe static void deserializeMessage(char* ser)
     {
         IntPtr care = (IntPtr)ser;
@@ -177,7 +172,7 @@ public class StructScript {
 
             case unchecked((byte)Message.CHAT_MESSAGE):
                 Debug.Log("New Message Received");
-                handleChatMessage(output);
+                MultiuserPlugin.handleChatMessage(output);
                 break;
 
             case unchecked((byte)Message.ID_DISCONNECTION):

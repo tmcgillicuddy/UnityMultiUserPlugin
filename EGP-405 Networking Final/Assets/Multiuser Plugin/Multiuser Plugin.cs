@@ -112,8 +112,8 @@ public class MultiuserPlugin
         }
         else
         {
-             Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
-              //Debug.Log(DateTime.Now.Second);
+            Debug.Log((DateTime.Now.Minute * 60 + DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+            //Debug.Log(DateTime.Now.Second);
         }
     }
 
@@ -238,7 +238,6 @@ public class MultiuserPlugin
             return;
         }
         StructScript.deserializeMessage(data);
-
     }
 
     public static void testSerialize(GameObject testObj)
@@ -306,11 +305,22 @@ public class MultiuserPlugin
         delClient.IP = newIP;
         mConnectedClients.Remove(delClient);
     }
-
     public static void SendMessageOverNetwork(string msg)
     {
-        Debug.Log(mConnectedClients.Count);
-        SendMessageData(msg, msg.Length, "");
+        if (mIsServer)
+        {
+            for (int i = 0; i < mConnectedClients.Count; ++i)
+            {
+                string targetIP = mConnectedClients[i].IP;
+                SendMessageData(msg, msg.Length, targetIP);
+            }
+        }
+        else
+            SendMessageData(msg, msg.Length, "");
+    }
+    public static void handleChatMessage(string msg)
+    {
+        Multiuser_Editor_Window.messageStack.Add(msg);
     }
 
     public static void Disconnect()
