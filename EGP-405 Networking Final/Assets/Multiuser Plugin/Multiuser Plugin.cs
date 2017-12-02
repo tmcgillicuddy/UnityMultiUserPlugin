@@ -127,6 +127,8 @@ public class MultiuserPlugin
 
     public static void startupServer(int portNum, int maxClients)
     {
+        StructScript.init();
+
         objectId = "Server ";
         //Runs through entire scene and setups marker flags
         objCounter = 0;
@@ -175,6 +177,8 @@ public class MultiuserPlugin
 
     public static void startupClient(string targetIP, int portNum)
     {
+        StructScript.init();
+
         //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
         objCounter = 0;
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
