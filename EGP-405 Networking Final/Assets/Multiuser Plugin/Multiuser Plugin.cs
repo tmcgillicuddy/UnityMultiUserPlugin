@@ -110,7 +110,7 @@ public class MultiuserPlugin
         }
         else
         {
-             Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+             //Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
               //Debug.Log(DateTime.Now.Second);
         }
     }

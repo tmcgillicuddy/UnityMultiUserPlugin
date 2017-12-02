@@ -234,13 +234,16 @@ public class StructScript {
         {
             temp = thisFlag.gameObject;
         }
-        if (thisFlag.parentID != "_")
+        if (objMarker.parentID != "_")
         {
-            int parentHash = genHashCode(thisFlag.parentID);
+            int parentHash = genHashCode(objMarker.parentID);
             int xParent = parentHash % 10;
             int yParent = parentHash % 100;
             MarkerFlag parentFlag = objectMap[xParent, yParent];
-            temp.transform.SetParent(parentFlag.gameObject.transform);
+            if (parentFlag != null)
+            {
+                temp.transform.SetParent(parentFlag.gameObject.transform);
+            }
         }
 
         temp.name = deserializeString(ref ser);
@@ -314,6 +317,7 @@ public class StructScript {
         //string trash = deserializeString(ref ser);
         temp.id = deserializeString(ref ser);
         temp.parentID = deserializeString(ref ser);
+        Debug.Log(temp.parentID);
         return temp;
     }
 
