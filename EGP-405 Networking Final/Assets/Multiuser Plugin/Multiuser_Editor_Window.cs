@@ -204,6 +204,15 @@ public class Multiuser_Editor_Window : EditorWindow
         }
     }
 
+    private void Update()
+    {
+        if (MultiuserPlugin.newMessage)
+        {
+            Repaint();
+            MultiuserPlugin.newMessage = false;
+        }
+    }
+
     void sendMessage()
     {
         string fullMessage = nickName + ": " + message; // full message is "nickname: message"
