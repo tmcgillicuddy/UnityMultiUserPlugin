@@ -52,6 +52,32 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
+bool ServerState::SendMessageData(char * data, int length, char * ownerIP)
+{
+	writeToLogger(data);
+
+	std::string tmpDebug = ownerIP;
+
+	writeToLogger("Sending data to " + tmpDebug);
+
+	dataBuffer* tmpBuffer = new dataBuffer();
+	tmpBuffer->messageID = 135;
+	strcpy(tmpBuffer->buffer, data);
+	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);
+
+	if (mpPeer == NULL)
+	{
+		writeToLogger("Error with Peer");
+		return false;
+	}
+	else
+	{
+		mpPeer->Send((char*)tmpBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
+		writeToLogger("Sent data");
+		return true;
+	}
+}
+
 char * ServerState::GetLastPacketIP()
 {
 	std::string ip = lastPacket->systemAddress.ToString();

@@ -24,6 +24,8 @@ public class MultiuserPlugin
     public static extern int Shutdown();
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe char* GetLastPacketIP();
+    [DllImport("UnityMultiuserPlugin")]
+    public static extern unsafe int SendMessageData(string data, int length, string ownerIP);
 
     //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
@@ -303,6 +305,12 @@ public class MultiuserPlugin
         ConnectedClientInfo delClient = new ConnectedClientInfo();
         delClient.IP = newIP;
         mConnectedClients.Remove(delClient);
+    }
+
+    public static void SendMessageOverNetwork(string msg)
+    {
+        Debug.Log(mConnectedClients.Count);
+        SendMessageData(msg, msg.Length, "");
     }
 
     public static void Disconnect()

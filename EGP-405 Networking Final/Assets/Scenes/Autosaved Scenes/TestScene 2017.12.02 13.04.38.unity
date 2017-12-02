@@ -142,6 +142,7 @@ MonoBehaviour:
   id: Server 0
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &668091
 Transform:
   m_ObjectHideFlags: 0
@@ -185,6 +186,7 @@ MonoBehaviour:
   id: Server 1
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &189410192
 Transform:
   m_ObjectHideFlags: 0
@@ -228,6 +230,7 @@ MonoBehaviour:
   id: Server 2
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &230407459
 Transform:
   m_ObjectHideFlags: 0
@@ -271,6 +274,7 @@ MonoBehaviour:
   id: Server 3
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &259430366
 Transform:
   m_ObjectHideFlags: 0
@@ -314,6 +318,7 @@ MonoBehaviour:
   id: Server 4
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &492611611
 Transform:
   m_ObjectHideFlags: 0
@@ -357,6 +362,7 @@ MonoBehaviour:
   id: Server 5
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &598063892
 Transform:
   m_ObjectHideFlags: 0
@@ -400,6 +406,7 @@ MonoBehaviour:
   id: Server 6
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &647311178
 Transform:
   m_ObjectHideFlags: 0
@@ -443,6 +450,7 @@ MonoBehaviour:
   id: Server 7
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &813788004
 Transform:
   m_ObjectHideFlags: 0
@@ -486,6 +494,7 @@ MonoBehaviour:
   id: Server 8
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &882999942
 Transform:
   m_ObjectHideFlags: 0
@@ -529,6 +538,7 @@ MonoBehaviour:
   id: Server 9
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &905590363
 Transform:
   m_ObjectHideFlags: 0
@@ -572,6 +582,7 @@ MonoBehaviour:
   id: Server 10
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1043423006
 Transform:
   m_ObjectHideFlags: 0
@@ -615,6 +626,7 @@ MonoBehaviour:
   id: Server 11
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1072299809
 Transform:
   m_ObjectHideFlags: 0
@@ -658,6 +670,7 @@ MonoBehaviour:
   id: Server 12
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1164269116
 Transform:
   m_ObjectHideFlags: 0
@@ -701,6 +714,7 @@ MonoBehaviour:
   id: Server 13
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1182129080
 Transform:
   m_ObjectHideFlags: 0
@@ -744,6 +758,7 @@ MonoBehaviour:
   id: Server 14
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1190825163
 Transform:
   m_ObjectHideFlags: 0
@@ -791,6 +806,7 @@ MonoBehaviour:
   id: Server 15
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!81 &1214527890
 AudioListener:
   m_ObjectHideFlags: 0
@@ -890,6 +906,7 @@ MonoBehaviour:
   id: Server 16
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1256312686
 Transform:
   m_ObjectHideFlags: 0
@@ -933,6 +950,7 @@ MonoBehaviour:
   id: Server 17
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1335119556
 Transform:
   m_ObjectHideFlags: 0
@@ -976,6 +994,7 @@ MonoBehaviour:
   id: Server 18
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1606604722
 Transform:
   m_ObjectHideFlags: 0
@@ -1019,6 +1038,7 @@ MonoBehaviour:
   id: Server 19
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &1956213766
 Transform:
   m_ObjectHideFlags: 0
@@ -1063,6 +1083,7 @@ MonoBehaviour:
   id: Server 20
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!108 &1980734667
 Light:
   m_ObjectHideFlags: 0
@@ -1142,6 +1163,7 @@ MonoBehaviour:
   id: Server 21
   isModified: 0
   isLocked: 0
+  parentID: 
 --- !u!4 &2145821126
 Transform:
   m_ObjectHideFlags: 0
