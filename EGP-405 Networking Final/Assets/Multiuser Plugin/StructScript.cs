@@ -446,7 +446,7 @@ public class serMarkerFlag : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "markerFlag/";
+        string temp = "";
         temp += flag.id + "/" + flag.parentID + "/";
         return temp.ToCharArray();
     }
