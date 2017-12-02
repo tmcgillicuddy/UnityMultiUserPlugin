@@ -126,9 +126,14 @@ public class StructScript {
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
         Debug.Log((int)ser[0]);
 
-        int length = output.IndexOf("/");
-        if (length <= 0)
-            ser[0] = (char)135;
+        Debug.Log(output);
+
+        if (output != null)
+        {
+            int length = output.IndexOf("/");
+            if (length <= 0)
+                ser[0] = (char)135;
+        }
 
         switch ((byte)ser[0])
         {
@@ -136,14 +141,12 @@ public class StructScript {
                 Debug.Log("New Message Recieved");
                 Debug.Log(output);
                 handleChatMessage(output);
-
-                //TODO: put message on the message stack for chat system
                 break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
                 Debug.Log("Failed to connect to server");
                 break;
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
-                Debug.Log("A new client is connecting with IP " );
+                Debug.Log("A new client is connecting");
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
