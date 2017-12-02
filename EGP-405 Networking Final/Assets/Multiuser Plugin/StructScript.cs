@@ -21,7 +21,7 @@ public unsafe struct StraightCharPointer //No mId so all stuffed content can be 
 public class StructScript
 {
 
-    static MarkerFlag[,] objectMap = new MarkerFlag[100, 100];
+    static List<MarkerFlag>[,] objectMap = new List<MarkerFlag>[100, 100];
 
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
@@ -35,6 +35,17 @@ public class StructScript
 
     }
 
+    public static void init()
+    {
+        for(int i=0; i < 100; ++i)
+        {
+            for(int q =0; q<100; ++q)
+            {
+                objectMap[i, q] = new List<MarkerFlag>();
+            }
+        }
+    }
+
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
@@ -42,13 +53,6 @@ public class StructScript
 
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
-
-        if (obj.transform.parent != null)
-            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
-        else
-            markTemp.flag.parentID = "_";
-
-
         string flagData = new string(markTemp.toChar());
         serialized += flagData;
 
@@ -58,7 +62,7 @@ public class StructScript
         int yLoc = hashLoc % 100;
         //Debug.Log(xLoc +" "+ yLoc);
 
-        objectMap[xLoc, yLoc] = markTemp.flag;
+        objectMap[xLoc, yLoc].Add(markTemp.flag);
 
         serialized += obj.name + "|";
         serialized += obj.tag + "|";
@@ -233,30 +237,50 @@ public class StructScript
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
 
-        MarkerFlag thisFlag = objectMap[xLoc, yLoc];
+        MarkerFlag thisFlag = null;
+
+        for(int i=0; i < objectMap[xLoc, yLoc].Count; ++i)
+        {
+            if(objectMap[xLoc,yLoc][i].id == objMarker.id)
+            {
+                thisFlag = objectMap[xLoc, yLoc][i];
+                break;
+            }
+        }
+
 
         if (thisFlag == null) //Make a new game object with given flag if you need to
         {
             temp = new GameObject();
             thisFlag = temp.AddComponent<MarkerFlag>();
-            thisFlag.id = objMarker.id;
-            thisFlag.parentID = objMarker.parentID;
         }
         else
         {
             temp = thisFlag.gameObject;
+            
         }
 
-        if (objMarker.parentID != "_")
+        thisFlag.id = objMarker.id;
+        thisFlag.parentID = objMarker.parentID;
+
+        if (thisFlag.parentID != "_")
         {
-            int parentHash = genHashCode(objMarker.parentID);
+            int parentHash = genHashCode(thisFlag.parentID);
             int xParent = parentHash % 10;
             int yParent = parentHash % 100;
-            MarkerFlag parentFlag = objectMap[xParent, yParent];
+            MarkerFlag parentFlag = findInList(thisFlag.parentID,xParent, yParent);
             if (parentFlag != null)
             {
                 temp.transform.SetParent(parentFlag.gameObject.transform);
             }
+            else
+            {
+                temp.transform.SetParent(null);
+            }
+        }
+        else
+        {
+            temp.transform.SetParent(null);
         }
 
         temp.name = deserializeString(ref ser);
@@ -314,7 +338,7 @@ public class StructScript
             {
                 string meshName = deserializeString(ref ser);
                 UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>(); // Add the mesh filter
-            //    col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
+                //col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
             }
 
         }
@@ -327,7 +351,7 @@ public class StructScript
         int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
-        objectMap[xLoc, yLoc] = flag;
+        objectMap[xLoc, yLoc].Add(flag);
     }
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
@@ -422,6 +446,19 @@ public class StructScript
         return temp;
     }
 
+
+    public static MarkerFlag findInList (string id, int x, int y)
+    {
+        for (int i=0; i < objectMap[x,y].Count; ++i)
+        {
+            if(objectMap[x, y][i].id == id)
+            {
+                return objectMap[x, y][i];
+            }
+        }
+
+        return null;
+    }
 }
 
 public class serializedComponent
