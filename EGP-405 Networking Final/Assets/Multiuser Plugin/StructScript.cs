@@ -328,6 +328,7 @@ public class StructScript
         MarkerFlag temp = new MarkerFlag();
         string trash = deserializeString(ref ser);
         temp.id = deserializeString(ref ser);
+        temp.parentID = deserializeString(ref ser);
         return temp;
     }
 
@@ -460,10 +461,11 @@ public class serMarkerFlag : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "markerFlag|";
-        temp += flag.id + "|";
+        string temp = "";
+        temp += flag.id + "|" + flag.parentID + "|";
         return temp.ToCharArray();
     }
+
 }
 
 public class Transform : serializedComponent
