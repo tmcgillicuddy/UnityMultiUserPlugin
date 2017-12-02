@@ -112,7 +112,7 @@ public  class ServerUtil {
             while (sceneNames.Count > 10)
             {
                // Debug.Log("sceneNames.Count = " + sceneNames.Count);
-                string earliestScene = sceneNames.Dequeue();
+                //string earliestScene = sceneNames.Dequeue();
 
                // Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
 
