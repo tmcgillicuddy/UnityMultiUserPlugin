@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System.Runtime.InteropServices;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -52,10 +53,10 @@ public class StructScript
 
         objectMap[xLoc, yLoc] = markTemp.flag;
 
-        serialized += obj.name + "/";
-        serialized += obj.tag + "/";
-        serialized += obj.layer + "/";
-        serialized += obj.isStatic + "/";
+        serialized += obj.name + "|";
+        serialized += obj.tag + "|";
+        serialized += obj.layer + "|";
+        serialized += obj.isStatic + "|";
         // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
@@ -137,9 +138,10 @@ public class StructScript
                     UnityEngine.MeshFilter temp = comps[i] as UnityEngine.MeshFilter;
                     MeshFilter meshTemp = new MeshFilter();
                     Mesh tempMesh = temp.sharedMesh;
-                    meshTemp.fileName = tempMesh.name;
+                    meshTemp.fileName = AssetDatabase.GetAssetPath(tempMesh);
                     string tempString = new string(meshTemp.toChar());
                     serialized += tempString;
+                    Debug.Log(serialized);
                 }
                 else
                 {
@@ -292,7 +294,7 @@ public class StructScript
             else if (tag == "meshfilter")
             {
                 string meshName = deserializeString(ref ser);
-                Mesh loadedMesh = ((GameObject)Resources.Load(meshName)).GetComponent<UnityEngine.MeshFilter>().mesh;
+                Mesh loadedMesh = (Mesh)AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh));
                 Debug.Log(meshName);
                 UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>();
                 col.mesh = loadedMesh;
@@ -321,7 +323,7 @@ public class StructScript
 
     public static int deserializeInt(ref string ser)
     {
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         int ret = int.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
         return ret;
@@ -329,7 +331,7 @@ public class StructScript
 
     public static string deserializeString(ref string ser)
     {
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         string ret = ser.Substring(0, length);
         ser = ser.Remove(0, length + 1);
         return ret;
@@ -337,7 +339,7 @@ public class StructScript
 
     public static float deserializeFloat(ref string ser)
     {
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         float ret = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
         return ret;
@@ -345,7 +347,7 @@ public class StructScript
 
     public static bool deserializeBool(ref string ser)
     {
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         bool ret = bool.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
         return ret;
@@ -354,13 +356,13 @@ public class StructScript
     public static Vector3 deserializeVector3(ref string ser)
     {
         Vector3 vec;
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         vec.x = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
-        length = ser.IndexOf("/");
+        length = ser.IndexOf("|");
         vec.y = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
-        length = ser.IndexOf("/");
+        length = ser.IndexOf("|");
         vec.z = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
         return vec;
@@ -369,16 +371,16 @@ public class StructScript
     public static Quaternion deserializeQuaternion(ref string ser)
     {
         Quaternion vec;
-        int length = ser.IndexOf("/");
+        int length = ser.IndexOf("|");
         vec.x = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
-        length = ser.IndexOf("/");
+        length = ser.IndexOf("|");
         vec.y = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
-        length = ser.IndexOf("/");
+        length = ser.IndexOf("|");
         vec.z = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
-        length = ser.IndexOf("/");
+        length = ser.IndexOf("|");
         vec.w = float.Parse(ser.Substring(0, length));
         ser = ser.Remove(0, length + 1);
         return vec;
@@ -448,8 +450,8 @@ public class serMarkerFlag : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "markerFlag/";
-        temp += flag.id + "/";
+        string temp = "markerFlag|";
+        temp += flag.id + "|";
         return temp.ToCharArray();
     }
 }
@@ -461,17 +463,17 @@ public class Transform : serializedComponent
     public Vector3 scale;
     override public char[] toChar()
     {
-        string temp = "transform/";
-        temp += pos.x + "/";
-        temp += pos.y + "/";
-        temp += pos.z + "/";
-        temp += rot.x + "/";
-        temp += rot.y + "/";
-        temp += rot.z + "/";
-        temp += rot.w + "/";
-        temp += scale.x + "/";
-        temp += scale.y + "/";
-        temp += scale.z + "/";
+        string temp = "transform|";
+        temp += pos.x + "|";
+        temp += pos.y + "|";
+        temp += pos.z + "|";
+        temp += rot.x + "|";
+        temp += rot.y + "|";
+        temp += rot.z + "|";
+        temp += rot.w + "|";
+        temp += scale.x + "|";
+        temp += scale.y + "|";
+        temp += scale.z + "|";
         return temp.ToCharArray();
     }
 }
@@ -483,14 +485,14 @@ public class BoxCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "boxCollider/";
-        temp += center.x + "/";
-        temp += center.y + "/";
-        temp += center.z + "/";
-        temp += size.x + "/";
-        temp += size.y + "/";
-        temp += size.z + "/";
-        temp += isTrigger + "/";
+        string temp = "boxCollider|";
+        temp += center.x + "|";
+        temp += center.y + "|";
+        temp += center.z + "|";
+        temp += size.x + "|";
+        temp += size.y + "|";
+        temp += size.z + "|";
+        temp += isTrigger + "|";
         return temp.ToCharArray();
     }
 }
@@ -502,12 +504,12 @@ public class SphereCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "sphereCollider/";
-        temp += center.x + "/";
-        temp += center.y + "/";
-        temp += center.z + "/";
-        temp += radius + "/";
-        temp += isTrigger + "/";
+        string temp = "sphereCollider|";
+        temp += center.x + "|";
+        temp += center.y + "|";
+        temp += center.z + "|";
+        temp += radius + "|";
+        temp += isTrigger + "|";
         return temp.ToCharArray();
     }
 }
@@ -520,14 +522,14 @@ public class CapsuleCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "capsuleCollider/";
-        temp += center.x + "/";
-        temp += center.y + "/";
-        temp += center.z + "/";
-        temp += radius + "/";
-        temp += height + "/";
-        temp += directionAxis + "/";
-        temp += isTrigger + "/";
+        string temp = "capsuleCollider|";
+        temp += center.x + "|";
+        temp += center.y + "|";
+        temp += center.z + "|";
+        temp += radius + "|";
+        temp += height + "|";
+        temp += directionAxis + "|";
+        temp += isTrigger + "|";
         return temp.ToCharArray();
     }
 }
@@ -539,15 +541,15 @@ public class RigidBody : serializedComponent
     public bool useGravity, isKinematic, collisionDetection;
     override public char[] toChar()
     {
-        string temp = "rigidbody/";
-        temp += mass + "/";
-        temp += drag + "/";
-        temp += angularDrag + "/";
-        temp += interpolate + "/";
-        temp += freeze + "/";
-        temp += useGravity + "/";
-        temp += isKinematic + "/";
-        temp += collisionDetection + "/";
+        string temp = "rigidbody|";
+        temp += mass + "|";
+        temp += drag + "|";
+        temp += angularDrag + "|";
+        temp += interpolate + "|";
+        temp += freeze + "|";
+        temp += useGravity + "|";
+        temp += isKinematic + "|";
+        temp += collisionDetection + "|";
         return temp.ToCharArray();
     }
 }
@@ -558,8 +560,8 @@ public class MeshFilter: serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "meshfilter/";
-        temp += fileName + "/";
+        string temp = "meshfilter|";
+        temp += fileName + "|";
         return temp.ToCharArray();
     }
 }

@@ -219,7 +219,7 @@ public class MultiuserPlugin
 
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
-                        Debug.Log(mConnectedClients[j].IP);
+                       // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
                             SendData(temp, temp.Length, mConnectedClients[j].IP);
