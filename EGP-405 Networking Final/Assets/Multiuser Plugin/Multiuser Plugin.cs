@@ -307,25 +307,11 @@ public class MultiuserPlugin
     public static void SendMessageOverNetwork(string msg)
     {
         if (mIsServer) // if it is the server
-        { 
+        {
             for (int i = 0; i < mConnectedClients.Count; ++i) // go through each of the connected clients
             {
-                bool isRepeat = false;
-                for (int j = 0; j < Multiuser_Editor_Window.messageStack.Count; ++i)
-                {
-                    if (msg == Multiuser_Editor_Window.messageStack[j])
-                    {
-                        isRepeat = true;
-                        break;
-                    }
-                }
-                if (isRepeat)
-                    continue;
-                else
-                {
-                    string targetIP = mConnectedClients[i].IP; // target ip is ip of client at i in mConnectedClients
-                    SendMessageData(msg, msg.Length, targetIP); // send message to target ip
-                }
+                string targetIP = mConnectedClients[i].IP; // target ip is ip of client at i in mConnectedClients
+                SendMessageData(msg, msg.Length, targetIP); // send message to target ip
             }
         }
         else // if client
