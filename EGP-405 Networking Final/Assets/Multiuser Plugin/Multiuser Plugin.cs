@@ -314,10 +314,12 @@ public class MultiuserPlugin
         else // if client
             SendMessageData(msg, msg.Length, ""); // send message to the server
     }
+
     public static void handleChatMessage(string msg)
     {
         // add received chat message to the stack
-        Multiuser_Editor_Window.messageStack.Add(msg);
+        if (mIsServer)
+            SendMessageOverNetwork(msg);
     }
 
     public static void Disconnect()
