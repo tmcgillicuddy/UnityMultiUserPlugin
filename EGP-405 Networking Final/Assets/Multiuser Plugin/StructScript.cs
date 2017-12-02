@@ -172,6 +172,7 @@ public class StructScript {
             case unchecked((byte)Message.ID_DISCONNECTION):
                 if(MultiuserPlugin.mIsServer)
                 {
+                    MultiuserPlugin.deleteClient();
                     Debug.Log("Client has disconnected");
                     //TODO: remove this client from client list
                 }

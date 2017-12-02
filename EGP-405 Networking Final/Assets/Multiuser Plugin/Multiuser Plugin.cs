@@ -293,6 +293,18 @@ public class MultiuserPlugin
 
     }
 
+    public static unsafe void deleteClient()
+    {
+        char* ip = GetLastPacketIP();
+        IntPtr careTwo = (IntPtr)ip;
+        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
+        string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
+        Debug.Log(newIP);
+        ConnectedClientInfo delClient = new ConnectedClientInfo();
+        delClient.IP = newIP;
+        mConnectedClients.Remove(delClient);
+    }
+
     public static void Disconnect()
     {
         Shutdown();
