@@ -223,8 +223,6 @@ public class MultiuserPlugin
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
         */
 
-        Debug.Log(data[0]);
-
         StructScript.deserializeMessage(data);
         //if (data != null)
         //{
@@ -266,6 +264,7 @@ public class MultiuserPlugin
 
     public static void SendMessageOverNetwork(string msg)
     {
+        Debug.Log(mConnectedClients.Count);
         SendMessageData(msg, msg.Length, "");
     }
 

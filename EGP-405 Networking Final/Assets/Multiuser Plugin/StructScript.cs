@@ -124,14 +124,11 @@ public class StructScript {
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
-        Debug.Log((int)ser[0]);
-        Debug.Log(output);
 
         switch ((byte)ser[0])
         {
             case (byte)Message.CHAT_MESSAGE:
                 Debug.Log("New Message Recieved");
-                Debug.Log(output);
                 handleChatMessage(output);
                 break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
