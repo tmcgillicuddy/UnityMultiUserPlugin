@@ -41,6 +41,11 @@ public class StructScript {
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
         string flagData = new string(markTemp.toChar());
+        serialized += "/";
+        if (obj.transform.parent != null)
+            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
+        else
+            markTemp.flag.parentID = "_";
         serialized += flagData;
 
 
@@ -50,6 +55,8 @@ public class StructScript {
         //Debug.Log(xLoc +" "+ yLoc);
 
         objectMap[xLoc, yLoc] = markTemp.flag;
+
+        
 
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
@@ -228,6 +235,14 @@ public class StructScript {
         {
             temp = thisFlag.gameObject;
         }
+        if (thisFlag.parentID != "_")
+        {
+            int parentHash = genHashCode(thisFlag.parentID);
+            int xParent = parentHash % 10;
+            int yParent = parentHash % 100;
+            MarkerFlag parentFlag = objectMap[xParent, yParent];
+            temp.transform.SetParent(parentFlag.gameObject.transform);
+        }
 
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
@@ -299,6 +314,7 @@ public class StructScript {
         MarkerFlag temp = new MarkerFlag();
         //string trash = deserializeString(ref ser);
         temp.id = deserializeString(ref ser);
+        temp.parentID = deserializeString(ref ser);
         return temp;
     }
 
