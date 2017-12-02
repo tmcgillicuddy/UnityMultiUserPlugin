@@ -114,16 +114,29 @@ public class StructScript {
         return serialized;
     }
 
+    public static void handleChatMessage(string ser)
+    {
+        Multiuser_Editor_Window.messageStack.Add(ser);
+    }
+
     public unsafe static void deserializeMessage(char* ser)
     {
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
         Debug.Log((int)ser[0]);
+
+        int length = output.IndexOf("/");
+        if (length <= 0)
+            ser[0] = (char)135;
+
         switch ((byte)ser[0])
         {
             case (byte)Message.CHAT_MESSAGE:
                 Debug.Log("New Message Recieved");
+                Debug.Log(output);
+                handleChatMessage(output);
+
                 //TODO: put message on the message stack for chat system
                 break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
@@ -139,11 +152,10 @@ public class StructScript {
             case (byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
+
             case unchecked((byte)Message.GO_UPDATE):
                 Debug.Log("Game Object Received");
                 componentSerialize(output);
-
-                //componentSerialize(ser);
                 break;
 
             default:
@@ -158,8 +170,6 @@ public class StructScript {
         Debug.Log(ser);
         GameObject temp = new GameObject();
         temp.name = deserializeString(ref ser);
-        Debug.Log(temp.name);
-        temp.name = "test";
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
@@ -175,14 +185,14 @@ public class StructScript {
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
             }
-            else if(tag == "boxCollider")
+            else if (tag == "boxCollider")
             {
                 UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
-            else if(tag == "sphereCollider")
+            else if (tag == "sphereCollider")
             {
                 UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
                 col.center = deserializeVector3(ref ser);
@@ -212,8 +222,6 @@ public class StructScript {
             }
 
         }
-        temp.name = "test";
-
     }
 
     public static int deserializeInt(ref string ser)
@@ -227,10 +235,11 @@ public class StructScript {
     public static string deserializeString(ref string ser)
     {
         Debug.Log(ser);
-        int length = ser.Length;// ser.IndexOf("/");
+        int length = ser.IndexOf("/");
         Debug.Log("deserializeString() length: " + length);
         string ret = ser.Substring(0, length);
         ser = ser.Remove(0, length);// + 1);
+        Debug.Log(ret);
         return ret;
     }
 

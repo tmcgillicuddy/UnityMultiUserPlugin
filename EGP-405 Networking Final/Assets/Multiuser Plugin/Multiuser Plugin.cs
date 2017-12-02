@@ -220,6 +220,7 @@ public class MultiuserPlugin
         MyStringStruct* myString = (MyStringStruct*)tempPtr;
         temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
         */
+
         StructScript.deserializeMessage(data);
         //if (data != null)
         //{

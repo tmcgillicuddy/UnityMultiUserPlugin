@@ -9,7 +9,7 @@ public class Multiuser_Editor_Window : EditorWindow
 {
     string serverpassword;
     string message;
-    static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
+    public static List<string> messageStack = new List<string>(); // THIS NEEDS TO BE A NEW DATA TYPE FOR MESSAGES (HOLD USERNAME AND MESSAGE, MAYBE TIME)
     int mode = 0;
     //int bottomBuffer = 10, topBuffer = 10;
     public static bool limitAutosave = false;
@@ -209,7 +209,7 @@ public class Multiuser_Editor_Window : EditorWindow
         //CALL SEND MESSAGE OVER NETWORK THING HERE
         messageStack.Add(fullMessage);
 
-        MultiuserPlugin.SendMessageOverNetwork(fullMessage);
+       // MultiuserPlugin.SendMessageOverNetwork(fullMessage);
 
         //Clean up selection and GUI
         message = null;
