@@ -310,6 +310,12 @@ public class MultiuserPlugin
             SendData(temp, temp.Length, newIP);
         }
 
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            string temp = StructScript.serialize(allGameobjects[i]);
+            SendData(temp, temp.Length, newIP);
+        }
+
     }
 
     public static void SendMessageOverNetwork(string message)

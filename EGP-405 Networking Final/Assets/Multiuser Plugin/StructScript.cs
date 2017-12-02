@@ -42,6 +42,13 @@ public class StructScript
 
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
+
+        if (obj.transform.parent != null)
+            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
+        else
+            markTemp.flag.parentID = "_";
+
+
         string flagData = new string(markTemp.toChar());
         serialized += flagData;
 
@@ -307,7 +314,7 @@ public class StructScript
             {
                 string meshName = deserializeString(ref ser);
                 UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>(); // Add the mesh filter
-                col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
+            //    col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
             }
 
         }
