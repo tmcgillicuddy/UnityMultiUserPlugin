@@ -208,7 +208,8 @@ public class Multiuser_Editor_Window : EditorWindow
     {
         string fullMessage = nickName + ": " + message; // full message is "nickname: message"
 
-        messageStack.Add(fullMessage); // add users own message to the stack
+        if (MultiuserPlugin.mIsServer)
+            messageStack.Add(fullMessage); // add users own message to the stack
 
         // send the message over the network
         MultiuserPlugin.SendMessageOverNetwork(fullMessage);
