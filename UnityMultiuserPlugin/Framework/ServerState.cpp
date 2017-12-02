@@ -7,7 +7,7 @@ ServerState::ServerState()
 
 ServerState::~ServerState()
 {
-	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	
 }
 
 bool ServerState::init(char *targetIP, int portNum, int maxClients)
@@ -52,32 +52,27 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
-bool ServerState::SendMessageData(char *data, int length, char * ownerIP)
+char * ServerState::GetLastPacketIP()
 {
-	writeToLogger(data);
-
-	std::string tempDebug = ownerIP;
-
-	writeToLogger("Sending data to " + tempDebug);
-
-	dataBuffer* tmpBuffer = new dataBuffer();
-	tmpBuffer->messageID = 135;
-	strcpy(tmpBuffer->buffer, data);
-	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);
-
-	if (mpPeer == NULL)
+	std::string ip = lastPacket->systemAddress.ToString();
+	char* tempIP = new char[ip.length()+1];
+	//writeToLogger(lastPacket->systemAddress.ToString());
+	if (lastPacket == nullptr)
 	{
-		writeToLogger("Error with Peer");
-		return false;
+		writeToLogger("No Last Packet");
+		return 0;
 	}
-	else
-	{
-		mpPeer->Send((char*)tmpBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
-		writeToLogger("Sent Data");
-		return true;
-	}
+	strcpy(tempIP,ip.c_str());
 
+	return tempIP;
+}
 
+bool ServerState::cleanup()
+{
+	writeToLogger("Shutting down server");
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	drawLineOnLogger();
+	return true;
 }
 
 char * ServerState::UpdateNetwork()
@@ -86,11 +81,13 @@ char * ServerState::UpdateNetwork()
 	RakNet::Packet *packet;
 
 	packet = mpPeer->Receive();
-	writeToLogger("Got Packet");
+	//writeToLogger("Got Packet");
 	if (packet)
 	{
+		lastPacket = packet;
 		writeToLogger("There is data");
 		writeToLogger((char*)packet->data);
+		drawLineOnLogger();
 		return (char*)packet->data;
 	}
 	else

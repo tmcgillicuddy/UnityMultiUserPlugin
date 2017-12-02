@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using System.Runtime.InteropServices;
- 
+
 
 [InitializeOnLoad]
 [ExecuteInEditMode]
@@ -13,7 +13,7 @@ public class MultiuserPlugin
 {
     //Importing DLL functions
     [DllImport("UnityMultiuserPlugin")]
-    public static extern int StartServer(string targetIP,int portNum, int maxClients);
+    public static extern int StartServer(string targetIP, int portNum, int maxClients);
     [DllImport("UnityMultiuserPlugin")]
     public static extern int StartClient(string targetIP, int portNum, int maxClients);
     [DllImport("UnityMultiuserPlugin")]
@@ -23,12 +23,11 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Shutdown();
     [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe int SendMessageData(string data, int length, string ownerIP);
-
+    public static extern unsafe char* GetLastPacketIP();
 
     //Unity Varibles
     public static bool mConnected, mIsPaused, mIsServer;  //If the system is running;
-    public static float syncInterval = 0f;   //How often system should sync
+    public static float syncInterval = 0.5f;   //How often system should sync
     static DateTime lastSyncTime = DateTime.Now;
     public static mode toolMode;
     public static string objectId;
@@ -36,12 +35,12 @@ public class MultiuserPlugin
 
     struct ConnectedClientInfo  //For storing connected client information
     {
-       public string IP;
-       public string userName;
-       public string ID;
+        public string IP;
+        public string userName;
+        public string ID;
     }
 
-    
+
     static List<ConnectedClientInfo> mConnectedClients = new List<ConnectedClientInfo>();
 
     public enum mode
@@ -59,29 +58,29 @@ public class MultiuserPlugin
     //Update Loop
     static void Update()
     {
-        
+
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
             //Debug.Log(mConnected);
             if (mConnected)
             {
-                if (toolMode == mode.EDIT) 
+                if (toolMode == mode.EDIT)
                 {
-                editMode();
+                    editMode();
                 }
                 else if (toolMode == mode.VIEW)
                 {
                     viewMode();
                 }
-                else if(mIsServer)
+                else if (mIsServer)
                 {
                     //ServerUtil.saveScene();
-                   // ServerUtil.saveToNewScene();
+                    // ServerUtil.saveToNewScene();
                 }
                 checkData();
             }
         }
-        
+
     }
 
     static void editMode()
@@ -111,15 +110,15 @@ public class MultiuserPlugin
         }
         else
         {
-            //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
-            //  Debug.Log(DateTime.Now.Second);
+             Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+              //Debug.Log(DateTime.Now.Second);
         }
     }
 
     static void viewMode()
     {
         Selection.activeObject = null;
-        
+
     }
 
     public static void startupServer(int portNum, int maxClients)
@@ -128,21 +127,23 @@ public class MultiuserPlugin
         //Runs through entire scene and setups marker flags
         objCounter = 0;
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
-        for(int i =0; i < allGameobjects.Length; ++i)
+        for (int i = 0; i < allGameobjects.Length; ++i)
         {
             MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-            if(objectFlag == null)
+            if (objectFlag == null)
             {
-                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();                
+                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
             }
 
             objectFlag.id = objectId + objCounter;
+
+            StructScript.addToMap(objectFlag);
 
             objCounter++;
         }
 
         //Calls plugin function to start server
-        StartServer("",portNum, maxClients);
+        StartServer("", portNum, maxClients);
 
         mIsServer = true;
         mConnected = true;
@@ -160,6 +161,7 @@ public class MultiuserPlugin
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
+            GameObject.DestroyImmediate(allGameobjects[i]);
             //TODO: Destroy the objects
         }
 
@@ -172,34 +174,52 @@ public class MultiuserPlugin
 
     public static void Sync()   //Sends out the data of the "modified" objects
     {
-            GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
-            //Debug.Log("Syncing");
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
+        //Debug.Log("Syncing");
 
-            for (int i = 0; i < allGameobjects.Length; ++i) //Checks All objects in scene and 
-            {
-                MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
+        for (int i = 0; i < allGameobjects.Length; ++i) //Checks All objects in scene and 
+        {
+            MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
 
-                if (objectFlag == null)    //If an object doesn't have the marker flag script on it
-                {                          //it will be added. This happens when a new object has been made
-                    objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
-                    objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
-                    objCounter++;
-                }
-
-                if (objectFlag.isModified)    //If this object's marker flag has been modified
-                {
-                     //TODO: CALL SERIALIZE DATA STUFF
-                     //TODO: SEND THAT DATA VIA PLUGIN
-                    objectFlag.isModified = false;
-                }
-
-                if (!Selection.Contains(allGameobjects[i]))
-                {
-                    objectFlag.isLocked = false;
-                }
-
+            if (objectFlag == null)    //If an object doesn't have the marker flag script on it
+            {                          //it will be added. This happens when a new object has been made
+                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+                objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
+                objCounter++;
             }
+
+            if (objectFlag.isModified)    //If this object's marker flag has been modified
+            {
+                string temp = StructScript.serialize(allGameobjects[i]);
+
+                if (!mIsServer)
+                {
+                    //   Debug.Log("Test Sending to server"); 
+                    SendData(temp, temp.Length, "");
+                }
+                else
+                {
+                    //  Debug.Log("Test Broadcasting");
+
+                    for (int j = 0; j < mConnectedClients.Count; ++j)
+                    {
+                        Debug.Log(mConnectedClients[j].IP);
+                        if (mConnectedClients[j].IP != "")
+                        {
+                            SendData(temp, temp.Length, mConnectedClients[j].IP);
+                        }
+                    }
+                }
+                objectFlag.isModified = false;
+            }
+
+            if (!Selection.Contains(allGameobjects[i]))
+            {
+                objectFlag.isLocked = false;
+            }
+
         }
+    }
     unsafe struct MyStringStruct
     {
         public int id;
@@ -209,49 +229,38 @@ public class MultiuserPlugin
     {
         //char* data = null;
         char* data = GetData();
-        string temp = "";
-       // Debug.Log(data[0]);
+        // Debug.Log(data[0]);
         if (data == null)
         {
-            temp = "No Data";
-            Debug.Log(temp);
+            //Debug.Log(temp);
             return;
         }
-        /*
-        IntPtr tempPtr = (IntPtr)data;
-        MyStringStruct* myString = (MyStringStruct*)tempPtr;
-        temp = Marshal.PtrToStringAnsi((IntPtr)myString->pseudoString);
-        */
-
         StructScript.deserializeMessage(data);
-        //if (data != null)
-        //{
-        //    for (int i = 0; i < data.Length; i++)
-         //       Debug.Log(data[i]);
-            // StructScript.deserializeMessage(data);
-        //}
 
     }
 
     public static void testSerialize(GameObject testObj)
     {
-        Debug.Log("Testing selected obj(s)");
+        //  Debug.Log("Testing selected obj(s)");
         string temp = StructScript.serialize(testObj);
-        if(Selection.gameObjects.Length > 0)
+        //Debug.Log(temp);
+        if (Selection.gameObjects.Length > 0)
         {
             GameObject[] testObjs = Selection.gameObjects;
-            for (int i=0; i < testObjs.Length; ++i)
+            for (int i = 0; i < testObjs.Length; ++i)
             {
                 if (!mIsServer)
                 {
-                    Debug.Log("Test Sending to server"); 
+                    //   Debug.Log("Test Sending to server"); 
                     SendData(temp, temp.Length, "");
                 }
                 else
                 {
-                    Debug.Log("Test Broadcasting");
+                    //  Debug.Log("Test Broadcasting");
+
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
+                        Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
                             SendData(temp, temp.Length, mConnectedClients[j].IP);
@@ -262,16 +271,44 @@ public class MultiuserPlugin
         }
     }
 
-    public static void SendMessageOverNetwork(string msg)
+    public static unsafe void addClient()
     {
-        Debug.Log(mConnectedClients.Count);
-        SendMessageData(msg, msg.Length, "");
+        char* ip = GetLastPacketIP();
+        IntPtr careTwo = (IntPtr)ip;
+        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
+        //string start = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mId);
+        string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
+        Debug.Log(newIP);
+        ConnectedClientInfo newClient = new ConnectedClientInfo();
+        newClient.IP = newIP;
+        mConnectedClients.Add(newClient);
+
+        //Send a data buffer of all the objects currently in the scene to the newly connected client
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i=0; i < allGameobjects.Length; ++i)
+        {
+            string temp = StructScript.serialize(allGameobjects[i]);
+            SendData(temp, temp.Length, newIP);
+        }
+
+    }
+
+    public static unsafe void deleteClient()
+    {
+        char* ip = GetLastPacketIP();
+        IntPtr careTwo = (IntPtr)ip;
+        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
+        string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
+        Debug.Log(newIP);
+        ConnectedClientInfo delClient = new ConnectedClientInfo();
+        delClient.IP = newIP;
+        mConnectedClients.Remove(delClient);
     }
 
     public static void Disconnect()
     {
         Shutdown();
-        mConnected = false; 
+        mConnected = false;
     }
 }
 

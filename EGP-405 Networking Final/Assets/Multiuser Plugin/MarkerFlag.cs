@@ -8,9 +8,18 @@ public class MarkerFlag : MonoBehaviour {
      public string id;
      public bool isModified = true;
      public bool isLocked = true;
-
+     public string parentID;
     void OnEnable()
     {
         //this.hideFlags = HideFlags.HideInInspector;
+    }
+    private void OnDrawGizmos()
+    {
+        if (isLocked)
+        {
+            Vector3 size = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            Gizmos.color = new Color(1, 1, 0, 0.75f);
+            Gizmos.DrawWireCube(transform.position, size);
+        }
     }
 }

@@ -12,6 +12,7 @@ int Shutdown()
 	if (theState != 0)
 	{
 		theState->writeToLogger("Shutting Down");
+		theState->cleanup();
 		delete theState;
 		theState = 0;
 
@@ -56,7 +57,9 @@ int SendData(char* data, int length, char* ownerIP)
 	if (theState != 0)
 	{
 		theState->writeToLogger("Sending Data");
-		return theState->SendData(data, length, ownerIP);
+		int good = theState->SendData(data, length, ownerIP);
+		theState->drawLineOnLogger();
+		return good;
 	}
 	return 0;
 }
@@ -76,7 +79,22 @@ char* GetData()
 {
 	if (theState != 0)
 	{
-		return theState->UpdateNetwork();
+		char *data = theState->UpdateNetwork();
+		return data;
 	}
+	return 0;
+}
+
+char * GetLastPacketIP()
+{
+	if (theState != 0)
+	{
+		theState->writeToLogger("Getting last packet IP");
+		char *data = theState->GetLastPacketIP();
+		theState->writeToLogger(data);
+		theState->drawLineOnLogger();
+		return data;
+	}
+
 	return 0;
 }

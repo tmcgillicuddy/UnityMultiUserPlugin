@@ -7,7 +7,7 @@ ClientState::ClientState()
 
 ClientState::~ClientState()
 {
-	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+
 }
 
 bool ClientState::init(char *targetIP, int portNum, int maxClients)
@@ -49,26 +49,19 @@ bool ClientState::SendData(char * data, int length, char * ownerIP)
 	}
 }
 
-bool ClientState::SendMessageData(char * data, int length, char * ownerIP)
+char * ClientState::GetLastPacketIP()
 {
-	writeToLogger("Sending data to " + mServerIP);
+	char * serverIP;
+	strcpy(serverIP, mServerIP.c_str());
+	return serverIP;
+}
 
-	dataBuffer * tmpBuffer = new dataBuffer();
-	tmpBuffer->messageID = 135;
-	strcpy(tmpBuffer->buffer, data);
-	writeToLogger((char*)&tmpBuffer);
-	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mServerIP.c_str());
-	if (mpPeer == NULL)
-	{
-		writeToLogger("Error with Peer");
-		return false;
-	}
-	else
-	{
-		mpPeer->Send((char *)tmpBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, true);
-		writeToLogger("Sent data");
-		return true;
-	}
+bool ClientState::cleanup()
+{
+	writeToLogger("Shutting down client");
+	mpPeer->Shutdown(500, 0, LOW_PRIORITY);
+	drawLineOnLogger();
+	return true;
 }
 
 char * ClientState::UpdateNetwork()

@@ -12,33 +12,58 @@ public unsafe struct CharPointer
     public fixed char mes[512];
 }
 
+public unsafe struct StraightCharPointer //No mId so all stuffed content can be read out at once
+{
+    public fixed char mes[512];
+}
+
 public class StructScript {
+
+    static MarkerFlag[,] objectMap = new MarkerFlag[100,100];
+
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 1040,
         ID_CONNECTION_ATTEMPT_FAILED = 45329,
         ID_NEW_INCOMING_CONNECTION = 1043,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
+        ID_DISCONNECTION = 57877,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 12680,
+
     }
 
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
+
+
+        serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
+        markTemp.flag = obj.GetComponent<MarkerFlag>();
+        string flagData = new string(markTemp.toChar());
+        serialized += flagData;
+
+
+        int hashLoc = genHashCode(markTemp.flag.id);
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+        //Debug.Log(xLoc +" "+ yLoc);
+
+        objectMap[xLoc, yLoc] = markTemp.flag;
+
         serialized += obj.name + "/";
         serialized += obj.tag + "/";
         serialized += obj.layer + "/";
         serialized += obj.isStatic + "/";
-        Debug.Log("Checking");
+       // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
-        Debug.Log(comps.Length);
+       // Debug.Log(comps.Length);
         for(int i = 0; i < comps.Length; i++)
         {
             if (comps[i].GetType() == typeof(UnityEngine.Transform))
             {
-                Debug.Log("Has Transform");
+                //        Debug.Log("Has Transform");
                 UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
                 Transform serTemp = new Transform();
                 serTemp.pos = temp.position;
@@ -46,11 +71,11 @@ public class StructScript {
                 serTemp.scale = temp.localScale; //Look here for scaling issues
                 string tempString = new string(serTemp.toChar());
                 serialized += tempString;
-                
+
             }
             else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
             {
-                Debug.Log("Has Box Collider");
+                //   Debug.Log("Has Box Collider");
                 UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
                 BoxCollider serTemp = new BoxCollider();
                 serTemp.center = temp.center;
@@ -61,7 +86,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
             {
-                Debug.Log("Has Sphere Collider");
+                //    Debug.Log("Has Sphere Collider");
                 UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
                 SphereCollider serTemp = new SphereCollider();
                 serTemp.center = temp.center;
@@ -72,7 +97,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
             {
-                Debug.Log("Has Capsule Collider");
+                //  Debug.Log("Has Capsule Collider");
                 UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
                 CapsuleCollider serTemp = new CapsuleCollider();
                 serTemp.center = temp.center;
@@ -85,7 +110,7 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
             {
-                Debug.Log("Has Rigidbody");
+                //  Debug.Log("Has Rigidbody");
                 UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
                 RigidBody serTemp = new RigidBody();
                 serTemp.mass = temp.mass;
@@ -102,21 +127,18 @@ public class StructScript {
             }
             else if (comps[i].GetType() == typeof(UnityEngine.Camera))
             {
-                Debug.Log("Has Camera");
+                //    Debug.Log("Has Camera");
             }
             else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
             {
-                Debug.Log("Has Mesh Filter");
+                //   Debug.Log("Has Mesh Filter");
             }
             else
-                Debug.Log(comps[i].GetType());
+            {
+                //    Debug.Log(comps[i].GetType());
+            }
         }
         return serialized;
-    }
-
-    public static void handleChatMessage(string ser)
-    {
-        Multiuser_Editor_Window.messageStack.Add(ser);
     }
 
     public unsafe static void deserializeMessage(char* ser)
@@ -124,18 +146,15 @@ public class StructScript {
         IntPtr care = (IntPtr)ser;
         CharPointer* data = (CharPointer*)care;
         string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
-
         switch ((byte)ser[0])
         {
-            case (byte)Message.CHAT_MESSAGE:
-                Debug.Log("New Message Recieved");
-                handleChatMessage(output);
-                break;
             case unchecked((byte)Message.ID_CONNECTION_ATTEMPT_FAILED):
                 Debug.Log("Failed to connect to server");
                 break;
             case unchecked((byte)Message.ID_NEW_INCOMING_CONNECTION):
                 Debug.Log("A new client is connecting");
+                MultiuserPlugin.addClient();
+                
                 break;
             case unchecked((byte)Message.ID_CONNECTION_REQUEST_ACCEPTED):
                 Debug.Log("You have connected to the server");
@@ -144,23 +163,71 @@ public class StructScript {
             case (byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
-
             case unchecked((byte)Message.GO_UPDATE):
                 Debug.Log("Game Object Received");
                 componentSerialize(output);
+                Debug.Log(ser[0]);
+                //componentSerialize(ser);
                 break;
-
+            case unchecked((byte)Message.ID_DISCONNECTION):
+                if(MultiuserPlugin.mIsServer)
+                {
+                    MultiuserPlugin.deleteClient();
+                    Debug.Log("Client has disconnected");
+                    //TODO: remove this client from client list
+                }
+                else
+                {
+                    Debug.Log("You have disconnected");
+                }
+                break;
             default:
                 Debug.Log(output);
-                Debug.Log("Message with identifier " + ser[0] + " has arrived");
+                int identifier = ser[0].GetHashCode();
+                Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
+        
+       
+    }
+
+    static int genHashCode(string id)
+    {
+        const int primeNum = 31;
+        int temp = 0;
+        for (int i = 0; i < id.Length; ++i)
+        {
+            temp += id[i].GetHashCode();
+        }
+        return temp*primeNum;
     }
 
     public static void componentSerialize(string ser)
     {
         Debug.Log(ser);
-        GameObject temp = new GameObject();
+        GameObject temp = null;
+
+        MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
+
+        int hashLoc = genHashCode(objMarker.id);
+
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+
+        MarkerFlag thisFlag = objectMap[xLoc, yLoc];
+
+        if(thisFlag == null) //Make a new game object with given flag if you need to
+        {
+            temp = new GameObject();
+            thisFlag = temp.AddComponent<MarkerFlag>();
+            thisFlag.id = objMarker.id;
+            thisFlag.parentID = objMarker.parentID;
+        }
+        else
+        {
+            temp = thisFlag.gameObject;
+        }
+
         temp.name = deserializeString(ref ser);
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
@@ -177,14 +244,14 @@ public class StructScript {
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
             }
-            else if (tag == "boxCollider")
+            else if(tag == "boxCollider")
             {
                 UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
-            else if (tag == "sphereCollider")
+            else if(tag == "sphereCollider")
             {
                 UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
                 col.center = deserializeVector3(ref ser);
@@ -214,6 +281,24 @@ public class StructScript {
             }
 
         }
+        addToMap(thisFlag);
+    }
+
+    public static void addToMap(MarkerFlag flag)
+    {
+        Debug.Log("Adding to map");
+        int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
+        int xLoc = hashCode % 10;
+        int yLoc = hashCode % 100;
+        objectMap[xLoc,yLoc] = flag;
+    }
+
+    public static MarkerFlag deserializeMarkerFlag(ref string ser)
+    {
+        MarkerFlag temp = new MarkerFlag();
+        //string trash = deserializeString(ref ser);
+        temp.id = deserializeString(ref ser);
+        return temp;
     }
 
     public static int deserializeInt(ref string ser)
@@ -226,12 +311,9 @@ public class StructScript {
 
     public static string deserializeString(ref string ser)
     {
-        Debug.Log(ser);
         int length = ser.IndexOf("/");
-        Debug.Log("deserializeString() length: " + length);
         string ret = ser.Substring(0, length);
-        ser = ser.Remove(0, length);// + 1);
-        Debug.Log(ret);
+        ser = ser.Remove(0, length + 1);
         return ret;
     }
 
@@ -341,6 +423,18 @@ struct Color
 {
     float r, g, b, a;
 }*/
+
+public class serMarkerFlag : serializedComponent
+{
+    public MarkerFlag flag;
+
+    override public char[] toChar()
+    {
+        string temp = "markerFlag/";
+        temp += flag.id + "/";
+        return temp.ToCharArray();
+    }
+}
 
 public class Transform : serializedComponent
 {

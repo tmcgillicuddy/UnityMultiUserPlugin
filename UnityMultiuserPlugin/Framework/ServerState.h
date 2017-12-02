@@ -18,10 +18,15 @@ public:
 
 	//Data Handeling
 	bool SendData(char * data, int length, char * ownerIP);
-	bool SendMessageData(char * data, int length, char * ownerIP);
+	char* GetLastPacketIP();
+
+
+	//Shutdown
+	bool cleanup();
+
 	char* UpdateNetwork();
 
 private:
 	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
-
+	RakNet::Packet* lastPacket;
 };
