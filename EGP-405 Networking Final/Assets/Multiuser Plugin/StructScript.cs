@@ -326,7 +326,6 @@ public class StructScript
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
         MarkerFlag temp = new MarkerFlag();
-        string trash = deserializeString(ref ser);
         temp.id = deserializeString(ref ser);
         temp.parentID = deserializeString(ref ser);
         return temp;
