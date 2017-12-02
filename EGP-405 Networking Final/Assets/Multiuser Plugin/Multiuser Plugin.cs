@@ -97,6 +97,8 @@ public class MultiuserPlugin
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
                 {                                                           //it will be added
                     selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
+                    selectedObjFlags.id = objectId + objCounter.ToString();
+                    objCounter++;
                 }
                 selectedObjFlags.isModified = true;
                 selectedObjFlags.isLocked = true;
@@ -152,11 +154,11 @@ public class MultiuserPlugin
         int index = 0;
         foreach (IPAddress i in addr)
         {
-            Debug.Log("Address " + index + ": " + i.ToString() + " ");
+            //Debug.Log("Address " + index + ": " + i.ToString() + " ");
             index++;
         }
         serverIP = addr[3].ToString();
-        Debug.Log("Server IP: " + serverIP);
+       // Debug.Log("Server IP: " + serverIP);
 
 
         //Calls plugin function to start server
@@ -199,6 +201,7 @@ public class MultiuserPlugin
 
             if (objectFlag == null)    //If an object doesn't have the marker flag script on it
             {                          //it will be added. This happens when a new object has been made
+                Debug.Log("New Marker");
                 objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
                 objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
                 objCounter++;

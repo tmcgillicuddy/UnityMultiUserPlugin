@@ -294,10 +294,8 @@ public class StructScript
             else if (tag == "meshfilter")
             {
                 string meshName = deserializeString(ref ser);
-                Mesh loadedMesh = (Mesh)AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh));
-                Debug.Log(meshName);
-                UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>();
-                col.mesh = loadedMesh;
+                UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>(); // Add the mesh filter
+                col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
             }
 
         }
