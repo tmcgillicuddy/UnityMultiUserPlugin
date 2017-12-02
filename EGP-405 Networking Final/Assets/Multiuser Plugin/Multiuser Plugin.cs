@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System.Net;
 
 
 [InitializeOnLoad]
@@ -32,6 +33,7 @@ public class MultiuserPlugin
     public static mode toolMode;
     public static string objectId;
     public static int objCounter = 0;
+    public static string serverIP;
 
     struct ConnectedClientInfo  //For storing connected client information
     {
@@ -95,6 +97,8 @@ public class MultiuserPlugin
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
                 {                                                           //it will be added
                     selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
+                    selectedObjFlags.id = objectId + objCounter.ToString();
+                    objCounter++;
                 }
                 selectedObjFlags.isModified = true;
                 selectedObjFlags.isLocked = true;
@@ -110,8 +114,8 @@ public class MultiuserPlugin
         }
         else
         {
-             //Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
-              //Debug.Log(DateTime.Now.Second);
+            //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
+            //  Debug.Log(DateTime.Now.Second);
         }
     }
 
@@ -142,8 +146,23 @@ public class MultiuserPlugin
             objCounter++;
         }
 
+        // get server ip address
+        string hostName = System.Net.Dns.GetHostName();
+        IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(hostName);
+        IPAddress[] addr = ipEntry.AddressList;
+
+        int index = 0;
+        foreach (IPAddress i in addr)
+        {
+            //Debug.Log("Address " + index + ": " + i.ToString() + " ");
+            index++;
+        }
+        serverIP = addr[3].ToString();
+       // Debug.Log("Server IP: " + serverIP);
+
+
         //Calls plugin function to start server
-        StartServer("", portNum, maxClients);
+        StartServer(serverIP, portNum, maxClients);
 
         mIsServer = true;
         mConnected = true;
@@ -161,7 +180,6 @@ public class MultiuserPlugin
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
-            GameObject.DestroyImmediate(allGameobjects[i]);
             //TODO: Destroy the objects
         }
 
@@ -183,6 +201,7 @@ public class MultiuserPlugin
 
             if (objectFlag == null)    //If an object doesn't have the marker flag script on it
             {                          //it will be added. This happens when a new object has been made
+                Debug.Log("New Marker");
                 objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
                 objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
                 objCounter++;
@@ -203,7 +222,7 @@ public class MultiuserPlugin
 
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
-                        Debug.Log(mConnectedClients[j].IP);
+                       // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
                             SendData(temp, temp.Length, mConnectedClients[j].IP);
@@ -293,16 +312,25 @@ public class MultiuserPlugin
 
     }
 
-    public static unsafe void deleteClient()
+    public static void SendMessageOverNetwork(string message)
     {
-        char* ip = GetLastPacketIP();
-        IntPtr careTwo = (IntPtr)ip;
-        StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
-        string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
-        Debug.Log(newIP);
-        ConnectedClientInfo delClient = new ConnectedClientInfo();
-        delClient.IP = newIP;
-        mConnectedClients.Remove(delClient);
+        switch (mIsServer)
+        {
+            case true:
+                {
+                    foreach (ConnectedClientInfo c in mConnectedClients)
+                    {
+                        SendData(message, message.Length, c.IP);
+                    }
+                    break;
+                }
+
+            case false:
+                {
+                    SendData(message, message.Length, serverIP);
+                    break;
+                }
+        }
     }
 
     public static void Disconnect()
