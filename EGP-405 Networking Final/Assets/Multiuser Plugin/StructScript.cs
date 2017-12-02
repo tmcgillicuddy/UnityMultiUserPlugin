@@ -23,8 +23,8 @@ public class StructScript {
 
     enum Message //TODO: Add all the regular message types that we want to be ready for
     {
-        ID_CONNECTION_REQUEST_ACCEPTED = 17,
-        ID_CONNECTION_ATTEMPT_FAILED = 18,
+        ID_CONNECTION_REQUEST_ACCEPTED = 16,
+        ID_CONNECTION_ATTEMPT_FAILED = 17,
         ID_NEW_INCOMING_CONNECTION = 19,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         ID_DISCONNECTION = 21,
