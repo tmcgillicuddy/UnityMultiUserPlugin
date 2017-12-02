@@ -76,8 +76,6 @@ public class MultiuserPlugin
                 }
                 else if (mIsServer)
                 {
-                    //ServerUtil.saveScene();
-                    // ServerUtil.saveToNewScene();
                 }
                 checkData();
             }
@@ -113,14 +111,13 @@ public class MultiuserPlugin
         else
         {
             Debug.Log((DateTime.Now.Minute * 60 + DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
-            //Debug.Log(DateTime.Now.Second);
         }
     }
 
     static void viewMode()
     {
         Selection.activeObject = null;
-
+        // TODO:: force deselection
     }
 
     public static void startupServer(int portNum, int maxClients)
@@ -149,7 +146,6 @@ public class MultiuserPlugin
 
         mIsServer = true;
         mConnected = true;
-        //ServerUtil.forceSave(); //Save the scene to start with
 
         ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
@@ -307,19 +303,20 @@ public class MultiuserPlugin
     }
     public static void SendMessageOverNetwork(string msg)
     {
-        if (mIsServer)
+        if (mIsServer) // if it is the server
         {
-            for (int i = 0; i < mConnectedClients.Count; ++i)
+            for (int i = 0; i < mConnectedClients.Count; ++i) // go through each of the connected clients
             {
-                string targetIP = mConnectedClients[i].IP;
-                SendMessageData(msg, msg.Length, targetIP);
+                string targetIP = mConnectedClients[i].IP; // target ip is ip of client at i in mConnectedClients
+                SendMessageData(msg, msg.Length, targetIP); // send message to target ip
             }
         }
-        else
-            SendMessageData(msg, msg.Length, "");
+        else // if client
+            SendMessageData(msg, msg.Length, ""); // send message to the server
     }
     public static void handleChatMessage(string msg)
     {
+        // add received chat message to the stack
         Multiuser_Editor_Window.messageStack.Add(msg);
     }
 

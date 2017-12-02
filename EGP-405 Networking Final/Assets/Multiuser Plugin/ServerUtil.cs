@@ -22,34 +22,11 @@ public  class ServerUtil {
     public static int folderIteration = 0;
     public static int saveInterval = 2;
     public const int MAX_SAVED_SCENES = 10;
-    public static string currentFolderPath = "Assets/Scenes/";
-    public static bool newDay = false;
-    public static string todaysFolder;
+   public static string currentFolderPath = "Assets/Scenes/";
 
 
     public void Update()
     {
-        //checkTooManyScenes();
-        //saveToNewScene();
-    }
-
-    public static void forceSave()
-    {
-        Debug.Log("Server side saving");
-        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-        lastSaveTime = DateTime.Now;
-        Debug.Log("Scene Last Saved: " + lastSaveTime);
-    }
-
-    public static void saveScene()
-    {
-        if(DateTime.Now.Minute>= lastSaveTime.Minute + saveInterval)
-        {
-            Debug.Log("Server side saving");
-            EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-            lastSaveTime = DateTime.Now;
-            Debug.Log("Scene Last Saved: " + lastSaveTime);
-        }
     }
 
     public static void saveToNewScene()
@@ -71,7 +48,7 @@ public  class ServerUtil {
                 // create new scene
                 newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             }
-            // if we are currently in a scene
+            // if there is an open scene
             else
             {
                 // Get the new scene name
@@ -92,41 +69,34 @@ public  class ServerUtil {
 
             string savedScene = currentFolderPath + folderName + "/" + newSceneName + ".unity";
             EditorSceneManager.SaveScene(newScene, savedScene, false);
-            Debug.Log(savedScene + " was Saved");
         }
     }
 
     public static void checkTooManyScenes()
     {
-        EditorSceneManager.preventCrossSceneReferences = false;
-        Debug.Log("checkTooManyScenes()");
-        String path = "Assets/Scenes/Autosaved Scenes/";
+        String path = "Assets/Scenes/Autosaved Scenes/"; // path to autosaved scenes
 
-        DirectoryInfo levelDirectoryPath = new DirectoryInfo(path);
-        FileInfo[] scenesInfo = levelDirectoryPath.GetFiles();
+        DirectoryInfo levelDirectoryPath = new DirectoryInfo(path); // asset information at path
+        FileInfo[] scenesInfo = levelDirectoryPath.GetFiles();  // array of files at the path
 
-        Queue<String> sceneNames = new Queue<String>();
+        Queue<String> sceneNames = new Queue<String>(); // queue of names in the file
 
         int i = 0;
         foreach (FileInfo fi in scenesInfo)
         {
-            if (fi.Name.Contains(".meta") == false)
+            if (fi.Name.Contains(".meta") == false) // filter out .meta files
             {
-                sceneNames.Enqueue(fi.Name);
+                sceneNames.Enqueue(fi.Name); // add appropriate file names into the queue
                 i++;
             }
         }
 
-        if (sceneNames.Count > 10)
+        if (sceneNames.Count > 10) // if there are more than 10 scenes saved
         {
-            while (sceneNames.Count > 10)
+            while (sceneNames.Count > 10) // run loop while there are more than 10 scenes in folder
             {
-               // Debug.Log("sceneNames.Count = " + sceneNames.Count);
-                //string earliestScene = sceneNames.Dequeue();
-
-               // Debug.Log(AssetDatabase.DeleteAsset(path + earliestScene));
-
-                //Debug.Log(path + earliestScene + " was Deleted");
+               string earliestScene = sceneNames.Dequeue(); // name of earliest scene in the file
+               AssetDatabase.DeleteAsset(path + earliestScene); // delete the scene
             }
 
         }

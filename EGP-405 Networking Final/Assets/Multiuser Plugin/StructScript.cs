@@ -292,7 +292,6 @@ public class StructScript {
 
     public static void addToMap(MarkerFlag flag)
     {
-        Debug.Log("Adding to map");
         int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
