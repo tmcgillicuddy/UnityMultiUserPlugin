@@ -34,6 +34,7 @@ public class MultiuserPlugin
     public static mode toolMode;
     public static string objectId;
     public static int objCounter = 0;
+    public static int clientID = 0;
 
     struct ConnectedClientInfo  //For storing connected client information
     {
@@ -277,6 +278,8 @@ public class MultiuserPlugin
         string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
         Debug.Log(newIP);
         ConnectedClientInfo newClient = new ConnectedClientInfo();
+        newClient.ID = clientID.ToString();
+        ++clientID;
         newClient.IP = newIP;
         mConnectedClients.Add(newClient);
 
@@ -304,11 +307,25 @@ public class MultiuserPlugin
     public static void SendMessageOverNetwork(string msg)
     {
         if (mIsServer) // if it is the server
-        {
+        { 
             for (int i = 0; i < mConnectedClients.Count; ++i) // go through each of the connected clients
             {
-                string targetIP = mConnectedClients[i].IP; // target ip is ip of client at i in mConnectedClients
-                SendMessageData(msg, msg.Length, targetIP); // send message to target ip
+                bool isRepeat = false;
+                for (int j = 0; j < Multiuser_Editor_Window.messageStack.Count; ++i)
+                {
+                    if (msg == Multiuser_Editor_Window.messageStack[j])
+                    {
+                        isRepeat = true;
+                        break;
+                    }
+                }
+                if (isRepeat)
+                    continue;
+                else
+                {
+                    string targetIP = mConnectedClients[i].IP; // target ip is ip of client at i in mConnectedClients
+                    SendMessageData(msg, msg.Length, targetIP); // send message to target ip
+                }
             }
         }
         else // if client

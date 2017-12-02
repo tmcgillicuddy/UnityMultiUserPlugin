@@ -15,6 +15,7 @@ public class Multiuser_Editor_Window : EditorWindow
     public static bool limitAutosave = false;
     public Vector2 scrollPos = Vector2.zero;
     public string nickName;
+    public static int clientID;
 
     [MenuItem("Window/Multiuser Network")]
     static void init()
@@ -100,6 +101,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 {
                     //CALL CONNECT TO SERVER FUNCTION HERE
                     MultiuserPlugin.startupClient(mTargetIP, mPortNum);
+                    clientID = MultiuserPlugin.clientID;
                 }
             }
             else // server
@@ -205,6 +207,7 @@ public class Multiuser_Editor_Window : EditorWindow
     void sendMessage()
     {
         string fullMessage = nickName + ": " + message; // full message is "nickname: message"
+
         messageStack.Add(fullMessage); // add users own message to the stack
 
         // send the message over the network
