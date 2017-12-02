@@ -27,7 +27,7 @@ public class StructScript
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 16,
         ID_CONNECTION_ATTEMPT_FAILED = 17,
-        ID_NEW_INCOMING_CONNECTION = 18,
+        ID_NEW_INCOMING_CONNECTION = 19,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         ID_DISCONNECTION = 21,
         CHAT_MESSAGE = 135,
@@ -195,7 +195,7 @@ public class StructScript
                 break;
             default:
                 Debug.Log(output);
-                int identifier = ser[0].GetHashCode();
+                int identifier = (Byte)ser[0].GetHashCode();
                 Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
@@ -238,6 +238,18 @@ public class StructScript
         else
         {
             temp = thisFlag.gameObject;
+        }
+
+        if (objMarker.parentID != "_")
+        {
+            int parentHash = genHashCode(objMarker.parentID);
+            int xParent = parentHash % 10;
+            int yParent = parentHash % 100;
+            MarkerFlag parentFlag = objectMap[xParent, yParent];
+            if (parentFlag != null)
+            {
+                temp.transform.SetParent(parentFlag.gameObject.transform);
+            }
         }
 
         temp.name = deserializeString(ref ser);
