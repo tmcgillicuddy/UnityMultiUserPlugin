@@ -146,13 +146,38 @@ public class StructScript
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
                 {
-                    UnityEngine.MeshFilter temp = comps[i] as UnityEngine.MeshFilter;
-                    MeshFilter meshTemp = new MeshFilter();
-                    Mesh tempMesh = temp.sharedMesh;
-                    meshTemp.fileName = AssetDatabase.GetAssetPath(tempMesh);
-                    string tempString = new string(meshTemp.toChar());
-                    serialized += tempString;
-                    Debug.Log(serialized);
+                    //Gather Meshfilter information on current GO
+                    UnityEngine.MeshFilter gOMeshFilter = comps[i] as UnityEngine.MeshFilter;
+                    Mesh gOMesh = gOMeshFilter.sharedMesh;
+
+
+                    //Pack data into our meshfilter object
+                    MeshFilter meshStruct = new MeshFilter();
+                    meshStruct.filePath = AssetDatabase.GetAssetPath(gOMesh);
+                    meshStruct.meshName = gOMesh.name;
+
+                    //Convert the data into a string and add it to the overall data stream
+                    string sStream = new string(meshStruct.toChar());
+                    serialized += sStream;
+                    
+                   // GameObject test = new GameObject();
+                   // test.AddComponent<UnityEngine.MeshFilter>();
+                   // UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(meshStruct.filePath);
+                   // //Debug.Log(assets.Length);
+                   // for(int x =0; x< assets.Length; ++x)
+                   // {
+                   //     if(assets[x].name == meshStruct.meshName)
+                   //     {
+                   //         test.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
+                   //         break;
+                   //     }
+                   // }
+                   // 
+                   // //test.AddComponent<MarkerFlag>();
+                   // //test.GetComponent<MarkerFlag>().id = "adsasda";
+
+                    
+                    
                 }
                 else
                 {
@@ -336,9 +361,20 @@ public class StructScript
             }
             else if (tag == "meshfilter")
             {
+                UnityEngine.MeshFilter meshFilter = temp.AddComponent<UnityEngine.MeshFilter>();
+                string filePath = deserializeString(ref ser);
                 string meshName = deserializeString(ref ser);
-                UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>(); // Add the mesh filter
-                //col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
+
+                UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(filePath);
+                //Debug.Log(assets.Length);
+                for (int x = 0; x < assets.Length; ++x)
+                {
+                    if (assets[x].name == meshName)
+                    {
+                        temp.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
+                        break;
+                    }
+                }
             }
 
         }
@@ -611,12 +647,14 @@ public class RigidBody : serializedComponent
 
 public class MeshFilter: serializedComponent
 {
-    public string fileName;
+    public string filePath;
+
+    public string meshName;
 
     override public char[] toChar()
     {
         string temp = "meshfilter|";
-        temp += fileName + "|";
+        temp += filePath +"|"+ meshName +"|";
         return temp.ToCharArray();
     }
 }
