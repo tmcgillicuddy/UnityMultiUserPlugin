@@ -412,7 +412,15 @@ public class StructScript
                 deserializeBool(ref ser);
 
                 string materialsList = deserializeString(ref ser);
-                Debug.Log(materialsList);
+                while (materialsList.Length > 0)
+                {
+                    int length = ser.IndexOf(",");
+                    string ret = materialsList.Substring(0, length);
+                    Debug.Log(ret);
+                    materialsList = materialsList.Remove(0, length + 1);
+                    Debug.Log(materialsList);
+                }
+
             }
         }
        
