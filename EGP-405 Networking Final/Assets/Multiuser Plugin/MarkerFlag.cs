@@ -6,8 +6,8 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class MarkerFlag : MonoBehaviour {
      public string id;
-     public bool isModified = true;
-     public bool isLocked = true;
+     public bool isModified = false;
+     public bool isLocked = false;
      public string parentID;
     void OnEnable()
     {

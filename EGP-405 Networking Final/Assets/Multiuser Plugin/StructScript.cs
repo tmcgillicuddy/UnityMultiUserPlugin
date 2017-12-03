@@ -264,9 +264,9 @@ public class StructScript
 
         MarkerFlag thisFlag = null;
 
-        for(int i=0; i < objectMap[xLoc, yLoc].Count; ++i)
+        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
         {
-            if(objectMap[xLoc,yLoc][i].id == objMarker.id)
+            if (objectMap[xLoc, yLoc][i].id == objMarker.id)
             {
                 thisFlag = objectMap[xLoc, yLoc][i];
                 break;
@@ -282,7 +282,7 @@ public class StructScript
         else
         {
             temp = thisFlag.gameObject;
-            
+
         }
 
         thisFlag.id = objMarker.id;
@@ -293,7 +293,7 @@ public class StructScript
             int parentHash = genHashCode(thisFlag.parentID);
             int xParent = parentHash % 10;
             int yParent = parentHash % 100;
-            MarkerFlag parentFlag = findInList(thisFlag.parentID,xParent, yParent);
+            MarkerFlag parentFlag = findInList(thisFlag.parentID, xParent, yParent);
             if (parentFlag != null)
             {
                 temp.transform.SetParent(parentFlag.gameObject.transform);
