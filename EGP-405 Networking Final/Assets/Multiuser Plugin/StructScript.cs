@@ -186,7 +186,7 @@ public class StructScript
                     for(int q=0; q<gOMaterials.Length; ++q)
                     {
                         string materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
-                        Debug.Log(materialPath);
+
                         meshStruct.materialFiles.Add(materialPath);
                     }
 
@@ -227,9 +227,8 @@ public class StructScript
                 Debug.Log("Connection Failed, server is FULL");
                 break;
             case (Byte)Message.GO_UPDATE:
-                Debug.Log("Game Object Received");
+
                 componentSerialize(output);
-                Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
             case (Byte)Message.ID_DISCONNECTION:
@@ -266,7 +265,7 @@ public class StructScript
 
     public static void componentSerialize(string ser)
     {
-        Debug.Log(ser);
+        //Debug.Log(ser);
         GameObject temp = null;
 
         MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
@@ -325,7 +324,7 @@ public class StructScript
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
-        Debug.Log(ser);
+        //Debug.Log(ser);
         while (ser.Length > 0)
         {
             string tag = deserializeString(ref ser);
@@ -374,6 +373,7 @@ public class StructScript
             }
             else if (tag == "meshfilter")
             {
+               
                 UnityEngine.MeshFilter meshFilter = temp.GetComponent<UnityEngine.MeshFilter>();
                 if(meshFilter == null)
                 {
@@ -412,19 +412,55 @@ public class StructScript
                 deserializeBool(ref ser);
 
                 string materialsList = deserializeString(ref ser);
-                while (materialsList.Length > 0)
+                List<Material> renderMaterials = new List<Material>();
+                while (materialsList != "")
                 {
-                    int length = ser.IndexOf(",");
-                    string ret = materialsList.Substring(0, length);
-                    Debug.Log(ret);
-                    materialsList = materialsList.Remove(0, length + 1);
-                    Debug.Log(materialsList);
-                }
+                    int length = materialsList.IndexOf(",");
+                    Debug.Log(length);
+                    if (length > 0)
+                    {
+                        string ret = materialsList.Substring(0, length);
+                        materialsList = materialsList.Remove(0, length + 1);
+                        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
 
+                        Debug.Log("Loading material: " + newMat.name);
+
+                        renderMaterials.Add(newMat);
+                        
+                    }
+                }
+                if (renderMaterials.Count > 0)
+                {
+                    gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                }
             }
         }
-       
+        ReparentObjects();
         addToMap(thisFlag);
+    }
+
+    public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects
+    {
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag currentFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if(currentFlag.parentID != null)
+            {
+                int parentHash = genHashCode(currentFlag.parentID);
+                int xParent = parentHash % 10;
+                int yParent = parentHash % 100;
+                MarkerFlag parentFlag = findInList(currentFlag.parentID, xParent, yParent);
+                if (parentFlag != null)
+                {
+                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform);
+                }
+                else
+                {
+                    allGameobjects[i].transform.SetParent(null);
+                }
+            }
+        }
     }
 
     public static void addToMap(MarkerFlag flag)
@@ -721,7 +757,7 @@ public class MeshRenderer: serializedComponent
             temp += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
         }
         temp += "|";
-        Debug.Log(temp);
+        //Debug.Log(temp);
         return temp.ToCharArray();
     }
 
