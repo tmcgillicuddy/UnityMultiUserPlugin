@@ -53,25 +53,32 @@ public class StructScript
 
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
+
+        if(obj.transform.parent == null)
+        {
+            markTemp.flag.parentID = "__";
+        }
+        else
+        {
+            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
+        }
+
         string flagData = new string(markTemp.toChar());
         serialized += flagData;
-
 
         int hashLoc = genHashCode(markTemp.flag.id);
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
-        //Debug.Log(xLoc +" "+ yLoc);
 
+        //TODO check location if it already is there
         objectMap[xLoc, yLoc].Add(markTemp.flag);
 
         serialized += obj.name + "|";
         serialized += obj.tag + "|";
         serialized += obj.layer + "|";
         serialized += obj.isStatic + "|";
-        // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
-        //Debug.Log(comps.Length);
         for (int i = 0; i < comps.Length; i++)
         {
             if (comps[i] != null)
@@ -282,7 +289,6 @@ public class StructScript
         else
         {
             temp = thisFlag.gameObject;
-
         }
 
         thisFlag.id = objMarker.id;
@@ -361,7 +367,11 @@ public class StructScript
             }
             else if (tag == "meshfilter")
             {
-                UnityEngine.MeshFilter meshFilter = temp.AddComponent<UnityEngine.MeshFilter>();
+                UnityEngine.MeshFilter meshFilter = temp.GetComponent<UnityEngine.MeshFilter>();
+                if(meshFilter == null)
+                {
+                    meshFilter =  temp.AddComponent<UnityEngine.MeshFilter>();
+                }
                 string filePath = deserializeString(ref ser);
                 string meshName = deserializeString(ref ser);
 
@@ -375,6 +385,8 @@ public class StructScript
                         break;
                     }
                 }
+
+                temp.AddComponent<MeshRenderer>(); //TODO <-----REMOVE THIS (for testing only)
             }
 
         }
@@ -383,7 +395,6 @@ public class StructScript
 
     public static void addToMap(MarkerFlag flag)
     {
-        Debug.Log("Adding to map");
         int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
