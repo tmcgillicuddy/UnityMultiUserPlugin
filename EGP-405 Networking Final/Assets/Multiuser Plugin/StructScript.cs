@@ -167,24 +167,31 @@ public class StructScript
                     string sStream = new string(meshStruct.toChar());
                     serialized += sStream;
                     
-                   // GameObject test = new GameObject();
-                   // test.AddComponent<UnityEngine.MeshFilter>();
-                   // UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(meshStruct.filePath);
-                   // //Debug.Log(assets.Length);
-                   // for(int x =0; x< assets.Length; ++x)
-                   // {
-                   //     if(assets[x].name == meshStruct.meshName)
-                   //     {
-                   //         test.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
-                   //         break;
-                   //     }
-                   // }
-                   // 
-                   // //test.AddComponent<MarkerFlag>();
-                   // //test.GetComponent<MarkerFlag>().id = "adsasda";
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.MeshRenderer))
+                {
+                    UnityEngine.MeshRenderer gOMeshRenderer = comps[i] as UnityEngine.MeshRenderer;
 
-                    
-                    
+
+                    //Pack data into our MeshRenderer obj
+                    MeshRenderer meshStruct = new MeshRenderer();
+                    meshStruct.lightProbe = (int)gOMeshRenderer.lightProbeUsage;
+                    meshStruct.reflectionProbe = (int)gOMeshRenderer.reflectionProbeUsage;
+                    meshStruct.castShadows = (int)gOMeshRenderer.shadowCastingMode;
+                    meshStruct.receiveShadows = gOMeshRenderer.receiveShadows;
+                    meshStruct.motionVectors = (int)gOMeshRenderer.motionVectorGenerationMode;
+                    meshStruct.lightmapStatic = false;
+
+                    Material[] gOMaterials = gOMeshRenderer.sharedMaterials;
+                    for(int q=0; q<gOMaterials.Length; ++q)
+                    {
+                        string materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
+                        Debug.Log(materialPath);
+                        meshStruct.materialFiles.Add(materialPath);
+                    }
+
+                    string sStream = new string(meshStruct.toChar());
+                    serialized += sStream;
                 }
                 else
                 {
@@ -386,10 +393,29 @@ public class StructScript
                     }
                 }
 
-                temp.AddComponent<MeshRenderer>(); //TODO <-----REMOVE THIS (for testing only)
+                //temp.AddComponent<MeshRenderer>(); //TODO <-----REMOVE THIS (for testing only)
             }
+            else if (tag == "meshRenderer")
+            {
+                UnityEngine.MeshRenderer gOMeshRenderer = temp.GetComponent<UnityEngine.MeshRenderer>();
+                if(gOMeshRenderer == null)
+                {
+                    gOMeshRenderer = temp.AddComponent<UnityEngine.MeshRenderer>();
+                }
 
+                gOMeshRenderer.lightProbeUsage = (UnityEngine.Rendering.LightProbeUsage)deserializeInt(ref ser);
+                gOMeshRenderer.reflectionProbeUsage = (UnityEngine.Rendering.ReflectionProbeUsage)deserializeInt(ref ser);
+                gOMeshRenderer.shadowCastingMode = (UnityEngine.Rendering.ShadowCastingMode)deserializeInt(ref ser);
+                gOMeshRenderer.receiveShadows = deserializeBool(ref ser);
+                gOMeshRenderer.motionVectorGenerationMode = (UnityEngine.MotionVectorGenerationMode)deserializeInt(ref ser);
+                //Light map static junk
+                deserializeBool(ref ser);
+
+                string materialsList = deserializeString(ref ser);
+                Debug.Log(materialsList);
+            }
         }
+       
         addToMap(thisFlag);
     }
 
@@ -528,23 +554,6 @@ public class serializedComponent
 
 }
 
-
-//These structs are in unity engine by default, keeping them just in case.
-/*struct Vector3
-{
-    float x, y, z;
-}
-
-struct Quaternion
-{
-    float rotX, rotY, rotZ, rotW;
-}
-
-struct Color
-{
-    float r, g, b, a;
-}*/
-
 public class serMarkerFlag : serializedComponent
 {
     public MarkerFlag flag;
@@ -668,6 +677,46 @@ public class MeshFilter: serializedComponent
         temp += filePath +"|"+ meshName +"|";
         return temp.ToCharArray();
     }
+}
+
+public class MeshRenderer: serializedComponent
+{
+    public int lightProbe;
+
+    public int reflectionProbe;
+
+    //MISSING Anchor Override
+
+    public int castShadows;
+
+    public bool receiveShadows;
+
+    public int motionVectors;
+
+    public bool lightmapStatic;
+
+    //MISSING lightmap settings and uv charting control
+
+    public List<string> materialFiles = new List<string>();
+    override public char[] toChar()
+    {
+        string temp = "meshRenderer|";
+        temp += lightProbe.ToString() + "|";
+        temp += reflectionProbe.ToString() + "|";
+        temp += castShadows.ToString() + "|";
+        temp += receiveShadows + "|";
+        temp += motionVectors.ToString() + "|";
+        temp += lightmapStatic + "|";
+
+        for(int i=0; i < materialFiles.Count; ++i)
+        {
+            temp += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
+        }
+        temp += "|";
+        Debug.Log(temp);
+        return temp.ToCharArray();
+    }
+
 }
 
 /*public class Camera : serializedComponent
