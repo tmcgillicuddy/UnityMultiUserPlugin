@@ -262,38 +262,6 @@ public class MultiuserPlugin
 
     }
 
-    public static void testSerialize(GameObject testObj)
-    {
-        //  Debug.Log("Testing selected obj(s)");
-        string temp = StructScript.serialize(testObj);
-        //Debug.Log(temp);
-        if (Selection.gameObjects.Length > 0)
-        {
-            GameObject[] testObjs = Selection.gameObjects;
-            for (int i = 0; i < testObjs.Length; ++i)
-            {
-                if (!mIsServer)
-                {
-                    //   Debug.Log("Test Sending to server"); 
-                    SendData(temp, temp.Length, "");
-                }
-                else
-                {
-                    //  Debug.Log("Test Broadcasting");
-
-                    for (int j = 0; j < mConnectedClients.Count; ++j)
-                    {
-                        Debug.Log(mConnectedClients[j].IP);
-                        if (mConnectedClients[j].IP != "")
-                        {
-                            SendData(temp, temp.Length, mConnectedClients[j].IP);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public static unsafe void addClient()
     {
         char* ip = GetLastPacketIP();

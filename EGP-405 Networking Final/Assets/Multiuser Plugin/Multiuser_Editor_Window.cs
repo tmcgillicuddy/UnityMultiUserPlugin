@@ -194,12 +194,6 @@ public class Multiuser_Editor_Window : EditorWindow
             EditorGUILayout.EndHorizontal();
 
         }
-        if (GUILayout.Button("Check"))
-        {
-          //  Debug.Log("Pressed Button");
-            MultiuserPlugin.testSerialize(Selection.gameObjects[0]);
-            //StructScript.serialize(Selection.gameObjects[0]);
-        }
     }
 
     void sendMessage()
