@@ -386,21 +386,33 @@ public class StructScript
             }
             else if (tag == "boxCollider")
             {
-                UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
+                UnityEngine.BoxCollider col = temp.GetComponent<UnityEngine.BoxCollider>();
+                if(col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.BoxCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
             else if (tag == "sphereCollider")
             {
-                UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
+                UnityEngine.SphereCollider col = temp.GetComponent<UnityEngine.SphereCollider>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.SphereCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
             else if (tag == "capsuleCollider")
             {
-                UnityEngine.CapsuleCollider col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                UnityEngine.CapsuleCollider col = temp.GetComponent<UnityEngine.CapsuleCollider>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
                 col.height = deserializeFloat(ref ser);
@@ -409,7 +421,11 @@ public class StructScript
             }
             else if (tag == "rigidbody")
             {
-                UnityEngine.Rigidbody col = temp.AddComponent<UnityEngine.Rigidbody>();
+                UnityEngine.Rigidbody col = temp.GetComponent<UnityEngine.Rigidbody>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.Rigidbody>();
+                }
                 col.mass = deserializeFloat(ref ser);
                 col.drag = deserializeFloat(ref ser);
                 col.angularDrag = deserializeFloat(ref ser);
@@ -421,8 +437,11 @@ public class StructScript
             }
             else if(tag == "camera")
             {
-                UnityEngine.Camera cam = temp.AddComponent<UnityEngine.Camera>();
-
+                UnityEngine.Camera cam = temp.GetComponent<UnityEngine.Camera>();
+                if (cam == null)
+                {
+                    cam = temp.AddComponent<UnityEngine.Camera>();
+                }
                 cam.clearFlags = (CameraClearFlags)deserializeInt(ref ser);
                 cam.backgroundColor = deserializeColor(ref ser);
                 cam.cullingMask = deserializeInt(ref ser);
