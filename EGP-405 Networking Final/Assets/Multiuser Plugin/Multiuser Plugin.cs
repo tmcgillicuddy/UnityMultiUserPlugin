@@ -34,6 +34,8 @@ public class MultiuserPlugin
     public static string objectId;
     public static int objCounter = 0;
     public static string serverIP;
+    public static int clientID;
+    public static bool newMessage;
 
     struct ConnectedClientInfo  //For storing connected client information
     {
