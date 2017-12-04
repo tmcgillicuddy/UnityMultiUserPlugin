@@ -271,7 +271,7 @@ public class MultiuserPlugin
     {
         if(mConnected)
         {
-            string targetID = target.id;
+            string targetID = target.id + "|";
             if (!mIsServer)
             {
                 //   Debug.Log("Test Sending to server"); 
