@@ -65,6 +65,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 EditorGUILayout.BeginHorizontal();
 
+                nickName = "Client";
                 GUILayout.Label("Enter nickname:");
                 nickName = EditorGUILayout.TextField(nickName);
 
@@ -86,6 +87,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 EditorGUILayout.BeginHorizontal();
 
+                nickName = "Server";
                 GUILayout.Label("Enter nickname:");
                 nickName = EditorGUILayout.TextField(nickName);
 
@@ -102,6 +104,7 @@ public class Multiuser_Editor_Window : EditorWindow
                     //CALL CONNECT TO SERVER FUNCTION HERE
                     MultiuserPlugin.startupClient(mTargetIP, mPortNum);
                     clientID = MultiuserPlugin.clientID;
+                    nickName += (" " + clientID);
                 }
             }
             else // server
@@ -146,15 +149,19 @@ public class Multiuser_Editor_Window : EditorWindow
 
             EditorGUILayout.BeginHorizontal();
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(Screen.width), GUILayout.Height(75));//, GUILayout.ExpandHeight(false));
-            //EditorGUILayout.LabelField(display, "textfield");//, GUILayout.Height(75));
             EditorGUILayout.TextArea(display, GUILayout.Width(Screen.width), GUILayout.ExpandHeight(true));
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
+            Event e = Event.current;
+            bool enterHit = false;
+            if (e.keyCode == KeyCode.Return && message != null)
+                enterHit = true;
             message = EditorGUILayout.TextField("Message", message);
-            if (GUILayout.Button("Send", GUILayout.Width(50)))
+            if (GUILayout.Button("Send", GUILayout.Width(50)) || enterHit)
             {
+                enterHit = false;
                 sendMessage();
             }
             EditorGUILayout.EndHorizontal();
@@ -216,8 +223,6 @@ public class Multiuser_Editor_Window : EditorWindow
 
         // send the message over the network
         MultiuserPlugin.SendMessageOverNetwork(fullMessage);
-
-        MultiuserPlugin.SendMessageOverNetwork(message);
 
         //Clean up selection and GUI
         message = null;

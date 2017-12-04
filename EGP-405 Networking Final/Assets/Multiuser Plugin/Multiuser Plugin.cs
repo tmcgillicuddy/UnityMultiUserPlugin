@@ -318,6 +318,16 @@ public class MultiuserPlugin
         }
     }
 
+    public static void handleChatMessage(string message)
+    {
+        Multiuser_Editor_Window.messageStack.Add(message);
+
+        if (mIsServer)
+            SendMessageOverNetwork(message);
+
+        newMessage = true;
+    }
+
     public static void Disconnect()
     {
         Shutdown();

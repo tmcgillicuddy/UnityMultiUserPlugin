@@ -238,6 +238,10 @@ public class StructScript
                 componentSerialize(output);
                 //componentSerialize(ser);
                 break;
+
+            case (Byte)Message.CHAT_MESSAGE:
+                MultiuserPlugin.handleChatMessage(output);
+                break;
             case (Byte)Message.ID_DISCONNECTION:
                 if (MultiuserPlugin.mIsServer)
                 {
