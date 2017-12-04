@@ -23,7 +23,7 @@ public class StructScript
 
     static List<MarkerFlag>[,] objectMap = new List<MarkerFlag>[100, 100];
 
-    enum Message //TODO: Add all the regular message types that we want to be ready for
+    public enum Message //TODO: Add all the regular message types that we want to be ready for
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 16,
         ID_CONNECTION_ATTEMPT_FAILED = 17,

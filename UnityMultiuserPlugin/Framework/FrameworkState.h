@@ -28,8 +28,7 @@ public:
 	virtual bool init(char *targetIP, int portNum, int maxClients) = 0;
 
 	//Data Handeling
-	virtual bool SendData(char * data, int length, char * ownerIP) = 0;
-	virtual bool SendMessageData(char * data, int length, char * ownerIP) = 0;
+	virtual bool SendData(int mID, char * data, int length, char * ownerIP) = 0;
 	virtual char* UpdateNetwork() = 0;
 	virtual char* GetLastPacketIP() = 0;
 

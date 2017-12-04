@@ -18,9 +18,7 @@ extern "C"
 
 	MULTIUSER_PLUGIN_SYMBOL int StartClient(char* targetIP, int portNum);
 
-	MULTIUSER_PLUGIN_SYMBOL int SendData(char* data, int length, char* ownerIP);
-
-	MULTIUSER_PLUGIN_SYMBOL int SendMessageData(char * data, int length, char * ownerIP);
+	MULTIUSER_PLUGIN_SYMBOL int SendData(int mID, char* data, int length, char* ownerIP);
 
 	MULTIUSER_PLUGIN_SYMBOL char* GetData();
 

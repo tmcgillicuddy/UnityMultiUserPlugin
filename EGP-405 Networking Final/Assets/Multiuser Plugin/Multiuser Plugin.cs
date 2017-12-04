@@ -20,7 +20,7 @@ public class MultiuserPlugin
     [DllImport("UnityMultiuserPlugin")]
     public static extern unsafe char* GetData();
     [DllImport("UnityMultiuserPlugin")]
-    public static extern unsafe int SendData(string data, int length, string ownerIP);
+    public static extern unsafe int SendData(int mID, string data, int length, string ownerIP);
     [DllImport("UnityMultiuserPlugin")]
     public static extern int Shutdown();
     [DllImport("UnityMultiuserPlugin")]
@@ -227,7 +227,7 @@ public class MultiuserPlugin
                 if (!mIsServer)
                 {
                     //   Debug.Log("Test Sending to server"); 
-                    SendData(temp, temp.Length, "");
+                    SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, "");
                 }
                 else
                 {
@@ -238,7 +238,7 @@ public class MultiuserPlugin
                        // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
-                            SendData(temp, temp.Length, mConnectedClients[j].IP);
+                            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, mConnectedClients[j].IP);
                         }
                     }
                 }
@@ -288,13 +288,13 @@ public class MultiuserPlugin
         for (int i=0; i < allGameobjects.Length; ++i)
         {
             string temp = StructScript.serialize(allGameobjects[i]);
-            SendData(temp, temp.Length, newIP);
+            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, newIP);
         }
 
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
             string temp = StructScript.serialize(allGameobjects[i]);
-            SendData(temp, temp.Length, newIP);
+            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, newIP);
         }
 
     }
@@ -307,14 +307,14 @@ public class MultiuserPlugin
                 {
                     foreach (ConnectedClientInfo c in mConnectedClients)
                     {
-                        SendData(message, message.Length, c.IP);
+                        SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, c.IP);
                     }
                     break;
                 }
 
             case false:
                 {
-                    SendData(message, message.Length, serverIP);
+                    SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, serverIP);
                     break;
                 }
         }

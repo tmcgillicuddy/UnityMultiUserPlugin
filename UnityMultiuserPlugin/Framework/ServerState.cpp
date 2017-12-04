@@ -27,7 +27,7 @@ bool ServerState::init(char *targetIP, int portNum, int maxClients)
 	
 }
 
-bool ServerState::SendData(char * data, int length, char * ownerIP)
+bool ServerState::SendData(int mID, char * data, int length, char * ownerIP)
 {
 	writeToLogger(data);
 
@@ -36,6 +36,7 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	writeToLogger("Sending data to " + tempDebug);
 
 	dataBuffer* tempBuffer = new dataBuffer();
+	tempBuffer->messageID = mID;
 	strcpy(tempBuffer->buffer, data);
 	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);	//Convert passed string into raknet IP address
 
@@ -47,32 +48,6 @@ bool ServerState::SendData(char * data, int length, char * ownerIP)
 	else
 	{
 		mpPeer->Send((char*)tempBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
-		writeToLogger("Sent data");
-		return true;
-	}
-}
-
-bool ServerState::SendMessageData(char * data, int length, char * ownerIP)
-{
-	writeToLogger(data);
-
-	std::string tmpDebug = ownerIP;
-
-	writeToLogger("Sending data to " + tmpDebug);
-
-	dataBuffer* tmpBuffer = new dataBuffer();
-	tmpBuffer->messageID = 135;
-	strcpy(tmpBuffer->buffer, data);
-	RakNet::SystemAddress newAddress = RakNet::SystemAddress(ownerIP);
-
-	if (mpPeer == NULL)
-	{
-		writeToLogger("Error with Peer");
-		return false;
-	}
-	else
-	{
-		mpPeer->Send((char*)tmpBuffer, sizeof(dataBuffer), HIGH_PRIORITY, RELIABLE_ORDERED, 0, newAddress, false);
 		writeToLogger("Sent data");
 		return true;
 	}
