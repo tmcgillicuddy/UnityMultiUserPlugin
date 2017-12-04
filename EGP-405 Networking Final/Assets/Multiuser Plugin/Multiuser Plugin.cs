@@ -306,6 +306,7 @@ public class MultiuserPlugin
                     foreach (ConnectedClientInfo c in mConnectedClients)
                     {
                         SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, c.IP);
+                        Debug.Log("Sent message to " + c.IP);
                     }
                     break;
                 }
