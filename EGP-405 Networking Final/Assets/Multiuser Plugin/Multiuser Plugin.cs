@@ -193,7 +193,7 @@ public class MultiuserPlugin
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
-            //TODO: Destroy the objects
+            MonoBehaviour.DestroyImmediate(allGameobjects[i]);
         }
 
         //TODO: Start client with given port num, targetIP and password
