@@ -89,6 +89,7 @@ public class StructScript
                 {
                     //        Debug.Log("Has Transform");
                     UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
+
                     Transform serTemp = new Transform();
                     serTemp.pos = temp.position;
                     serTemp.rot = temp.rotation;
@@ -101,6 +102,7 @@ public class StructScript
                 {
                     //   Debug.Log("Has Box Collider");
                     UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
+
                     BoxCollider serTemp = new BoxCollider();
                     serTemp.center = temp.center;
                     serTemp.size = temp.size;
@@ -112,6 +114,7 @@ public class StructScript
                 {
                     //    Debug.Log("Has Sphere Collider");
                     UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
+
                     SphereCollider serTemp = new SphereCollider();
                     serTemp.center = temp.center;
                     serTemp.radius = temp.radius;
@@ -123,6 +126,7 @@ public class StructScript
                 {
                     //  Debug.Log("Has Capsule Collider");
                     UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
+
                     CapsuleCollider serTemp = new CapsuleCollider();
                     serTemp.center = temp.center;
                     serTemp.radius = temp.radius;
@@ -136,6 +140,7 @@ public class StructScript
                 {
                     //  Debug.Log("Has Rigidbody");
                     UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
+
                     RigidBody serTemp = new RigidBody();
                     serTemp.mass = temp.mass;
                     serTemp.drag = temp.drag;
@@ -151,7 +156,26 @@ public class StructScript
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.Camera))
                 {
-                    //    Debug.Log("Has Camera");
+                    UnityEngine.Camera temp = comps[i] as UnityEngine.Camera;
+
+                    Camera serTemp = new Camera();
+                    serTemp.clearFlags = (int)temp.clearFlags;
+                    serTemp.background = temp.backgroundColor;
+                    serTemp.cullingMask = temp.cullingMask;
+                    serTemp.projection = temp.projectionMatrix.ToString();
+                    serTemp.near = temp.nearClipPlane;
+                    serTemp.far = temp.farClipPlane;
+                    serTemp.viewportRect = temp.rect;
+                    serTemp.renderingPath = (int)temp.renderingPath;
+                    serTemp.HDR = temp.allowHDR;
+                    serTemp.MSAA = temp.allowMSAA;
+                    serTemp.occlusionCulling = temp.useOcclusionCulling;
+                    serTemp.depth = temp.depth;
+                    serTemp.fov = temp.fieldOfView;
+                    serTemp.targetDisplay = temp.targetDisplay;
+
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
                 {
@@ -807,19 +831,16 @@ public class MeshRenderer: serializedComponent
 
 public class Camera : serializedComponent
 {
-    int clearFlags;
-    Color background;
-    bool defaultCul, transparent, igRay, water, ui;
-    bool projection;
-    float near, far;
-    Vector4 viewportRect;
-    int renderingPath;
-
-    bool HDR, MSAA, occlusionCulling;
-
-    float depth, fov;
-
-    int targetDisplay;
+    public int clearFlags;
+    public Color background;
+    public int cullingMask;
+    public string projection;
+    public float near, far;
+    public Rect viewportRect;
+    public int renderingPath;
+    public bool HDR, MSAA, occlusionCulling;
+    public float depth, fov;
+    public int targetDisplay;
 
     override public char[] toChar()
     {
@@ -829,17 +850,13 @@ public class Camera : serializedComponent
         temp += background.g + "|";
         temp += background.b + "|";
         temp += background.a + "|";
-        temp += defaultCul.ToString() + "|";
-        temp += transparent.ToString() + "|";
-        temp += igRay.ToString() + "|";
-        temp += water.ToString() + "|";
-        temp += ui.ToString() + "|";
+        temp += cullingMask.ToString() + "|";
         temp += near.ToString() + "|";
         temp += far.ToString() + "|";
         temp += viewportRect.x + "|";
         temp += viewportRect.y + "|";
-        temp += viewportRect.z + "|";
-        temp += viewportRect.w + "|";
+        temp += viewportRect.width + "|";
+        temp += viewportRect.height + "|";
         temp += renderingPath.ToString() + "|";
         temp += HDR.ToString() + "|";
         temp += MSAA.ToString() + "|";
