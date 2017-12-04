@@ -123,8 +123,8 @@ public class MultiuserPlugin
 
     static void viewMode()
     {
-        Selection.activeObject = null;
-
+        Selection.activeObject = new UnityEngine.Object(); // prevents selection in heirarchy window ( can still select but can't do anything with selection, it only highlights in heirarchy window)
+        Selection.objects = new UnityEngine.Object[0]; // always sets selection to a new gameobject that doesn't exist
     }
 
     public static void startupServer(int portNum, int maxClients)
