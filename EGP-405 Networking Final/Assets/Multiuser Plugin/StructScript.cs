@@ -32,7 +32,8 @@ public class StructScript
         ID_DISCONNECTION = 21,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 136,
-
+        LOADLEVEL = 137,
+        LEVELLOADED = 138,
     }
 
     public static void init()
@@ -241,6 +242,13 @@ public class StructScript
                 {
                     Debug.Log("You have disconnected");
                 }
+                break;
+            case (Byte)Message.LOADLEVEL:
+                int numObjs = deserializeInt(ref output);
+                break;
+
+            case (Byte)Message.LEVELLOADED:
+
                 break;
             default:
                 Debug.Log(output);

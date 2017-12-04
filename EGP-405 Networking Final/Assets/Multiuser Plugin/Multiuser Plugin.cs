@@ -285,18 +285,16 @@ public class MultiuserPlugin
 
         //Send a data buffer of all the objects currently in the scene to the newly connected client
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+
+        string gOCount = allGameobjects.Length.ToString();
+        SendData((int)StructScript.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
         for (int i=0; i < allGameobjects.Length; ++i)
         {
             string temp = StructScript.serialize(allGameobjects[i]);
             SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, newIP);
         }
 
-        for (int i = 0; i < allGameobjects.Length; ++i)
-        {
-            string temp = StructScript.serialize(allGameobjects[i]);
-            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, newIP);
-        }
-
+        SendData((int)StructScript.Message.LEVELLOADED, gOCount, gOCount.Length, newIP);
     }
 
     public static void SendMessageOverNetwork(string message)
