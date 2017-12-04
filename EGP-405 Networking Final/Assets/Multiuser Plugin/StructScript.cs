@@ -20,6 +20,7 @@ public unsafe struct StraightCharPointer //No mId so all stuffed content can be 
 
 public class StructScript
 {
+    static int expectedObjs, recievedObjs;
 
     static List<MarkerFlag>[,] objectMap = new List<MarkerFlag>[100, 100];
 
@@ -228,7 +229,11 @@ public class StructScript
                 Debug.Log("Connection Failed, server is FULL");
                 break;
             case (Byte)Message.GO_UPDATE:
-
+                if(expectedObjs>0)
+                {
+                    recievedObjs++;
+                    EditorUtility.DisplayProgressBar("Getting Level Data", "", recievedObjs/expectedObjs);
+                }
                 componentSerialize(output);
                 //componentSerialize(ser);
                 break;
@@ -244,10 +249,15 @@ public class StructScript
                 }
                 break;
             case (Byte)Message.LOADLEVEL:
-                int numObjs = deserializeInt(ref output);
-                break;
+                expectedObjs = deserializeInt(ref output);
 
+                EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
+
+                break;
             case (Byte)Message.LEVELLOADED:
+                ReparentObjects();
+                expectedObjs = -1;
+                EditorUtility.ClearProgressBar();
 
                 break;
             default:
