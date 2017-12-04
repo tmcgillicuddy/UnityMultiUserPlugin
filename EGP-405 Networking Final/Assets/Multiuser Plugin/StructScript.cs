@@ -53,25 +53,32 @@ public class StructScript
 
         serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         markTemp.flag = obj.GetComponent<MarkerFlag>();
+
+        if(obj.transform.parent == null)
+        {
+            markTemp.flag.parentID = "__";
+        }
+        else
+        {
+            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
+        }
+
         string flagData = new string(markTemp.toChar());
         serialized += flagData;
-
 
         int hashLoc = genHashCode(markTemp.flag.id);
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
-        //Debug.Log(xLoc +" "+ yLoc);
 
+        //TODO check location if it already is there
         objectMap[xLoc, yLoc].Add(markTemp.flag);
 
         serialized += obj.name + "|";
         serialized += obj.tag + "|";
         serialized += obj.layer + "|";
         serialized += obj.isStatic + "|";
-        // Debug.Log("Checking");
         Component[] comps;
         comps = obj.GetComponents<Component>();
-        //Debug.Log(comps.Length);
         for (int i = 0; i < comps.Length; i++)
         {
             if (comps[i] != null)
@@ -146,13 +153,45 @@ public class StructScript
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
                 {
-                    UnityEngine.MeshFilter temp = comps[i] as UnityEngine.MeshFilter;
-                    MeshFilter meshTemp = new MeshFilter();
-                    Mesh tempMesh = temp.sharedMesh;
-                    meshTemp.fileName = AssetDatabase.GetAssetPath(tempMesh);
-                    string tempString = new string(meshTemp.toChar());
-                    serialized += tempString;
-                    Debug.Log(serialized);
+                    //Gather Meshfilter information on current GO
+                    UnityEngine.MeshFilter gOMeshFilter = comps[i] as UnityEngine.MeshFilter;
+                    Mesh gOMesh = gOMeshFilter.sharedMesh;
+
+
+                    //Pack data into our meshfilter object
+                    MeshFilter meshStruct = new MeshFilter();
+                    meshStruct.filePath = AssetDatabase.GetAssetPath(gOMesh);
+                    meshStruct.meshName = gOMesh.name;
+
+                    //Convert the data into a string and add it to the overall data stream
+                    string sStream = new string(meshStruct.toChar());
+                    serialized += sStream;
+                    
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.MeshRenderer))
+                {
+                    UnityEngine.MeshRenderer gOMeshRenderer = comps[i] as UnityEngine.MeshRenderer;
+
+
+                    //Pack data into our MeshRenderer obj
+                    MeshRenderer meshStruct = new MeshRenderer();
+                    meshStruct.lightProbe = (int)gOMeshRenderer.lightProbeUsage;
+                    meshStruct.reflectionProbe = (int)gOMeshRenderer.reflectionProbeUsage;
+                    meshStruct.castShadows = (int)gOMeshRenderer.shadowCastingMode;
+                    meshStruct.receiveShadows = gOMeshRenderer.receiveShadows;
+                    meshStruct.motionVectors = (int)gOMeshRenderer.motionVectorGenerationMode;
+                    meshStruct.lightmapStatic = false;
+
+                    Material[] gOMaterials = gOMeshRenderer.sharedMaterials;
+                    for(int q=0; q<gOMaterials.Length; ++q)
+                    {
+                        string materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
+
+                        meshStruct.materialFiles.Add(materialPath);
+                    }
+
+                    string sStream = new string(meshStruct.toChar());
+                    serialized += sStream;
                 }
                 else
                 {
@@ -188,9 +227,8 @@ public class StructScript
                 Debug.Log("Connection Failed, server is FULL");
                 break;
             case (Byte)Message.GO_UPDATE:
-                Debug.Log("Game Object Received");
+
                 componentSerialize(output);
-                Debug.Log(ser[0]);
                 //componentSerialize(ser);
                 break;
             case (Byte)Message.ID_DISCONNECTION:
@@ -227,7 +265,7 @@ public class StructScript
 
     public static void componentSerialize(string ser)
     {
-        Debug.Log(ser);
+        //Debug.Log(ser);
         GameObject temp = null;
 
         MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
@@ -239,9 +277,9 @@ public class StructScript
 
         MarkerFlag thisFlag = null;
 
-        for(int i=0; i < objectMap[xLoc, yLoc].Count; ++i)
+        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
         {
-            if(objectMap[xLoc,yLoc][i].id == objMarker.id)
+            if (objectMap[xLoc, yLoc][i].id == objMarker.id)
             {
                 thisFlag = objectMap[xLoc, yLoc][i];
                 break;
@@ -257,7 +295,6 @@ public class StructScript
         else
         {
             temp = thisFlag.gameObject;
-            
         }
 
         thisFlag.id = objMarker.id;
@@ -268,7 +305,7 @@ public class StructScript
             int parentHash = genHashCode(thisFlag.parentID);
             int xParent = parentHash % 10;
             int yParent = parentHash % 100;
-            MarkerFlag parentFlag = findInList(thisFlag.parentID,xParent, yParent);
+            MarkerFlag parentFlag = findInList(thisFlag.parentID, xParent, yParent);
             if (parentFlag != null)
             {
                 temp.transform.SetParent(parentFlag.gameObject.transform);
@@ -287,7 +324,7 @@ public class StructScript
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
-        Debug.Log(ser);
+        //Debug.Log(ser);
         while (ser.Length > 0)
         {
             string tag = deserializeString(ref ser);
@@ -336,18 +373,98 @@ public class StructScript
             }
             else if (tag == "meshfilter")
             {
+               
+                UnityEngine.MeshFilter meshFilter = temp.GetComponent<UnityEngine.MeshFilter>();
+                if(meshFilter == null)
+                {
+                    meshFilter =  temp.AddComponent<UnityEngine.MeshFilter>();
+                }
+                string filePath = deserializeString(ref ser);
                 string meshName = deserializeString(ref ser);
-                UnityEngine.MeshFilter col = temp.AddComponent<UnityEngine.MeshFilter>(); // Add the mesh filter
-                //col.mesh = AssetDatabase.LoadAssetAtPath(meshName, typeof(Mesh)) as Mesh;
-            }
 
+                UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(filePath);
+                //Debug.Log(assets.Length);
+                for (int x = 0; x < assets.Length; ++x)
+                {
+                    if (assets[x].name == meshName)
+                    {
+                        temp.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
+                        break;
+                    }
+                }
+
+                //temp.AddComponent<MeshRenderer>(); //TODO <-----REMOVE THIS (for testing only)
+            }
+            else if (tag == "meshRenderer")
+            {
+                UnityEngine.MeshRenderer gOMeshRenderer = temp.GetComponent<UnityEngine.MeshRenderer>();
+                if(gOMeshRenderer == null)
+                {
+                    gOMeshRenderer = temp.AddComponent<UnityEngine.MeshRenderer>();
+                }
+
+                gOMeshRenderer.lightProbeUsage = (UnityEngine.Rendering.LightProbeUsage)deserializeInt(ref ser);
+                gOMeshRenderer.reflectionProbeUsage = (UnityEngine.Rendering.ReflectionProbeUsage)deserializeInt(ref ser);
+                gOMeshRenderer.shadowCastingMode = (UnityEngine.Rendering.ShadowCastingMode)deserializeInt(ref ser);
+                gOMeshRenderer.receiveShadows = deserializeBool(ref ser);
+                gOMeshRenderer.motionVectorGenerationMode = (UnityEngine.MotionVectorGenerationMode)deserializeInt(ref ser);
+                //Light map static junk
+                deserializeBool(ref ser);
+
+                string materialsList = deserializeString(ref ser);
+                List<Material> renderMaterials = new List<Material>();
+                while (materialsList != "")
+                {
+                    int length = materialsList.IndexOf(",");
+                    Debug.Log(length);
+                    if (length > 0)
+                    {
+                        string ret = materialsList.Substring(0, length);
+                        materialsList = materialsList.Remove(0, length + 1);
+                        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
+
+                        Debug.Log("Loading material: " + newMat.name);
+
+                        renderMaterials.Add(newMat);
+                        
+                    }
+                }
+                if (renderMaterials.Count > 0)
+                {
+                    gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                }
+            }
         }
+        ReparentObjects();
         addToMap(thisFlag);
+    }
+
+    public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects
+    {
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag currentFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if(currentFlag.parentID != null)
+            {
+                int parentHash = genHashCode(currentFlag.parentID);
+                int xParent = parentHash % 10;
+                int yParent = parentHash % 100;
+                MarkerFlag parentFlag = findInList(currentFlag.parentID, xParent, yParent);
+                if (parentFlag != null)
+                {
+                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform);
+                }
+                else
+                {
+                    allGameobjects[i].transform.SetParent(null);
+                }
+            }
+        }
     }
 
     public static void addToMap(MarkerFlag flag)
     {
-        Debug.Log("Adding to map");
         int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
@@ -481,23 +598,6 @@ public class serializedComponent
 
 }
 
-
-//These structs are in unity engine by default, keeping them just in case.
-/*struct Vector3
-{
-    float x, y, z;
-}
-
-struct Quaternion
-{
-    float rotX, rotY, rotZ, rotW;
-}
-
-struct Color
-{
-    float r, g, b, a;
-}*/
-
 public class serMarkerFlag : serializedComponent
 {
     public MarkerFlag flag;
@@ -611,14 +711,56 @@ public class RigidBody : serializedComponent
 
 public class MeshFilter: serializedComponent
 {
-    public string fileName;
+    public string filePath;
+
+    public string meshName;
 
     override public char[] toChar()
     {
         string temp = "meshfilter|";
-        temp += fileName + "|";
+        temp += filePath +"|"+ meshName +"|";
         return temp.ToCharArray();
     }
+}
+
+public class MeshRenderer: serializedComponent
+{
+    public int lightProbe;
+
+    public int reflectionProbe;
+
+    //MISSING Anchor Override
+
+    public int castShadows;
+
+    public bool receiveShadows;
+
+    public int motionVectors;
+
+    public bool lightmapStatic;
+
+    //MISSING lightmap settings and uv charting control
+
+    public List<string> materialFiles = new List<string>();
+    override public char[] toChar()
+    {
+        string temp = "meshRenderer|";
+        temp += lightProbe.ToString() + "|";
+        temp += reflectionProbe.ToString() + "|";
+        temp += castShadows.ToString() + "|";
+        temp += receiveShadows + "|";
+        temp += motionVectors.ToString() + "|";
+        temp += lightmapStatic + "|";
+
+        for(int i=0; i < materialFiles.Count; ++i)
+        {
+            temp += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
+        }
+        temp += "|";
+        //Debug.Log(temp);
+        return temp.ToCharArray();
+    }
+
 }
 
 /*public class Camera : serializedComponent

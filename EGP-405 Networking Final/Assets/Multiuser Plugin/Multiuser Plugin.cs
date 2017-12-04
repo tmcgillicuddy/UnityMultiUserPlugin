@@ -128,7 +128,7 @@ public class MultiuserPlugin
     public static void startupServer(int portNum, int maxClients)
     {
         StructScript.init();
-
+        EditorUtility.DisplayProgressBar("Setting up", "", 0);
         objectId = "Server ";
         //Runs through entire scene and setups marker flags
         objCounter = 0;
@@ -146,6 +146,8 @@ public class MultiuserPlugin
             StructScript.addToMap(objectFlag);
 
             objCounter++;
+            EditorUtility.DisplayProgressBar("Setting up", allGameobjects[i].name, (float)i / (allGameobjects.Length - 1));
+
         }
 
         // get server ip address
@@ -170,9 +172,14 @@ public class MultiuserPlugin
         mConnected = true;
         //ServerUtil.forceSave(); //Save the scene to start with
 
+        EditorUtility.ClearProgressBar();
+
         ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
+
+        
+
     }
 
     public static void startupClient(string targetIP, int portNum)
@@ -205,7 +212,7 @@ public class MultiuserPlugin
 
             if (objectFlag == null)    //If an object doesn't have the marker flag script on it
             {                          //it will be added. This happens when a new object has been made
-                Debug.Log("New Marker");
+
                 objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
                 objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
                 objCounter++;
