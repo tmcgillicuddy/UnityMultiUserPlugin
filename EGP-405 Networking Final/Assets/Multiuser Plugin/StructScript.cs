@@ -262,7 +262,7 @@ public class StructScript
 
                 break;
             case (Byte)Message.LEVELLOADED:
-                //ReparentObjects();
+                ReparentObjects();
                 expectedObjs = -1;
                 EditorUtility.ClearProgressBar();
 
@@ -501,10 +501,10 @@ public class StructScript
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
             MarkerFlag currentFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-            Transform newVal = new Transform();
-            newVal.pos = allGameobjects[i].transform.localPosition;
-            newVal.rot = allGameobjects[i].transform.localRotation;
-            newVal.scale = allGameobjects[i].transform.localScale;
+            //Transform newVal = new Transform();
+            //newVal.pos = allGameobjects[i].transform.localPosition;
+            //newVal.rot = allGameobjects[i].transform.localRotation;
+            //newVal.scale = allGameobjects[i].transform.localScale;
 
             if (currentFlag.parentID != null)
             {
@@ -514,11 +514,11 @@ public class StructScript
                 MarkerFlag parentFlag = findInList(currentFlag.parentID, xParent, yParent);
                 if (parentFlag != null)
                 {
-                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform, false); //Parent the object
+                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform); //Parent the object
 
-                    allGameobjects[i].transform.position = newVal.pos; //Reapply the local values because they have changed with the parent
-                    allGameobjects[i].transform.localScale = newVal.scale;
-                    allGameobjects[i].transform.rotation = newVal.rot;
+                    //allGameobjects[i].transform.position = newVal.pos; //Reapply the local values because they have changed with the parent
+                    //allGameobjects[i].transform.localScale = newVal.scale;
+                    //allGameobjects[i].transform.rotation = newVal.rot;
                 }                                                                         
                 else
                 {
