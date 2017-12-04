@@ -35,6 +35,7 @@ public class StructScript
         GO_UPDATE = 136,
         LOADLEVEL = 137,
         LEVELLOADED = 138,
+        GO_DELETE = 139,
     }
 
     public static void init()
@@ -266,6 +267,9 @@ public class StructScript
                 EditorUtility.ClearProgressBar();
 
                 break;
+            case (Byte)Message.GO_DELETE:
+                deleteGO(output);
+                break;
             default:
                 Debug.Log(output);
                 int identifier = (Byte)ser[0].GetHashCode();
@@ -285,6 +289,32 @@ public class StructScript
             temp += id[i].GetHashCode();
         }
         return temp * primeNum;
+    }
+
+    public static void deleteGO(string info)
+    {
+        string gOId = deserializeString(ref info);
+
+        int hashLoc = genHashCode(gOId);
+
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+
+        MarkerFlag thisFlag = null;
+
+        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
+        {
+            if (objectMap[xLoc, yLoc][i].id == gOId)
+            {
+                thisFlag = objectMap[xLoc, yLoc][i];
+                break;
+            }
+        }
+
+        if (thisFlag != null)
+        {
+            MonoBehaviour.DestroyImmediate(thisFlag.gameObject);
+        }
     }
 
     public static void componentSerialize(string ser)
