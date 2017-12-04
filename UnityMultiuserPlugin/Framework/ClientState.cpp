@@ -33,6 +33,7 @@ bool ClientState::SendData(int mID,char * data, int length, char * ownerIP)
 	writeToLogger("Sending data to " + mServerIP);
 
 	dataBuffer * tempBuffer = new dataBuffer();
+	tempBuffer->messageID = mID;
 	strcpy(tempBuffer->buffer, data);
 	writeToLogger((char*)&tempBuffer);
 	RakNet::SystemAddress newAddress = RakNet::SystemAddress(mServerIP.c_str());	//Convert passed string into raknet IP address
