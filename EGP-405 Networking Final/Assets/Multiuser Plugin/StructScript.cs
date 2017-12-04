@@ -419,6 +419,24 @@ public class StructScript
                 col.isKinematic = deserializeBool(ref ser);
                 col.detectCollisions = deserializeBool(ref ser);
             }
+            else if(tag == "camera")
+            {
+                UnityEngine.Camera cam = temp.AddComponent<UnityEngine.Camera>();
+
+                cam.clearFlags = (CameraClearFlags)deserializeInt(ref ser);
+                cam.backgroundColor = deserializeColor(ref ser);
+                cam.cullingMask = deserializeInt(ref ser);
+                cam.nearClipPlane = deserializeFloat(ref ser);
+                cam.farClipPlane = deserializeFloat(ref ser);
+                cam.rect = deserializeRect(ref ser);
+                cam.renderingPath = (RenderingPath)deserializeInt(ref ser);
+                cam.allowHDR = deserializeBool(ref ser);
+                cam.allowMSAA = deserializeBool(ref ser);
+                cam.useOcclusionCulling = deserializeBool(ref ser);
+                cam.depth = deserializeFloat(ref ser);
+                cam.fieldOfView = deserializeFloat(ref ser);
+                cam.targetDisplay = deserializeInt(ref ser);
+            }
             else if (tag == "meshfilter")
             {
                
@@ -543,6 +561,42 @@ public class StructScript
         temp.id = deserializeString(ref ser);
         temp.parentID = deserializeString(ref ser);
         return temp;
+    }
+
+    public static Rect deserializeRect(ref string ser)
+    {
+        Rect rec = new Rect();
+        int length = ser.IndexOf("|");
+        rec.x = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.y = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.width = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.height = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return rec;
+    }
+
+    public static Color deserializeColor(ref string ser)
+    {
+        Color col;
+        int length = ser.IndexOf("|");
+        col.r = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.g = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.b = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.a = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return col;
     }
 
     public static int deserializeInt(ref string ser)
