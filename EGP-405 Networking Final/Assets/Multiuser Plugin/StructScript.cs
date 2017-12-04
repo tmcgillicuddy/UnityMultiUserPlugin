@@ -89,6 +89,7 @@ public class StructScript
                 {
                     //        Debug.Log("Has Transform");
                     UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
+
                     Transform serTemp = new Transform();
                     serTemp.pos = temp.position;
                     serTemp.rot = temp.rotation;
@@ -101,6 +102,7 @@ public class StructScript
                 {
                     //   Debug.Log("Has Box Collider");
                     UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
+
                     BoxCollider serTemp = new BoxCollider();
                     serTemp.center = temp.center;
                     serTemp.size = temp.size;
@@ -112,6 +114,7 @@ public class StructScript
                 {
                     //    Debug.Log("Has Sphere Collider");
                     UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
+
                     SphereCollider serTemp = new SphereCollider();
                     serTemp.center = temp.center;
                     serTemp.radius = temp.radius;
@@ -123,6 +126,7 @@ public class StructScript
                 {
                     //  Debug.Log("Has Capsule Collider");
                     UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
+
                     CapsuleCollider serTemp = new CapsuleCollider();
                     serTemp.center = temp.center;
                     serTemp.radius = temp.radius;
@@ -136,6 +140,7 @@ public class StructScript
                 {
                     //  Debug.Log("Has Rigidbody");
                     UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
+
                     RigidBody serTemp = new RigidBody();
                     serTemp.mass = temp.mass;
                     serTemp.drag = temp.drag;
@@ -151,7 +156,26 @@ public class StructScript
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.Camera))
                 {
-                    //    Debug.Log("Has Camera");
+                    UnityEngine.Camera temp = comps[i] as UnityEngine.Camera;
+
+                    Camera serTemp = new Camera();
+                    serTemp.clearFlags = (int)temp.clearFlags;
+                    serTemp.background = temp.backgroundColor;
+                    serTemp.cullingMask = temp.cullingMask;
+                    serTemp.projection = temp.projectionMatrix.ToString();
+                    serTemp.near = temp.nearClipPlane;
+                    serTemp.far = temp.farClipPlane;
+                    serTemp.viewportRect = temp.rect;
+                    serTemp.renderingPath = (int)temp.renderingPath;
+                    serTemp.HDR = temp.allowHDR;
+                    serTemp.MSAA = temp.allowMSAA;
+                    serTemp.occlusionCulling = temp.useOcclusionCulling;
+                    serTemp.depth = temp.depth;
+                    serTemp.fov = temp.fieldOfView;
+                    serTemp.targetDisplay = temp.targetDisplay;
+
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
                 {
@@ -362,21 +386,33 @@ public class StructScript
             }
             else if (tag == "boxCollider")
             {
-                UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
+                UnityEngine.BoxCollider col = temp.GetComponent<UnityEngine.BoxCollider>();
+                if(col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.BoxCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
             else if (tag == "sphereCollider")
             {
-                UnityEngine.SphereCollider col = temp.AddComponent<UnityEngine.SphereCollider>();
+                UnityEngine.SphereCollider col = temp.GetComponent<UnityEngine.SphereCollider>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.SphereCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
             }
             else if (tag == "capsuleCollider")
             {
-                UnityEngine.CapsuleCollider col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                UnityEngine.CapsuleCollider col = temp.GetComponent<UnityEngine.CapsuleCollider>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
                 col.height = deserializeFloat(ref ser);
@@ -385,7 +421,11 @@ public class StructScript
             }
             else if (tag == "rigidbody")
             {
-                UnityEngine.Rigidbody col = temp.AddComponent<UnityEngine.Rigidbody>();
+                UnityEngine.Rigidbody col = temp.GetComponent<UnityEngine.Rigidbody>();
+                if (col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.Rigidbody>();
+                }
                 col.mass = deserializeFloat(ref ser);
                 col.drag = deserializeFloat(ref ser);
                 col.angularDrag = deserializeFloat(ref ser);
@@ -394,6 +434,27 @@ public class StructScript
                 col.useGravity = deserializeBool(ref ser);
                 col.isKinematic = deserializeBool(ref ser);
                 col.detectCollisions = deserializeBool(ref ser);
+            }
+            else if(tag == "camera")
+            {
+                UnityEngine.Camera cam = temp.GetComponent<UnityEngine.Camera>();
+                if (cam == null)
+                {
+                    cam = temp.AddComponent<UnityEngine.Camera>();
+                }
+                cam.clearFlags = (CameraClearFlags)deserializeInt(ref ser);
+                cam.backgroundColor = deserializeColor(ref ser);
+                cam.cullingMask = deserializeInt(ref ser);
+                cam.nearClipPlane = deserializeFloat(ref ser);
+                cam.farClipPlane = deserializeFloat(ref ser);
+                cam.rect = deserializeRect(ref ser);
+                cam.renderingPath = (RenderingPath)deserializeInt(ref ser);
+                cam.allowHDR = deserializeBool(ref ser);
+                cam.allowMSAA = deserializeBool(ref ser);
+                cam.useOcclusionCulling = deserializeBool(ref ser);
+                cam.depth = deserializeFloat(ref ser);
+                cam.fieldOfView = deserializeFloat(ref ser);
+                cam.targetDisplay = deserializeInt(ref ser);
             }
             else if (tag == "meshfilter")
             {
@@ -519,6 +580,42 @@ public class StructScript
         temp.id = deserializeString(ref ser);
         temp.parentID = deserializeString(ref ser);
         return temp;
+    }
+
+    public static Rect deserializeRect(ref string ser)
+    {
+        Rect rec = new Rect();
+        int length = ser.IndexOf("|");
+        rec.x = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.y = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.width = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        rec.height = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return rec;
+    }
+
+    public static Color deserializeColor(ref string ser)
+    {
+        Color col;
+        int length = ser.IndexOf("|");
+        col.r = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.g = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.b = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        length = ser.IndexOf("|");
+        col.a = float.Parse(ser.Substring(0, length));
+        ser = ser.Remove(0, length + 1);
+        return col;
     }
 
     public static int deserializeInt(ref string ser)
@@ -807,19 +904,16 @@ public class MeshRenderer: serializedComponent
 
 public class Camera : serializedComponent
 {
-    int clearFlags;
-    Color background;
-    bool defaultCul, transparent, igRay, water, ui;
-    bool projection;
-    float near, far;
-    Vector4 viewportRect;
-    int renderingPath;
-
-    bool HDR, MSAA, occlusionCulling;
-
-    float depth, fov;
-
-    int targetDisplay;
+    public int clearFlags;
+    public Color background;
+    public int cullingMask;
+    public string projection;
+    public float near, far;
+    public Rect viewportRect;
+    public int renderingPath;
+    public bool HDR, MSAA, occlusionCulling;
+    public float depth, fov;
+    public int targetDisplay;
 
     override public char[] toChar()
     {
@@ -829,17 +923,13 @@ public class Camera : serializedComponent
         temp += background.g + "|";
         temp += background.b + "|";
         temp += background.a + "|";
-        temp += defaultCul.ToString() + "|";
-        temp += transparent.ToString() + "|";
-        temp += igRay.ToString() + "|";
-        temp += water.ToString() + "|";
-        temp += ui.ToString() + "|";
+        temp += cullingMask.ToString() + "|";
         temp += near.ToString() + "|";
         temp += far.ToString() + "|";
         temp += viewportRect.x + "|";
         temp += viewportRect.y + "|";
-        temp += viewportRect.z + "|";
-        temp += viewportRect.w + "|";
+        temp += viewportRect.width + "|";
+        temp += viewportRect.height + "|";
         temp += renderingPath.ToString() + "|";
         temp += HDR.ToString() + "|";
         temp += MSAA.ToString() + "|";
