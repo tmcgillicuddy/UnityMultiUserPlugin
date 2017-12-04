@@ -229,10 +229,11 @@ public class StructScript
                 Debug.Log("Connection Failed, server is FULL");
                 break;
             case (Byte)Message.GO_UPDATE:
+               // Debug.Log(recievedObjs);
                 if(expectedObjs>0)
                 {
                     recievedObjs++;
-                    EditorUtility.DisplayProgressBar("Getting Level Data", "", recievedObjs/expectedObjs);
+                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs/expectedObjs);
                 }
                 componentSerialize(output);
                 //componentSerialize(ser);
@@ -250,12 +251,13 @@ public class StructScript
                 break;
             case (Byte)Message.LOADLEVEL:
                 expectedObjs = deserializeInt(ref output);
-
+                recievedObjs = 0;
+                //Debug.Log("Expecting " + expectedObjs);
                 EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
 
                 break;
             case (Byte)Message.LEVELLOADED:
-                ReparentObjects();
+                //ReparentObjects();
                 expectedObjs = -1;
                 EditorUtility.ClearProgressBar();
 
@@ -434,14 +436,14 @@ public class StructScript
                 while (materialsList != "")
                 {
                     int length = materialsList.IndexOf(",");
-                    Debug.Log(length);
+                   // Debug.Log(length);
                     if (length > 0)
                     {
                         string ret = materialsList.Substring(0, length);
                         materialsList = materialsList.Remove(0, length + 1);
                         Material newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
 
-                        Debug.Log("Loading material: " + newMat.name);
+                        //Debug.Log("Loading material: " + newMat.name);
 
                         renderMaterials.Add(newMat);
                         
@@ -453,17 +455,24 @@ public class StructScript
                 }
             }
         }
-        ReparentObjects();
+       // ReparentObjects();
         addToMap(thisFlag);
     }
 
     public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects
     {
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        EditorUtility.DisplayProgressBar("Reparenting Objects", "", 0);
+
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
             MarkerFlag currentFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-            if(currentFlag.parentID != null)
+            Transform newVal = new Transform();
+            newVal.pos = allGameobjects[i].transform.localPosition;
+            newVal.rot = allGameobjects[i].transform.localRotation;
+            newVal.scale = allGameobjects[i].transform.localScale;
+
+            if (currentFlag.parentID != null)
             {
                 int parentHash = genHashCode(currentFlag.parentID);
                 int xParent = parentHash % 10;
@@ -471,14 +480,25 @@ public class StructScript
                 MarkerFlag parentFlag = findInList(currentFlag.parentID, xParent, yParent);
                 if (parentFlag != null)
                 {
-                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform);
-                }
+                    allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform, false); //Parent the object
+
+                    allGameobjects[i].transform.position = newVal.pos; //Reapply the local values because they have changed with the parent
+                    allGameobjects[i].transform.localScale = newVal.scale;
+                    allGameobjects[i].transform.rotation = newVal.rot;
+                }                                                                         
                 else
                 {
                     allGameobjects[i].transform.SetParent(null);
                 }
             }
+
+            
+            EditorUtility.DisplayProgressBar("Getting Level Data", allGameobjects[i].name, (float)i/allGameobjects.Length);
+
         }
+
+        EditorUtility.ClearProgressBar();
+
     }
 
     public static void addToMap(MarkerFlag flag)
