@@ -805,52 +805,48 @@ public class MeshRenderer: serializedComponent
 
 }
 
-/*public class Camera : serializedComponent
+public class Camera : serializedComponent
 {
-    enum clearFlags
-    {
-        SKYBOX,
-        SOLID_COLOR,
-        DEPTH_ONLY,
-        DONT_CLEAR
-    }
+    int clearFlags;
     Color background;
-    bool[] cullingMask = new bool[5];
-    enum projection
-    {
-        PERSPECTIVE,
-        ORTHOGRAPHIC
-    }
-    float[] clippingPlanes = new float[2];
+    bool defaultCul, transparent, igRay, water, ui;
+    bool projection;
+    float near, far;
     Vector4 viewportRect;
-    enum renderingPath
-    {
-        USE_GRAPHICS_SETTINGS,
-        FORWARD,
-        DEFERRED,
-        LEGACY_VERTEX_LIT,
-        LEGACY_DEFERRED
-    }
+    int renderingPath;
 
     bool HDR, MSAA, occlusionCulling;
 
     float depth, fov;
 
-     enum targetDisplay
+    int targetDisplay;
+
+    override public char[] toChar()
     {
-        DISPLAY_1,
-        DISPLAY_2,
-        DISPLAY_3,
-        DISPLAY_4,
-        DISPLAY_5,
-        DISPLAY_6,
-        DISPLAY_7,
-        DISPLAY_8
+        string temp = "camera|";
+        temp += clearFlags.ToString() + "|";
+        temp += background.r + "|";
+        temp += background.g + "|";
+        temp += background.b + "|";
+        temp += background.a + "|";
+        temp += defaultCul.ToString() + "|";
+        temp += transparent.ToString() + "|";
+        temp += igRay.ToString() + "|";
+        temp += water.ToString() + "|";
+        temp += ui.ToString() + "|";
+        temp += near.ToString() + "|";
+        temp += far.ToString() + "|";
+        temp += viewportRect.x + "|";
+        temp += viewportRect.y + "|";
+        temp += viewportRect.z + "|";
+        temp += viewportRect.w + "|";
+        temp += renderingPath.ToString() + "|";
+        temp += HDR.ToString() + "|";
+        temp += MSAA.ToString() + "|";
+        temp += occlusionCulling.ToString() + "|";
+        temp += depth.ToString() + "|";
+        temp += fov.ToString() + "|";
+        temp += targetDisplay.ToString() + "|";
+        return temp.ToCharArray();
     }
 }
-
-public class MeshFilter : serializedComponent
-{
-    string fileName;
-}*/
-
