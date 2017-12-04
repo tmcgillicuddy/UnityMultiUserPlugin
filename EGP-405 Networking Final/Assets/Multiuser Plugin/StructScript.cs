@@ -219,6 +219,22 @@ public class StructScript
                     string sStream = new string(meshStruct.toChar());
                     serialized += sStream;
                 }
+                else if(comps[i].GetType() == typeof(UnityEngine.Light))
+                {
+                    UnityEngine.Light temp = comps[i] as UnityEngine.Light;
+
+                    Light serTemp = new Light();
+                    serTemp.type = (int)temp.type;
+                    serTemp.shadows = (int)temp.shadows;
+                    serTemp.mode = (int)temp.renderMode;
+                    serTemp.cullingMask = temp.cullingMask;
+                    serTemp.color = temp.color;
+                    serTemp.intensity = temp.intensity;
+                    serTemp.cookie = temp.cookieSize;
+
+                    string tempString = new string(serTemp.toChar());
+                    serialized += tempString;
+                }
                 else
                 {
                     //    Debug.Log(comps[i].GetType());
@@ -387,7 +403,7 @@ public class StructScript
             else if (tag == "boxCollider")
             {
                 UnityEngine.BoxCollider col = temp.GetComponent<UnityEngine.BoxCollider>();
-                if(col == null)
+                if (col == null)
                 {
                     col = temp.AddComponent<UnityEngine.BoxCollider>();
                 }
@@ -435,7 +451,7 @@ public class StructScript
                 col.isKinematic = deserializeBool(ref ser);
                 col.detectCollisions = deserializeBool(ref ser);
             }
-            else if(tag == "camera")
+            else if (tag == "camera")
             {
                 UnityEngine.Camera cam = temp.GetComponent<UnityEngine.Camera>();
                 if (cam == null)
@@ -456,13 +472,28 @@ public class StructScript
                 cam.fieldOfView = deserializeFloat(ref ser);
                 cam.targetDisplay = deserializeInt(ref ser);
             }
+            else if (tag == "light")
+            { 
+                UnityEngine.Light li = temp.GetComponent<UnityEngine.Light>();
+                if (li == null)
+                {
+                    li = temp.AddComponent<UnityEngine.Light>();
+                }
+                li.type = (LightType)deserializeInt(ref ser);
+                li.shadows = (LightShadows)deserializeInt(ref ser);
+                li.renderMode = (LightRenderMode)deserializeInt(ref ser);
+                li.cullingMask = deserializeInt(ref ser);
+                li.color = deserializeColor(ref ser);
+                li.intensity = deserializeFloat(ref ser);
+                li.cookieSize = deserializeFloat(ref ser);
+            }
             else if (tag == "meshfilter")
             {
-               
+
                 UnityEngine.MeshFilter meshFilter = temp.GetComponent<UnityEngine.MeshFilter>();
-                if(meshFilter == null)
+                if (meshFilter == null)
                 {
-                    meshFilter =  temp.AddComponent<UnityEngine.MeshFilter>();
+                    meshFilter = temp.AddComponent<UnityEngine.MeshFilter>();
                 }
                 string filePath = deserializeString(ref ser);
                 string meshName = deserializeString(ref ser);
@@ -483,7 +514,7 @@ public class StructScript
             else if (tag == "meshRenderer")
             {
                 UnityEngine.MeshRenderer gOMeshRenderer = temp.GetComponent<UnityEngine.MeshRenderer>();
-                if(gOMeshRenderer == null)
+                if (gOMeshRenderer == null)
                 {
                     gOMeshRenderer = temp.AddComponent<UnityEngine.MeshRenderer>();
                 }
@@ -501,7 +532,7 @@ public class StructScript
                 while (materialsList != "")
                 {
                     int length = materialsList.IndexOf(",");
-                   // Debug.Log(length);
+                    // Debug.Log(length);
                     if (length > 0)
                     {
                         string ret = materialsList.Substring(0, length);
@@ -511,7 +542,7 @@ public class StructScript
                         //Debug.Log("Loading material: " + newMat.name);
 
                         renderMaterials.Add(newMat);
-                        
+
                     }
                 }
                 if (renderMaterials.Count > 0)
@@ -937,6 +968,29 @@ public class Camera : serializedComponent
         temp += depth.ToString() + "|";
         temp += fov.ToString() + "|";
         temp += targetDisplay.ToString() + "|";
+        return temp.ToCharArray();
+    }
+}
+
+public class Light : serializedComponent
+{
+    public int type, shadows, mode, cullingMask;
+    public Color color;
+    public float intensity, cookie;
+
+    override public char[] toChar()
+    {
+        string temp = "light|";
+        temp += type.ToString() + "|";
+        temp += shadows.ToString()+ "|";
+        temp += mode.ToString() + "|";
+        temp += cullingMask.ToString() + "|";
+        temp += color.r + "|";
+        temp += color.g + "|";
+        temp += color.b + "|";
+        temp += color.a + "|";
+        temp += intensity + "|";
+        temp += cookie + "|";
         return temp.ToCharArray();
     }
 }
