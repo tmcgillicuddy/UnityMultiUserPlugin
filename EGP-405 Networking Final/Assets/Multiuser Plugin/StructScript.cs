@@ -31,6 +31,7 @@ public class StructScript
         ID_NEW_INCOMING_CONNECTION = 19,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         ID_DISCONNECTION = 21,
+        ID_CONNECTION_LOST = 22,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 136,
         LOADLEVEL = 137,
@@ -229,19 +230,9 @@ public class StructScript
             case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
-            case (Byte)Message.GO_UPDATE:
-               // Debug.Log(recievedObjs);
-                if(expectedObjs>0)
-                {
-                    recievedObjs++;
-                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs/expectedObjs);
-                }
-                componentSerialize(output);
-                //componentSerialize(ser);
-                break;
 
-            case (Byte)Message.CHAT_MESSAGE:
-                MultiuserPlugin.handleChatMessage(output);
+            case (Byte)Message.ID_CONNECTION_LOST:
+                Debug.Log("Someone lost connection");
                 break;
             case (Byte)Message.ID_DISCONNECTION:
                 if (MultiuserPlugin.mIsServer)
@@ -259,7 +250,6 @@ public class StructScript
                 recievedObjs = 0;
                 //Debug.Log("Expecting " + expectedObjs);
                 EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
-
                 break;
             case (Byte)Message.LEVELLOADED:
                 ReparentObjects();
@@ -269,6 +259,19 @@ public class StructScript
                 break;
             case (Byte)Message.GO_DELETE:
                 deleteGO(output);
+                break;
+            case (Byte)Message.CHAT_MESSAGE:
+                MultiuserPlugin.handleChatMessage(output);
+                break;
+            case (Byte)Message.GO_UPDATE:
+                // Debug.Log(recievedObjs);
+                if (expectedObjs > 0)
+                {
+                    recievedObjs++;
+                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs / expectedObjs);
+                }
+                componentSerialize(output);
+                //componentSerialize(ser);
                 break;
             default:
                 Debug.Log(output);
