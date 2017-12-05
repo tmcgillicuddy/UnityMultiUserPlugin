@@ -24,17 +24,19 @@ public class StructScript
 
     static List<MarkerFlag>[,] objectMap = new List<MarkerFlag>[100, 100];
 
-    public enum Message //TODO: Add all the regular message types that we want to be ready for
+    public enum Message
     {
         ID_CONNECTION_REQUEST_ACCEPTED = 16,
         ID_CONNECTION_ATTEMPT_FAILED = 17,
         ID_NEW_INCOMING_CONNECTION = 19,
         ID_NO_FREE_INCOMING_CONNECTIONS = 20,
         ID_DISCONNECTION = 21,
+        ID_CONNECTION_LOST = 22,
         CHAT_MESSAGE = 135,
         GO_UPDATE = 136,
         LOADLEVEL = 137,
         LEVELLOADED = 138,
+        GO_DELETE = 139,
     }
 
     public static void init()
@@ -209,10 +211,17 @@ public class StructScript
                     meshStruct.lightmapStatic = false;
 
                     Material[] gOMaterials = gOMeshRenderer.sharedMaterials;
-                    for(int q=0; q<gOMaterials.Length; ++q)
+                    for (int q = 0; q < gOMaterials.Length; ++q)
                     {
-                        string materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
-
+                        string materialPath = "";
+                        if (gOMaterials[q] == null || gOMaterials[q].name == "Default-Material")
+                        {
+                            materialPath = "Default-Material";
+                        }
+                        else
+                        {
+                            materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
+                        }
                         meshStruct.materialFiles.Add(materialPath);
                     }
 
@@ -268,21 +277,9 @@ public class StructScript
             case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
                 Debug.Log("Connection Failed, server is FULL");
                 break;
-            case (Byte)Message.GO_UPDATE:
-                Debug.Log("Someone is doing something to a Game Object");
-                // Debug.Log(recievedObjs);
-                Debug.Log(expectedObjs);
-                if(expectedObjs>0)
-                {
-                    recievedObjs++;
-                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs/expectedObjs);
-                }
-                componentSerialize(output);
-                //componentSerialize(ser);
-                break;
 
-            case (Byte)Message.CHAT_MESSAGE:
-                MultiuserPlugin.handleChatMessage(output);
+            case (Byte)Message.ID_CONNECTION_LOST:
+                Debug.Log("Someone lost connection");
                 break;
             case (Byte)Message.ID_DISCONNECTION:
                 if (MultiuserPlugin.mIsServer)
@@ -300,13 +297,28 @@ public class StructScript
                 recievedObjs = 0;
                 //Debug.Log("Expecting " + expectedObjs);
                 EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
-
                 break;
             case (Byte)Message.LEVELLOADED:
-                //ReparentObjects();
+                ReparentObjects();
                 expectedObjs = -1;
                 EditorUtility.ClearProgressBar();
 
+                break;
+            case (Byte)Message.GO_DELETE:
+                deleteGO(output);
+                break;
+            case (Byte)Message.CHAT_MESSAGE:
+                MultiuserPlugin.handleChatMessage(output);
+                break;
+            case (Byte)Message.GO_UPDATE:
+                // Debug.Log(recievedObjs);
+                if (expectedObjs > 0)
+                {
+                    recievedObjs++;
+                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs / expectedObjs);
+                }
+                componentSerialize(output);
+                //componentSerialize(ser);
                 break;
             default:
                 Debug.Log(output);
@@ -327,6 +339,32 @@ public class StructScript
             temp += id[i].GetHashCode();
         }
         return temp * primeNum;
+    }
+
+    public static void deleteGO(string info)
+    {
+        string gOId = deserializeString(ref info);
+
+        int hashLoc = genHashCode(gOId);
+
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+
+        MarkerFlag thisFlag = null;
+
+        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
+        {
+            if (objectMap[xLoc, yLoc][i].id == gOId)
+            {
+                thisFlag = objectMap[xLoc, yLoc][i];
+                break;
+            }
+        }
+
+        if (thisFlag != null)
+        {
+            MonoBehaviour.DestroyImmediate(thisFlag.gameObject);
+        }
     }
 
     public static void componentSerialize(string ser)
@@ -533,27 +571,35 @@ public class StructScript
 
                 string materialsList = deserializeString(ref ser);
                 List<Material> renderMaterials = new List<Material>();
-                while (materialsList != "")
+                if (materialsList.Length > 1)
                 {
-                    Debug.Log("Stuck in while loop");
-                    int length = materialsList.IndexOf(",");
-                    // Debug.Log(length);
-                    if (length > 0)
+                    while (materialsList != "")
                     {
-                        string ret = materialsList.Substring(0, length);
-                        materialsList = materialsList.Remove(0, length + 1);
-                        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
+                        int length = materialsList.IndexOf(",");
+                        // Debug.Log(length);
+                        if (length > 0)
+                        {
+                            string ret = materialsList.Substring(0, length);
+                            materialsList = materialsList.Remove(0, length + 1);
+                            Material newMat = null;
+                            if (ret == "Default-Material" || ret == "" || ret == "Resources/unity_builtin_extra")
+                            {
+                                newMat = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+                            }
+                            else
+                            {
+                                newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
+                            }
+                            //Debug.Log("Loading material: " + newMat.name);
 
-                        //Debug.Log("Loading material: " + newMat.name);
+                            renderMaterials.Add(newMat);
 
-                        renderMaterials.Add(newMat);
-
+                        }
                     }
-                }
-                Debug.Log("out of while loop");
-                if (renderMaterials.Count > 0)
-                {
-                    gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                    if (renderMaterials.Count > 0)
+                    {
+                        gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                    }
                 }
             }
             Debug.Log(ser);
