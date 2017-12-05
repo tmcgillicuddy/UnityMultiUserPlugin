@@ -65,9 +65,9 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 EditorGUILayout.BeginHorizontal();
 
-                nickName = "Client";
+                MultiuserPlugin.objectId = "Client";
                 GUILayout.Label("Enter nickname:");
-                nickName = EditorGUILayout.TextField(nickName);
+                MultiuserPlugin.objectId = EditorGUILayout.TextField(MultiuserPlugin.objectId);
 
                 EditorGUILayout.EndHorizontal();
                 MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
@@ -87,9 +87,9 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 EditorGUILayout.BeginHorizontal();
 
-                nickName = "Server";
+                MultiuserPlugin.objectId = "Server";
                 GUILayout.Label("Enter nickname:");
-                nickName = EditorGUILayout.TextField(nickName);
+                MultiuserPlugin.objectId = EditorGUILayout.TextField(MultiuserPlugin.objectId);
 
                 EditorGUILayout.EndHorizontal();
 

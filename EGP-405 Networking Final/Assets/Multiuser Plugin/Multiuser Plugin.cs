@@ -222,6 +222,7 @@ public class MultiuserPlugin
 
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
+                Debug.Log("Sending modified obj");
                 string temp = StructScript.serialize(allGameobjects[i]);
 
                 if (!mIsServer)
@@ -254,11 +255,7 @@ public class MultiuserPlugin
 
         }
     }
-    unsafe struct MyStringStruct
-    {
-        public int id;
-        public fixed char pseudoString[512];
-    }
+
     static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
         //char* data = null;
@@ -271,6 +268,32 @@ public class MultiuserPlugin
         }
         StructScript.deserializeMessage(data);
 
+    }
+
+    public static void DeleteObject(MarkerFlag target)
+    {
+        if(mConnected)
+        {
+            string targetID = target.id + "|";
+            if (!mIsServer)
+            {
+                //   Debug.Log("Test Sending to server"); 
+                SendData((int)StructScript.Message.GO_DELETE, targetID, targetID.Length, "");
+            }
+            else
+            {
+                //  Debug.Log("Test Broadcasting");
+
+                for (int j = 0; j < mConnectedClients.Count; ++j)
+                {
+                    // Debug.Log(mConnectedClients[j].IP);
+                    if (mConnectedClients[j].IP != "")
+                    {
+                        SendData((int)StructScript.Message.GO_DELETE, targetID, targetID.Length, mConnectedClients[j].IP);
+                    }
+                }
+            }
+        }
     }
 
     public static unsafe void addClient()

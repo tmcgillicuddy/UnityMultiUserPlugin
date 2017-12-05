@@ -55,8 +55,11 @@ public class ServerUtil
                 // Get the new scene name
                 oldSceneName = EditorSceneManager.GetActiveScene().name;
                 int i = 0;
-                while (oldSceneName[i] != ' ')
+                while (i < oldSceneName.Length)
+                {
+                    Debug.Log(oldSceneName[i]);
                     i++;
+                }
                 newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
                 // got the new scene name
 

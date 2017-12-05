@@ -22,4 +22,9 @@ public class MarkerFlag : MonoBehaviour {
             Gizmos.DrawWireCube(transform.position, size);
         }
     }
+
+    private void OnDestroy()
+    {
+        MultiuserPlugin.DeleteObject(this);
+    }
 }
