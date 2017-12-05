@@ -227,7 +227,7 @@ public class MultiuserPlugin
                 if (!mIsServer)
                 {
                     //   Debug.Log("Test Sending to server"); 
-                    SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, "");
+                    SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, serverIP);
                 }
                 else
                 {
