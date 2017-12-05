@@ -238,6 +238,8 @@ public class MultiuserPlugin
                        // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
+                            Debug.Log(temp);
+                            Debug.Log(temp.Length);
                             SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, mConnectedClients[j].IP);
                         }
                     }
@@ -281,6 +283,8 @@ public class MultiuserPlugin
         Debug.Log(newIP);
         ConnectedClientInfo newClient = new ConnectedClientInfo();
         newClient.IP = newIP;
+        newClient.ID = clientID.ToString();
+        ++clientID;
         mConnectedClients.Add(newClient);
 
         //Send a data buffer of all the objects currently in the scene to the newly connected client
@@ -306,7 +310,6 @@ public class MultiuserPlugin
                     foreach (ConnectedClientInfo c in mConnectedClients)
                     {
                         SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, c.IP);
-                        Debug.Log("Sent message to " + c.IP);
                     }
                     break;
                 }

@@ -253,7 +253,9 @@ public class StructScript
                 Debug.Log("Connection Failed, server is FULL");
                 break;
             case (Byte)Message.GO_UPDATE:
-               // Debug.Log(recievedObjs);
+                Debug.Log("Someone is doing something to a Game Object");
+                // Debug.Log(recievedObjs);
+                Debug.Log(expectedObjs);
                 if(expectedObjs>0)
                 {
                     recievedObjs++;
@@ -372,9 +374,11 @@ public class StructScript
         temp.tag = deserializeString(ref ser);
         temp.layer = deserializeInt(ref ser);
         temp.isStatic = deserializeBool(ref ser);
-        //Debug.Log(ser);
+        Debug.Log(ser);
         while (ser.Length > 0)
         {
+            Debug.Log(ser);
+            Debug.Log(ser.Length);
             string tag = deserializeString(ref ser);
 
             if (tag == "transform")
@@ -500,6 +504,7 @@ public class StructScript
                 List<Material> renderMaterials = new List<Material>();
                 while (materialsList != "")
                 {
+                    Debug.Log("Stuck in while loop");
                     int length = materialsList.IndexOf(",");
                    // Debug.Log(length);
                     if (length > 0)
@@ -514,14 +519,17 @@ public class StructScript
                         
                     }
                 }
+                Debug.Log("out of while loop");
                 if (renderMaterials.Count > 0)
                 {
                     gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
                 }
             }
+            Debug.Log(ser);
         }
        // ReparentObjects();
         addToMap(thisFlag);
+        Debug.Log("Out of while loop");
     }
 
     public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects
@@ -563,6 +571,7 @@ public class StructScript
         }
 
         EditorUtility.ClearProgressBar();
+
 
     }
 
