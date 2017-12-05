@@ -189,7 +189,7 @@ public class StructScript
                     for(int q=0; q<gOMaterials.Length; ++q)
                     {
                         string materialPath = "";
-                        if (gOMaterials[q] == new Material(Shader.Find("Diffuse")))
+                        if (gOMaterials[q].name == "Default-Material")
                         {
                             materialPath = "Default-Diffuse";
                         }
