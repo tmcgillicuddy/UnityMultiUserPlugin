@@ -190,7 +190,7 @@ public class StructScript
                     for(int q=0; q<gOMaterials.Length; ++q)
                     {
                         string materialPath = "";
-                        if (gOMaterials[q].name == "Default-Material" || gOMaterials[q] == null)
+                        if (gOMaterials[q] == null ||gOMaterials[q].name == "Default-Material")
                         {
                             materialPath = "Default-Material";
                         }
