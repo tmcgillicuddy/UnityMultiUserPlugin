@@ -53,29 +53,28 @@ public class StructScript
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
-        //Debug.Log(obj.name);
 
-        serMarkerFlag markTemp = new serMarkerFlag(); //Put the marker flag info on the string first !!!
-        markTemp.flag = obj.GetComponent<MarkerFlag>();
+        serMarkerFlag serMarker = new serMarkerFlag(); //Put the marker flag info on the string first !!!
+        serMarker.flag = obj.GetComponent<MarkerFlag>();
 
         if(obj.transform.parent == null)
         {
-            markTemp.flag.parentID = "__";
+            serMarker.flag.parentID = "__";
         }
         else
         {
-            markTemp.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
+            serMarker.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
         }
 
-        string flagData = new string(markTemp.toChar());
+        string flagData = new string(serMarker.toChar());
         serialized += flagData;
 
-        int hashLoc = genHashCode(markTemp.flag.id);
+        int hashLoc = genHashCode(serMarker.flag.id);
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
 
         //TODO check location if it already is there
-        objectMap[xLoc, yLoc].Add(markTemp.flag);
+        objectMap[xLoc, yLoc].Add(serMarker.flag);
 
         serialized += obj.name + "|";
         serialized += obj.tag + "|";
@@ -89,95 +88,94 @@ public class StructScript
             {
                 if (comps[i].GetType() == typeof(UnityEngine.Transform))
                 {
-                    //        Debug.Log("Has Transform");
-                    UnityEngine.Transform temp = comps[i] as UnityEngine.Transform;
+                    UnityEngine.Transform newTransform = comps[i] as UnityEngine.Transform;
 
-                    Transform serTemp = new Transform();
-                    serTemp.pos = temp.position;
-                    serTemp.rot = temp.rotation;
-                    serTemp.scale = temp.localScale; //Look here for scaling issues
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    Transform serNewTransform = new Transform();
+                    serNewTransform.pos = newTransform.position;
+                    serNewTransform.rot = newTransform.rotation;
+                    serNewTransform.scale = newTransform.localScale; //Look here for scaling issues
+                    string transformString = new string(serNewTransform.toChar());
+                    serialized += transformString;
 
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
                 {
                     //   Debug.Log("Has Box Collider");
-                    UnityEngine.BoxCollider temp = comps[i] as UnityEngine.BoxCollider;
+                    UnityEngine.BoxCollider newBoxCollider = comps[i] as UnityEngine.BoxCollider;
 
-                    BoxCollider serTemp = new BoxCollider();
-                    serTemp.center = temp.center;
-                    serTemp.size = temp.size;
-                    serTemp.isTrigger = temp.isTrigger;
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    BoxCollider serNewBoxCollider = new BoxCollider();
+                    serNewBoxCollider.center = newBoxCollider.center;
+                    serNewBoxCollider.size = newBoxCollider.size;
+                    serNewBoxCollider.isTrigger = newBoxCollider.isTrigger;
+                    string boxColliderString = new string(serNewBoxCollider.toChar());
+                    serialized += boxColliderString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
                 {
                     //    Debug.Log("Has Sphere Collider");
-                    UnityEngine.SphereCollider temp = comps[i] as UnityEngine.SphereCollider;
+                    UnityEngine.SphereCollider newSphereCollider = comps[i] as UnityEngine.SphereCollider;
 
-                    SphereCollider serTemp = new SphereCollider();
-                    serTemp.center = temp.center;
-                    serTemp.radius = temp.radius;
-                    serTemp.isTrigger = temp.isTrigger;
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    SphereCollider serNewSphereCollider = new SphereCollider();
+                    serNewSphereCollider.center = newSphereCollider.center;
+                    serNewSphereCollider.radius = newSphereCollider.radius;
+                    serNewSphereCollider.isTrigger = newSphereCollider.isTrigger;
+                    string sphereColliderString = new string(serNewSphereCollider.toChar());
+                    serialized += sphereColliderString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
                 {
                     //  Debug.Log("Has Capsule Collider");
-                    UnityEngine.CapsuleCollider temp = comps[i] as UnityEngine.CapsuleCollider;
+                    UnityEngine.CapsuleCollider newCapsuleCollider = comps[i] as UnityEngine.CapsuleCollider;
 
-                    CapsuleCollider serTemp = new CapsuleCollider();
-                    serTemp.center = temp.center;
-                    serTemp.radius = temp.radius;
-                    serTemp.height = temp.height;
-                    serTemp.directionAxis = temp.direction;
-                    serTemp.isTrigger = temp.isTrigger;
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    CapsuleCollider serNewCapsuleCollider = new CapsuleCollider();
+                    serNewCapsuleCollider.center = newCapsuleCollider.center;
+                    serNewCapsuleCollider.radius = newCapsuleCollider.radius;
+                    serNewCapsuleCollider.height = newCapsuleCollider.height;
+                    serNewCapsuleCollider.directionAxis = newCapsuleCollider.direction;
+                    serNewCapsuleCollider.isTrigger = newCapsuleCollider.isTrigger;
+                    string capsuleColliderString = new string(serNewCapsuleCollider.toChar());
+                    serialized += capsuleColliderString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
                 {
                     //  Debug.Log("Has Rigidbody");
-                    UnityEngine.Rigidbody temp = comps[i] as UnityEngine.Rigidbody;
+                    UnityEngine.Rigidbody newRigidBody = comps[i] as UnityEngine.Rigidbody;
 
-                    RigidBody serTemp = new RigidBody();
-                    serTemp.mass = temp.mass;
-                    serTemp.drag = temp.drag;
-                    serTemp.angularDrag = temp.angularDrag;
-                    serTemp.interpolate = (int)temp.interpolation;
-                    serTemp.collisionDetection = temp.detectCollisions;
-                    serTemp.freeze = (int)temp.constraints;
-                    serTemp.isKinematic = temp.isKinematic;
-                    serTemp.useGravity = temp.useGravity;
-                    serTemp.collisionDetection = temp.detectCollisions;
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    RigidBody serNewRigidBody = new RigidBody();
+                    serNewRigidBody.mass = newRigidBody.mass;
+                    serNewRigidBody.drag = newRigidBody.drag;
+                    serNewRigidBody.angularDrag = newRigidBody.angularDrag;
+                    serNewRigidBody.interpolate = (int)newRigidBody.interpolation;
+                    serNewRigidBody.collisionDetection = newRigidBody.detectCollisions;
+                    serNewRigidBody.freeze = (int)newRigidBody.constraints;
+                    serNewRigidBody.isKinematic = newRigidBody.isKinematic;
+                    serNewRigidBody.useGravity = newRigidBody.useGravity;
+                    serNewRigidBody.collisionDetection = newRigidBody.detectCollisions;
+                    string rigidBodyString = new string(serNewRigidBody.toChar());
+                    serialized += rigidBodyString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.Camera))
                 {
-                    UnityEngine.Camera temp = comps[i] as UnityEngine.Camera;
+                    UnityEngine.Camera newCamera = comps[i] as UnityEngine.Camera;
 
-                    Camera serTemp = new Camera();
-                    serTemp.clearFlags = (int)temp.clearFlags;
-                    serTemp.background = temp.backgroundColor;
-                    serTemp.cullingMask = temp.cullingMask;
-                    serTemp.projection = temp.projectionMatrix.ToString();
-                    serTemp.near = temp.nearClipPlane;
-                    serTemp.far = temp.farClipPlane;
-                    serTemp.viewportRect = temp.rect;
-                    serTemp.renderingPath = (int)temp.renderingPath;
-                    serTemp.HDR = temp.allowHDR;
-                    serTemp.MSAA = temp.allowMSAA;
-                    serTemp.occlusionCulling = temp.useOcclusionCulling;
-                    serTemp.depth = temp.depth;
-                    serTemp.fov = temp.fieldOfView;
-                    serTemp.targetDisplay = temp.targetDisplay;
+                    Camera serNewCamera = new Camera();
+                    serNewCamera.clearFlags = (int)newCamera.clearFlags;
+                    serNewCamera.background = newCamera.backgroundColor;
+                    serNewCamera.cullingMask = newCamera.cullingMask;
+                    serNewCamera.projection = newCamera.projectionMatrix.ToString();
+                    serNewCamera.near = newCamera.nearClipPlane;
+                    serNewCamera.far = newCamera.farClipPlane;
+                    serNewCamera.viewportRect = newCamera.rect;
+                    serNewCamera.renderingPath = (int)newCamera.renderingPath;
+                    serNewCamera.HDR = newCamera.allowHDR;
+                    serNewCamera.MSAA = newCamera.allowMSAA;
+                    serNewCamera.occlusionCulling = newCamera.useOcclusionCulling;
+                    serNewCamera.depth = newCamera.depth;
+                    serNewCamera.fov = newCamera.fieldOfView;
+                    serNewCamera.targetDisplay = newCamera.targetDisplay;
 
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    string cameraString = new string(serNewCamera.toChar());
+                    serialized += cameraString;
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshFilter))
                 {
@@ -230,23 +228,23 @@ public class StructScript
                 }
                 else if(comps[i].GetType() == typeof(UnityEngine.Light))
                 {
-                    UnityEngine.Light temp = comps[i] as UnityEngine.Light;
+                    UnityEngine.Light newLight = comps[i] as UnityEngine.Light;
 
-                    Light serTemp = new Light();
-                    serTemp.type = (int)temp.type;
-                    serTemp.shadows = (int)temp.shadows;
-                    serTemp.mode = (int)temp.renderMode;
-                    serTemp.cullingMask = temp.cullingMask;
-                    serTemp.color = temp.color;
-                    serTemp.intensity = temp.intensity;
-                    serTemp.cookie = temp.cookieSize;
+                    Light serNewLight = new Light();
+                    serNewLight.type = (int)newLight.type;
+                    serNewLight.shadows = (int)newLight.shadows;
+                    serNewLight.mode = (int)newLight.renderMode;
+                    serNewLight.cullingMask = newLight.cullingMask;
+                    serNewLight.color = newLight.color;
+                    serNewLight.intensity = newLight.intensity;
+                    serNewLight.cookie = newLight.cookieSize;
 
-                    string tempString = new string(serTemp.toChar());
-                    serialized += tempString;
+                    string lightString = new string(serNewLight.toChar());
+                    serialized += lightString;
                 }
                 else
                 {
-                    //    Debug.Log(comps[i].GetType());
+                    // DO we still need this else statement?
                 }
 
             }
@@ -333,12 +331,12 @@ public class StructScript
     static int genHashCode(string id)
     {
         const int primeNum = 31;
-        int temp = 0;
+        int hashCode = 0;
         for (int i = 0; i < id.Length; ++i)
         {
-            temp += id[i].GetHashCode();
+            hashCode += id[i].GetHashCode();
         }
-        return temp * primeNum;
+        return hashCode * primeNum;
     }
 
     public static void deleteGO(string info)
@@ -370,7 +368,7 @@ public class StructScript
     public static void componentSerialize(string ser)
     {
         //Debug.Log(ser);
-        GameObject temp = null;
+        GameObject gameObject = null;
 
         MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
 
@@ -393,12 +391,12 @@ public class StructScript
 
         if (thisFlag == null) //Make a new game object with given flag if you need to
         {
-            temp = new GameObject();
-            thisFlag = temp.AddComponent<MarkerFlag>();
+            gameObject = new GameObject();
+            thisFlag = gameObject.AddComponent<MarkerFlag>();
         }
         else
         {
-            temp = thisFlag.gameObject;
+            gameObject = thisFlag.gameObject;
         }
 
         thisFlag.id = objMarker.id;
@@ -412,22 +410,22 @@ public class StructScript
             MarkerFlag parentFlag = findInList(thisFlag.parentID, xParent, yParent);
             if (parentFlag != null)
             {
-                temp.transform.SetParent(parentFlag.gameObject.transform);
+                gameObject.transform.SetParent(parentFlag.gameObject.transform);
             }
             else
             {
-                temp.transform.SetParent(null);
+                gameObject.transform.SetParent(null);
             }
         }
         else
         {
-            temp.transform.SetParent(null);
+            gameObject.transform.SetParent(null);
         }
 
-        temp.name = deserializeString(ref ser);
-        temp.tag = deserializeString(ref ser);
-        temp.layer = deserializeInt(ref ser);
-        temp.isStatic = deserializeBool(ref ser);
+        gameObject.name = deserializeString(ref ser);
+        gameObject.tag = deserializeString(ref ser);
+        gameObject.layer = deserializeInt(ref ser);
+        gameObject.isStatic = deserializeBool(ref ser);
         Debug.Log(ser);
         while (ser.Length > 0)
         {
@@ -437,17 +435,17 @@ public class StructScript
 
             if (tag == "transform")
             {
-                UnityEngine.Transform trans = temp.transform;
+                UnityEngine.Transform trans = gameObject.transform;
                 trans.position = deserializeVector3(ref ser);
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
             }
             else if (tag == "boxCollider")
             {
-                UnityEngine.BoxCollider col = temp.GetComponent<UnityEngine.BoxCollider>();
+                UnityEngine.BoxCollider col = gameObject.GetComponent<UnityEngine.BoxCollider>();
                 if (col == null)
                 {
-                    col = temp.AddComponent<UnityEngine.BoxCollider>();
+                    col = gameObject.AddComponent<UnityEngine.BoxCollider>();
                 }
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
@@ -455,10 +453,10 @@ public class StructScript
             }
             else if (tag == "sphereCollider")
             {
-                UnityEngine.SphereCollider col = temp.GetComponent<UnityEngine.SphereCollider>();
+                UnityEngine.SphereCollider col = gameObject.GetComponent<UnityEngine.SphereCollider>();
                 if (col == null)
                 {
-                    col = temp.AddComponent<UnityEngine.SphereCollider>();
+                    col = gameObject.AddComponent<UnityEngine.SphereCollider>();
                 }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
@@ -466,10 +464,10 @@ public class StructScript
             }
             else if (tag == "capsuleCollider")
             {
-                UnityEngine.CapsuleCollider col = temp.GetComponent<UnityEngine.CapsuleCollider>();
+                UnityEngine.CapsuleCollider col = gameObject.GetComponent<UnityEngine.CapsuleCollider>();
                 if (col == null)
                 {
-                    col = temp.AddComponent<UnityEngine.CapsuleCollider>();
+                    col = gameObject.AddComponent<UnityEngine.CapsuleCollider>();
                 }
                 col.center = deserializeVector3(ref ser);
                 col.radius = deserializeFloat(ref ser);
@@ -479,10 +477,10 @@ public class StructScript
             }
             else if (tag == "rigidbody")
             {
-                UnityEngine.Rigidbody col = temp.GetComponent<UnityEngine.Rigidbody>();
+                UnityEngine.Rigidbody col = gameObject.GetComponent<UnityEngine.Rigidbody>();
                 if (col == null)
                 {
-                    col = temp.AddComponent<UnityEngine.Rigidbody>();
+                    col = gameObject.AddComponent<UnityEngine.Rigidbody>();
                 }
                 col.mass = deserializeFloat(ref ser);
                 col.drag = deserializeFloat(ref ser);
@@ -495,10 +493,10 @@ public class StructScript
             }
             else if (tag == "camera")
             {
-                UnityEngine.Camera cam = temp.GetComponent<UnityEngine.Camera>();
+                UnityEngine.Camera cam = gameObject.GetComponent<UnityEngine.Camera>();
                 if (cam == null)
                 {
-                    cam = temp.AddComponent<UnityEngine.Camera>();
+                    cam = gameObject.AddComponent<UnityEngine.Camera>();
                 }
                 cam.clearFlags = (CameraClearFlags)deserializeInt(ref ser);
                 cam.backgroundColor = deserializeColor(ref ser);
@@ -516,10 +514,10 @@ public class StructScript
             }
             else if (tag == "light")
             { 
-                UnityEngine.Light li = temp.GetComponent<UnityEngine.Light>();
+                UnityEngine.Light li = gameObject.GetComponent<UnityEngine.Light>();
                 if (li == null)
                 {
-                    li = temp.AddComponent<UnityEngine.Light>();
+                    li = gameObject.AddComponent<UnityEngine.Light>();
                 }
                 li.type = (LightType)deserializeInt(ref ser);
                 li.shadows = (LightShadows)deserializeInt(ref ser);
@@ -532,33 +530,31 @@ public class StructScript
             else if (tag == "meshfilter")
             {
 
-                UnityEngine.MeshFilter meshFilter = temp.GetComponent<UnityEngine.MeshFilter>();
+                UnityEngine.MeshFilter meshFilter = gameObject.GetComponent<UnityEngine.MeshFilter>();
                 if (meshFilter == null)
                 {
-                    meshFilter = temp.AddComponent<UnityEngine.MeshFilter>();
+                    meshFilter = gameObject.AddComponent<UnityEngine.MeshFilter>();
                 }
                 string filePath = deserializeString(ref ser);
                 string meshName = deserializeString(ref ser);
 
                 UnityEngine.Object[] assets = AssetDatabase.LoadAllAssetsAtPath(filePath);
-                //Debug.Log(assets.Length);
                 for (int x = 0; x < assets.Length; ++x)
                 {
                     if (assets[x].name == meshName)
                     {
-                        temp.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
+                        gameObject.GetComponent<UnityEngine.MeshFilter>().mesh = assets[x] as UnityEngine.Mesh;
                         break;
                     }
                 }
 
-                //temp.AddComponent<MeshRenderer>(); //TODO <-----REMOVE THIS (for testing only)
             }
             else if (tag == "meshRenderer")
             {
-                UnityEngine.MeshRenderer gOMeshRenderer = temp.GetComponent<UnityEngine.MeshRenderer>();
+                UnityEngine.MeshRenderer gOMeshRenderer = gameObject.GetComponent<UnityEngine.MeshRenderer>();
                 if (gOMeshRenderer == null)
                 {
-                    gOMeshRenderer = temp.AddComponent<UnityEngine.MeshRenderer>();
+                    gOMeshRenderer = gameObject.AddComponent<UnityEngine.MeshRenderer>();
                 }
 
                 gOMeshRenderer.lightProbeUsage = (UnityEngine.Rendering.LightProbeUsage)deserializeInt(ref ser);
@@ -576,7 +572,6 @@ public class StructScript
                     while (materialsList != "")
                     {
                         int length = materialsList.IndexOf(",");
-                        // Debug.Log(length);
                         if (length > 0)
                         {
                             string ret = materialsList.Substring(0, length);
@@ -662,10 +657,10 @@ public class StructScript
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
-        MarkerFlag temp = new MarkerFlag();
-        temp.id = deserializeString(ref ser);
-        temp.parentID = deserializeString(ref ser);
-        return temp;
+        MarkerFlag markerFlab = new MarkerFlag();
+        markerFlab.id = deserializeString(ref ser);
+        markerFlab.parentID = deserializeString(ref ser);
+        return markerFlab;
     }
 
     public static Rect deserializeRect(ref string ser)
@@ -771,21 +766,21 @@ public class StructScript
 
     public string vecToString(Vector3 vec)
     {
-        string temp = "";
-        temp += vec.x;
-        temp += vec.y;
-        temp += vec.z;
-        return temp;
+        string vecString = "";
+        vecString += vec.x;
+        vecString += vec.y;
+        vecString += vec.z;
+        return vecString;
     }
 
     public string quatToString(Quaternion qua)
     {
-        string temp = "";
-        temp += qua.x;
-        temp += qua.y;
-        temp += qua.z;
-        temp += qua.w;
-        return temp;
+        string quatString = "";
+        quatString += qua.x;
+        quatString += qua.y;
+        quatString += qua.z;
+        quatString += qua.w;
+        return quatString;
     }
 
 
@@ -829,9 +824,9 @@ public class serMarkerFlag : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "";
-        temp += flag.id + "|" + flag.parentID + "|";
-        return temp.ToCharArray();
+        string charString = "";
+        charString += flag.id + "|" + flag.parentID + "|";
+        return charString.ToCharArray();
     }
 
 }
@@ -843,18 +838,18 @@ public class Transform : serializedComponent
     public Vector3 scale;
     override public char[] toChar()
     {
-        string temp = "transform|";
-        temp += pos.x + "|";
-        temp += pos.y + "|";
-        temp += pos.z + "|";
-        temp += rot.x + "|";
-        temp += rot.y + "|";
-        temp += rot.z + "|";
-        temp += rot.w + "|";
-        temp += scale.x + "|";
-        temp += scale.y + "|";
-        temp += scale.z + "|";
-        return temp.ToCharArray();
+        string transformString = "transform|";
+        transformString += pos.x + "|";
+        transformString += pos.y + "|";
+        transformString += pos.z + "|";
+        transformString += rot.x + "|";
+        transformString += rot.y + "|";
+        transformString += rot.z + "|";
+        transformString += rot.w + "|";
+        transformString += scale.x + "|";
+        transformString += scale.y + "|";
+        transformString += scale.z + "|";
+        return transformString.ToCharArray();
     }
 }
 
@@ -865,15 +860,15 @@ public class BoxCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "boxCollider|";
-        temp += center.x + "|";
-        temp += center.y + "|";
-        temp += center.z + "|";
-        temp += size.x + "|";
-        temp += size.y + "|";
-        temp += size.z + "|";
-        temp += isTrigger + "|";
-        return temp.ToCharArray();
+        string boxColliderString = "boxCollider|";
+        boxColliderString += center.x + "|";
+        boxColliderString += center.y + "|";
+        boxColliderString += center.z + "|";
+        boxColliderString += size.x + "|";
+        boxColliderString += size.y + "|";
+        boxColliderString += size.z + "|";
+        boxColliderString += isTrigger + "|";
+        return boxColliderString.ToCharArray();
     }
 }
 
@@ -884,13 +879,13 @@ public class SphereCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "sphereCollider|";
-        temp += center.x + "|";
-        temp += center.y + "|";
-        temp += center.z + "|";
-        temp += radius + "|";
-        temp += isTrigger + "|";
-        return temp.ToCharArray();
+        string sphereColliderString = "sphereCollider|";
+        sphereColliderString += center.x + "|";
+        sphereColliderString += center.y + "|";
+        sphereColliderString += center.z + "|";
+        sphereColliderString += radius + "|";
+        sphereColliderString += isTrigger + "|";
+        return sphereColliderString.ToCharArray();
     }
 }
 
@@ -902,15 +897,15 @@ public class CapsuleCollider : serializedComponent
     public bool isTrigger;
     override public char[] toChar()
     {
-        string temp = "capsuleCollider|";
-        temp += center.x + "|";
-        temp += center.y + "|";
-        temp += center.z + "|";
-        temp += radius + "|";
-        temp += height + "|";
-        temp += directionAxis + "|";
-        temp += isTrigger + "|";
-        return temp.ToCharArray();
+        string capsuleColliderString = "capsuleCollider|";
+        capsuleColliderString += center.x + "|";
+        capsuleColliderString += center.y + "|";
+        capsuleColliderString += center.z + "|";
+        capsuleColliderString += radius + "|";
+        capsuleColliderString += height + "|";
+        capsuleColliderString += directionAxis + "|";
+        capsuleColliderString += isTrigger + "|";
+        return capsuleColliderString.ToCharArray();
     }
 }
 
@@ -921,16 +916,16 @@ public class RigidBody : serializedComponent
     public bool useGravity, isKinematic, collisionDetection;
     override public char[] toChar()
     {
-        string temp = "rigidbody|";
-        temp += mass + "|";
-        temp += drag + "|";
-        temp += angularDrag + "|";
-        temp += interpolate + "|";
-        temp += freeze + "|";
-        temp += useGravity + "|";
-        temp += isKinematic + "|";
-        temp += collisionDetection + "|";
-        return temp.ToCharArray();
+        string rigidBodyString = "rigidbody|";
+        rigidBodyString += mass + "|";
+        rigidBodyString += drag + "|";
+        rigidBodyString += angularDrag + "|";
+        rigidBodyString += interpolate + "|";
+        rigidBodyString += freeze + "|";
+        rigidBodyString += useGravity + "|";
+        rigidBodyString += isKinematic + "|";
+        rigidBodyString += collisionDetection + "|";
+        return rigidBodyString.ToCharArray();
     }
 }
 
@@ -942,9 +937,9 @@ public class MeshFilter: serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "meshfilter|";
-        temp += filePath +"|"+ meshName +"|";
-        return temp.ToCharArray();
+        string meshFilterString = "meshfilter|";
+        meshFilterString += filePath +"|"+ meshName +"|";
+        return meshFilterString.ToCharArray();
     }
 }
 
@@ -969,21 +964,20 @@ public class MeshRenderer: serializedComponent
     public List<string> materialFiles = new List<string>();
     override public char[] toChar()
     {
-        string temp = "meshRenderer|";
-        temp += lightProbe.ToString() + "|";
-        temp += reflectionProbe.ToString() + "|";
-        temp += castShadows.ToString() + "|";
-        temp += receiveShadows + "|";
-        temp += motionVectors.ToString() + "|";
-        temp += lightmapStatic + "|";
+        string meshRendererString = "meshRenderer|";
+        meshRendererString += lightProbe.ToString() + "|";
+        meshRendererString += reflectionProbe.ToString() + "|";
+        meshRendererString += castShadows.ToString() + "|";
+        meshRendererString += receiveShadows + "|";
+        meshRendererString += motionVectors.ToString() + "|";
+        meshRendererString += lightmapStatic + "|";
 
         for(int i=0; i < materialFiles.Count; ++i)
         {
-            temp += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
+            meshRendererString += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
         }
-        temp += "|";
-        //Debug.Log(temp);
-        return temp.ToCharArray();
+        meshRendererString += "|";
+        return meshRendererString.ToCharArray();
     }
 
 }
@@ -1003,27 +997,27 @@ public class Camera : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "camera|";
-        temp += clearFlags.ToString() + "|";
-        temp += background.r + "|";
-        temp += background.g + "|";
-        temp += background.b + "|";
-        temp += background.a + "|";
-        temp += cullingMask.ToString() + "|";
-        temp += near.ToString() + "|";
-        temp += far.ToString() + "|";
-        temp += viewportRect.x + "|";
-        temp += viewportRect.y + "|";
-        temp += viewportRect.width + "|";
-        temp += viewportRect.height + "|";
-        temp += renderingPath.ToString() + "|";
-        temp += HDR.ToString() + "|";
-        temp += MSAA.ToString() + "|";
-        temp += occlusionCulling.ToString() + "|";
-        temp += depth.ToString() + "|";
-        temp += fov.ToString() + "|";
-        temp += targetDisplay.ToString() + "|";
-        return temp.ToCharArray();
+        string cameraString = "camera|";
+        cameraString += clearFlags.ToString() + "|";
+        cameraString += background.r + "|";
+        cameraString += background.g + "|";
+        cameraString += background.b + "|";
+        cameraString += background.a + "|";
+        cameraString += cullingMask.ToString() + "|";
+        cameraString += near.ToString() + "|";
+        cameraString += far.ToString() + "|";
+        cameraString += viewportRect.x + "|";
+        cameraString += viewportRect.y + "|";
+        cameraString += viewportRect.width + "|";
+        cameraString += viewportRect.height + "|";
+        cameraString += renderingPath.ToString() + "|";
+        cameraString += HDR.ToString() + "|";
+        cameraString += MSAA.ToString() + "|";
+        cameraString += occlusionCulling.ToString() + "|";
+        cameraString += depth.ToString() + "|";
+        cameraString += fov.ToString() + "|";
+        cameraString += targetDisplay.ToString() + "|";
+        return cameraString.ToCharArray();
     }
 }
 
@@ -1035,17 +1029,17 @@ public class Light : serializedComponent
 
     override public char[] toChar()
     {
-        string temp = "light|";
-        temp += type.ToString() + "|";
-        temp += shadows.ToString()+ "|";
-        temp += mode.ToString() + "|";
-        temp += cullingMask.ToString() + "|";
-        temp += color.r + "|";
-        temp += color.g + "|";
-        temp += color.b + "|";
-        temp += color.a + "|";
-        temp += intensity + "|";
-        temp += cookie + "|";
-        return temp.ToCharArray();
+        string lightString = "light|";
+        lightString += type.ToString() + "|";
+        lightString += shadows.ToString()+ "|";
+        lightString += mode.ToString() + "|";
+        lightString += cullingMask.ToString() + "|";
+        lightString += color.r + "|";
+        lightString += color.g + "|";
+        lightString += color.b + "|";
+        lightString += color.a + "|";
+        lightString += intensity + "|";
+        lightString += cookie + "|";
+        return lightString.ToCharArray();
     }
 }

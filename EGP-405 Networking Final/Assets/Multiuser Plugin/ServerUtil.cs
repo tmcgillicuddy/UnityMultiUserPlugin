@@ -34,6 +34,7 @@ public class ServerUtil
     {
         string folderName = "Autosaved Scenes";
         String newTimestamp = getTimestamp(DateTime.Now, true, true);
+        int tsLength = newTimestamp.Length;
 
         string newSceneName, oldSceneName;
         Scene newScene;
@@ -54,13 +55,7 @@ public class ServerUtil
             {
                 // Get the new scene name
                 oldSceneName = EditorSceneManager.GetActiveScene().name;
-                int i = 0;
-                while (i < oldSceneName.Length)
-                {
-                    Debug.Log(oldSceneName[i]);
-                    i++;
-                }
-                newSceneName = oldSceneName.Substring(0, i + 1) + newTimestamp;
+                newSceneName = oldSceneName.Substring(0, oldSceneName.Length - tsLength) + newTimestamp;
                 // got the new scene name
 
                 // create new scene

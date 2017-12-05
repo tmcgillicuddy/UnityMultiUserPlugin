@@ -96,7 +96,6 @@ public class Multiuser_Editor_Window : EditorWindow
                 limitAutosave = EditorGUILayout.Toggle("Limit Autosave", limitAutosave);
             }
 
-
             if (mode == 0) // client
             {
                 if (GUILayout.Button("Connect"))
@@ -104,7 +103,8 @@ public class Multiuser_Editor_Window : EditorWindow
                     //CALL CONNECT TO SERVER FUNCTION HERE
                     MultiuserPlugin.startupClient(mTargetIP, mPortNum);
                     clientID = MultiuserPlugin.clientID;
-                    nickName += (" " + clientID);
+                    if (nickName == "Client")
+                        nickName += (" " + clientID);
                 }
             }
             else // server

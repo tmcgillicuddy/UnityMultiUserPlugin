@@ -198,6 +198,7 @@ public class MultiuserPlugin
 
         //TODO: Start client with given port num, targetIP and password
         StartClient(targetIP, portNum, 0);
+        clientID++;
 
         mIsServer = false;
         mConnected = true;
@@ -223,12 +224,12 @@ public class MultiuserPlugin
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
                 Debug.Log("Sending modified obj");
-                string temp = StructScript.serialize(allGameobjects[i]);
+                string serializedObj = StructScript.serialize(allGameobjects[i]);
 
                 if (!mIsServer)
                 {
                     //   Debug.Log("Test Sending to server"); 
-                    SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, serverIP);
+                    SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, serverIP);
                 }
                 else
                 {
@@ -239,9 +240,7 @@ public class MultiuserPlugin
                        // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
-                            Debug.Log(temp);
-                            Debug.Log(temp.Length);
-                            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, mConnectedClients[j].IP);
+                            SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, mConnectedClients[j].IP);
                         }
                     }
                 }
@@ -258,16 +257,11 @@ public class MultiuserPlugin
 
     static unsafe void checkData()  //Checks the plugin network loop for a packet
     {
-        //char* data = null;
         char* data = GetData();
-        // Debug.Log(data[0]);
         if (data == null)
-        {
-            //Debug.Log(temp);
             return;
-        }
-        StructScript.deserializeMessage(data);
-
+       else 
+            StructScript.deserializeMessage(data);
     }
 
     public static void DeleteObject(MarkerFlag target)
@@ -317,8 +311,8 @@ public class MultiuserPlugin
         SendData((int)StructScript.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
         for (int i=0; i < allGameobjects.Length; ++i)
         {
-            string temp = StructScript.serialize(allGameobjects[i]);
-            SendData((int)StructScript.Message.GO_UPDATE, temp, temp.Length, newIP);
+            string serializedObj = StructScript.serialize(allGameobjects[i]);
+            SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, newIP);
         }
 
         SendData((int)StructScript.Message.LEVELLOADED, gOCount, gOCount.Length, newIP);
