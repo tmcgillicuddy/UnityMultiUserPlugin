@@ -188,8 +188,15 @@ public class StructScript
                     Material[] gOMaterials = gOMeshRenderer.sharedMaterials;
                     for(int q=0; q<gOMaterials.Length; ++q)
                     {
-                        string materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
-
+                        string materialPath = "";
+                        if (gOMaterials[q] == new Material(Shader.Find("Diffuse")))
+                        {
+                            materialPath = "Default-Diffuse";
+                        }
+                        else
+                        {
+                            materialPath = AssetDatabase.GetAssetPath(gOMaterials[q]);
+                        }
                         meshStruct.materialFiles.Add(materialPath);
                     }
 
@@ -276,8 +283,6 @@ public class StructScript
                 Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
                 break;
         }
-
-
     }
 
     static int genHashCode(string id)
@@ -471,25 +476,35 @@ public class StructScript
 
                 string materialsList = deserializeString(ref ser);
                 List<Material> renderMaterials = new List<Material>();
-                while (materialsList != "")
+                if (materialsList.Length > 1)
                 {
-                    int length = materialsList.IndexOf(",");
-                   // Debug.Log(length);
-                    if (length > 0)
+                    while (materialsList != "")
                     {
-                        string ret = materialsList.Substring(0, length);
-                        materialsList = materialsList.Remove(0, length + 1);
-                        Material newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
+                        int length = materialsList.IndexOf(",");
+                        // Debug.Log(length);
+                        if (length > 0)
+                        {
+                            string ret = materialsList.Substring(0, length);
+                            materialsList = materialsList.Remove(0, length + 1);
+                            Material newMat = null;
+                            if (ret == "Default-Diffuse")
+                            {
+                                newMat = new Material(Shader.Find("Diffuse"));
+                            }
+                            else
+                            {
+                                newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
+                            }
+                            //Debug.Log("Loading material: " + newMat.name);
 
-                        //Debug.Log("Loading material: " + newMat.name);
+                            renderMaterials.Add(newMat);
 
-                        renderMaterials.Add(newMat);
-                        
+                        }
                     }
-                }
-                if (renderMaterials.Count > 0)
-                {
-                    gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                    if (renderMaterials.Count > 0)
+                    {
+                        gOMeshRenderer.GetComponent<Renderer>().materials = renderMaterials.ToArray();
+                    }
                 }
             }
         }
