@@ -190,9 +190,9 @@ public class StructScript
                     for(int q=0; q<gOMaterials.Length; ++q)
                     {
                         string materialPath = "";
-                        if (gOMaterials[q].name == "Default-Material")
+                        if (gOMaterials[q].name == "Default-Material" || gOMaterials[q] == null)
                         {
-                            materialPath = "Default-Diffuse";
+                            materialPath = "Default-Material";
                         }
                         else
                         {
@@ -490,7 +490,7 @@ public class StructScript
                             string ret = materialsList.Substring(0, length);
                             materialsList = materialsList.Remove(0, length + 1);
                             Material newMat = null;
-                            if (ret == "Default-Diffuse"||ret == "")
+                            if (ret == "Default-Material"||ret == "" || ret == "Resources/unity_builtin_extra")
                             {
                                 newMat = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
                             }
