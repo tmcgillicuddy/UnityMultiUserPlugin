@@ -102,8 +102,15 @@ public class MultiuserPlugin
                     selectedObjFlags.id = objectId + objCounter.ToString();
                     objCounter++;
                 }
-                selectedObjFlags.isModified = true;
-                selectedObjFlags.isLocked = true;
+				if (!selectedObjFlags.isLocked)
+				{
+					selectedObjFlags.isModified = true;
+					selectedObjFlags.isLocked = true;
+				}
+				else
+				{
+					Selection.activeGameObject = null;
+				}
             }
         }
 
