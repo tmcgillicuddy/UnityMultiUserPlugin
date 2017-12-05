@@ -222,6 +222,7 @@ public class MultiuserPlugin
 
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
+                Debug.Log("Sending modified obj");
                 string temp = StructScript.serialize(allGameobjects[i]);
 
                 if (!mIsServer)
