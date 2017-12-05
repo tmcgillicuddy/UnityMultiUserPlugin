@@ -490,9 +490,9 @@ public class StructScript
                             string ret = materialsList.Substring(0, length);
                             materialsList = materialsList.Remove(0, length + 1);
                             Material newMat = null;
-                            if (ret == "Default-Diffuse")
+                            if (ret == "Default-Diffuse"||ret == "")
                             {
-                                newMat = new Material(Shader.Find("Diffuse"));
+                                newMat = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
                             }
                             else
                             {
