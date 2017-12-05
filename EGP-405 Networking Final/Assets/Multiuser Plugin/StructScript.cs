@@ -392,7 +392,11 @@ public class StructScript
             }
             else if (tag == "boxCollider")
             {
-                UnityEngine.BoxCollider col = temp.AddComponent<UnityEngine.BoxCollider>();
+                UnityEngine.BoxCollider col = temp.GetComponent<UnityEngine.BoxCollider>();
+                if(col == null)
+                {
+                    col = temp.AddComponent<UnityEngine.BoxCollider>();
+                }
                 col.center = deserializeVector3(ref ser);
                 col.size = deserializeVector3(ref ser);
                 col.isTrigger = deserializeBool(ref ser);
