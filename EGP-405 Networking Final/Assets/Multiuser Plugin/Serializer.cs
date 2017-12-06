@@ -66,12 +66,6 @@ public class Serializer
             serMarker.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
         }
 
-        if(serMarker.flag.isHeld == true)
-        {
-            serMarker.flag.isHeld = false;
-            serMarker.flag.isLocked = true;
-        }
-
         string flagData = new string(serMarker.toChar());
         serialized += flagData;
 
@@ -866,7 +860,16 @@ public class serMarkerFlag : serializedComponent
     override public char[] toChar()
     {
         string charString = "";
-        charString += flag.id + "|" + flag.parentID + "|" + flag.isLocked+"|";
+        charString += flag.id + "|" + flag.parentID + "|";
+        if(flag.isHeld)
+        {
+            charString += true + "|";
+        }
+        else
+        {
+            charString += false + "|";
+
+        }
         return charString.ToCharArray();
     }
 
