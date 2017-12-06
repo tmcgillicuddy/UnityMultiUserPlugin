@@ -332,6 +332,10 @@ public class Serializer
                     recievedObjs++;
                     EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs / expectedObjs);
                 }
+                if(MultiuserPlugin.mIsServer) //If this instance is a server
+                {
+                    MultiuserPlugin.Echo(output);
+                }
                 componentSerialize(output);
                 //componentSerialize(ser);
                 break;
@@ -443,11 +447,9 @@ public class Serializer
         gameObject.tag = deserializeString(ref ser);
         gameObject.layer = deserializeInt(ref ser);
         gameObject.isStatic = deserializeBool(ref ser);
-        Debug.Log(ser);
         while (ser.Length > 0)
         {
-            Debug.Log(ser);
-            Debug.Log(ser.Length);
+
             string tag = deserializeString(ref ser);
 
             if (tag == "transform")

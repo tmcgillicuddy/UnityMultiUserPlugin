@@ -268,6 +268,24 @@ public class MultiuserPlugin
             Serializer.deserializeMessage(data);
     }
 
+    public static unsafe void Echo(string message)
+    {
+        Debug.Log("Echoing");
+        char* oGIP = GetLastPacketIP(); //Get the IP of the packet from the original sender to prevent ghosting
+        IntPtr careIP = (IntPtr)oGIP;
+        StraightCharPointer* IPdata = (StraightCharPointer*)careIP;
+        string newIP = Marshal.PtrToStringAnsi((IntPtr)IPdata->mes);
+        
+        for (int i=0; i < mConnectedClients.Count; ++i)
+        {
+            if(mConnectedClients[i].IP != newIP)
+            {
+                Debug.Log(mConnectedClients[i].IP);
+                SendData((int)Serializer.Message.GO_UPDATE, message, message.Length,mConnectedClients[i].IP);
+            }
+        }
+    }
+
     public static void DeleteObject(MarkerFlag target)
     {
         if(mConnected)
