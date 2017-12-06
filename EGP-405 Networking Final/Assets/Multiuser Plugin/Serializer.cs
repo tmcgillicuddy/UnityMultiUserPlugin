@@ -422,7 +422,7 @@ public class Serializer
 
         thisFlag.id = objMarker.id;
         thisFlag.parentID = objMarker.parentID;
-
+        thisFlag.isLocked = objMarker.isLocked;
         if (thisFlag.parentID != "_")
         {
             int parentHash = genHashCode(thisFlag.parentID);
