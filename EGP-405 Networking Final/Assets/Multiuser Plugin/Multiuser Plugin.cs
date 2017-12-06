@@ -113,6 +113,7 @@ public class MultiuserPlugin
 				{
                     selectedObjFlags.isModified = true;
                     selectedObjFlags.isHeld = true;
+                    selectedObjFlags.isLocked = false;
                     approvedObjects.Add(selectedObjects[i]);
                 }
             }

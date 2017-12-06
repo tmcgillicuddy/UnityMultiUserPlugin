@@ -15,7 +15,7 @@ public class MarkerFlag : MonoBehaviour {
     public Quaternion ogRot;
     void OnEnable()
     {
-        this.hideFlags = HideFlags.HideInInspector;
+      //  this.hideFlags = HideFlags.HideInInspector;
     }
     private void OnDrawGizmos()
     {
