@@ -242,9 +242,26 @@ public class StructScript
                     string lightString = new string(serNewLight.toChar());
                     serialized += lightString;
                 }
-                else
+                else if(comps[i].GetType() == typeof(UnityEngine.GUILayer))
                 {
-                    // DO we still need this else statement?
+                    UnityEngine.GUILayer newGuiLayer = comps[i] as UnityEngine.GUILayer;
+
+                    string lightString = "guilayer|";
+                    serialized += lightString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.FlareLayer))
+                {
+                    UnityEngine.FlareLayer newGuiLayer = comps[i] as UnityEngine.FlareLayer;
+
+                    string lightString = "flarelayer|";
+                    serialized += lightString;
+                }
+                else if (comps[i].GetType() == typeof(UnityEngine.AudioListener))
+                {
+                    UnityEngine.AudioListener newGuiLayer = comps[i] as UnityEngine.AudioListener;
+
+                    string lightString = "audiolistener|";
+                    serialized += lightString;
                 }
 
             }
@@ -597,11 +614,36 @@ public class StructScript
                     }
                 }
             }
-            Debug.Log(ser);
+            else if(tag == "guilayer")
+            {
+                UnityEngine.GUILayer gOGuiLayer = gameObject.GetComponent<GUILayer>();
+                if (gOGuiLayer == null)
+                {
+                    gOGuiLayer = gameObject.AddComponent<GUILayer>();
+                }
+            }
+            else if(tag == "flarelayer")
+            {
+                UnityEngine.FlareLayer gOFlareLayer = gameObject.GetComponent<FlareLayer>();
+                if (gOFlareLayer == null)
+                {
+                    gOFlareLayer = gameObject.AddComponent<FlareLayer>();
+                }
+            }
+            else if(tag== "audiolistener")
+            {
+                UnityEngine.AudioListener gOAudioListener = gameObject.GetComponent<AudioListener>();
+                if(gOAudioListener == null)
+                {
+                    gOAudioListener = gameObject.AddComponent<AudioListener>();
+                }
+            }
+            else
+            {
+                Debug.Log("Unkown Componenet Type " + tag);
+            }
         }
-       // ReparentObjects();
         addToMap(thisFlag);
-        Debug.Log("Out of while loop");
     }
 
     public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects

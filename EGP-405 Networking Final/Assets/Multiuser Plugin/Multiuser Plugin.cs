@@ -37,6 +37,8 @@ public class MultiuserPlugin
     public static int clientID;
     public static bool newMessage;
 
+    public static GameObject[] allGOs;
+
     struct ConnectedClientInfo  //For storing connected client information
     {
         public string IP;
@@ -109,7 +111,7 @@ public class MultiuserPlugin
 				}
 				else
 				{
-					Selection.activeGameObject = null;
+					//Selection.activeGameObject = null;
 				}
             }
         }
@@ -141,13 +143,13 @@ public class MultiuserPlugin
         objectId = "Server ";
         //Runs through entire scene and setups marker flags
         objCounter = 0;
-        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
-        for (int i = 0; i < allGameobjects.Length; ++i)
+        allGOs = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        for (int i = 0; i < allGOs.Length; ++i)
         {
-            MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            MarkerFlag objectFlag = allGOs[i].GetComponent<MarkerFlag>();
             if (objectFlag == null)
             {
-                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+                objectFlag = allGOs[i].AddComponent<MarkerFlag>();
             }
 
             objectFlag.id = objectId + objCounter;
@@ -155,7 +157,7 @@ public class MultiuserPlugin
             StructScript.addToMap(objectFlag);
 
             objCounter++;
-            EditorUtility.DisplayProgressBar("Setting up", allGameobjects[i].name, (float)i / (allGameobjects.Length - 1));
+            EditorUtility.DisplayProgressBar("Setting up", allGOs[i].name, (float)i / (allGOs.Length - 1));
 
         }
 
@@ -312,13 +314,13 @@ public class MultiuserPlugin
         mConnectedClients.Add(newClient);
 
         //Send a data buffer of all the objects currently in the scene to the newly connected client
-        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+    //    GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
 
-        string gOCount = allGameobjects.Length.ToString() + "|";
+        string gOCount = allGOs.Length.ToString() + "|";
         SendData((int)StructScript.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
-        for (int i=0; i < allGameobjects.Length; ++i)
+        for (int i=0; i < allGOs.Length; ++i)
         {
-            string serializedObj = StructScript.serialize(allGameobjects[i]);
+            string serializedObj = StructScript.serialize(allGOs[i]);
             SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, newIP);
         }
 

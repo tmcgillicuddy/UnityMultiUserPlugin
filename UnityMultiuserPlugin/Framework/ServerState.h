@@ -27,6 +27,5 @@ public:
 	char* UpdateNetwork();
 
 private:
-	std::vector<ConnectedClient> allConnectedClients;	//Only used when instance is a server
 	RakNet::Packet* lastPacket;
 };
