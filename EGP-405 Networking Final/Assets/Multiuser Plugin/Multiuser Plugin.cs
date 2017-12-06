@@ -104,7 +104,7 @@ public class MultiuserPlugin
                     selectedObjFlags.id = objectId + objCounter.ToString();
                     objCounter++;
                 }
-				if (!selectedObjFlags.isLocked)
+				if (!selectedObjFlags.isLocked || !selectedObjFlags.isModified)
 				{
 					selectedObjFlags.isModified = true;
 					selectedObjFlags.isLocked = true;
@@ -188,9 +188,6 @@ public class MultiuserPlugin
         ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
-
-        
-
     }
 
     public static void startupClient(string targetIP, int portNum)
@@ -204,8 +201,6 @@ public class MultiuserPlugin
         {
             MonoBehaviour.DestroyImmediate(allGameobjects[i]);
         }
-
-        //TODO: Start client with given port num, targetIP and password
         StartClient(targetIP, portNum, 0);
         clientID++;
 
