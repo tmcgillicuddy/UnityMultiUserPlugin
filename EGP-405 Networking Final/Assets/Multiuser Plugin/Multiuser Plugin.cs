@@ -94,6 +94,7 @@ public class MultiuserPlugin
         if (Selection.gameObjects.Length > 0)
         {
             GameObject[] selectedObjects = Selection.gameObjects;
+            List<GameObject> approvedObjects = new List<GameObject>();
 
             for (int i = 0; i < selectedObjects.Length; ++i)
             {
@@ -104,23 +105,27 @@ public class MultiuserPlugin
                     selectedObjFlags.id = objectId + objCounter.ToString();
                     objCounter++;
                 }
-				if (!selectedObjFlags.isLocked || !selectedObjFlags.isModified)
+				if (selectedObjFlags.isLocked)
 				{
-					selectedObjFlags.isModified = true;
-					selectedObjFlags.isLocked = true;
+					
 				}
 				else
 				{
-					//Selection.activeGameObject = null;
-				}
+                    selectedObjFlags.isModified = true;
+                    selectedObjFlags.isHeld = true;
+                    approvedObjects.Add(selectedObjects[i]);
+                }
             }
+
+            Selection.objects = approvedObjects.ToArray();
+
         }
 
         //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
         if (mConnected && (syncInterval == 0 || DateTime.Now.Minute * 60 + DateTime.Now.Second >=
             (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60)))
         {
-            Sync();
+            Sync(Selection.gameObjects);
             lastSyncTime = DateTime.Now;
         }
         else
@@ -208,40 +213,33 @@ public class MultiuserPlugin
         mConnected = true;
     }
 
-    public static void Sync()   //Sends out the data of the "modified" objects
-    {
-        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
-        //Debug.Log("Syncing");
+    public static void Sync(GameObject[] gOsToSend)   //Sends out the data of the "modified" objects
+    {       
 
-        for (int i = 0; i < allGameobjects.Length; ++i) //Checks All objects in scene and 
+        for (int i = 0; i < gOsToSend.Length; ++i) //Checks All objects in scene and 
         {
-            MarkerFlag objectFlag = allGameobjects[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
+            MarkerFlag objectFlag = gOsToSend[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
 
             if (objectFlag == null)    //If an object doesn't have the marker flag script on it
             {                          //it will be added. This happens when a new object has been made
 
-                objectFlag = allGameobjects[i].AddComponent<MarkerFlag>();
+                objectFlag = gOsToSend[i].AddComponent<MarkerFlag>();
                 objectFlag.name = objectId + objCounter; //Make a uniquie name for the client so that other objects can't get confused by it
                 objCounter++;
             }
 
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
-                Debug.Log("Sending modified obj");
-                string serializedObj = Serializer.serialize(allGameobjects[i]);
+                string serializedObj = Serializer.serialize(gOsToSend[i]);
 
                 if (!mIsServer)
                 {
-                    //   Debug.Log("Test Sending to server"); 
                     SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, serverIP);
                 }
                 else
                 {
-                    //  Debug.Log("Test Broadcasting");
-
                     for (int j = 0; j < mConnectedClients.Count; ++j)
                     {
-                       // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
                             SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, mConnectedClients[j].IP);
@@ -250,12 +248,6 @@ public class MultiuserPlugin
                 }
                 objectFlag.isModified = false;
             }
-
-            if (!Selection.Contains(allGameobjects[i]))
-            {
-                objectFlag.isLocked = false;
-            }
-
         }
     }
 

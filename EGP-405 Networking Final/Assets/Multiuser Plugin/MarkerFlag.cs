@@ -6,8 +6,9 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class MarkerFlag : MonoBehaviour {
      public string id;
-     public bool isModified = false;
-     public bool isLocked = false;
+     public bool isModified = false; //Marks if the object needs to be sent over the network
+     public bool isHeld = false; //Marks if YOU'RE holding the object
+     public bool isLocked = false; //Marks if an object is held by another client
      public string parentID;
 
     public Vector3 ogPos, ogScale;

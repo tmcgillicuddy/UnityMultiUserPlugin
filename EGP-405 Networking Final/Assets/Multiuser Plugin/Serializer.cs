@@ -66,6 +66,12 @@ public class Serializer
             serMarker.flag.parentID = obj.transform.parent.GetComponent<MarkerFlag>().id;
         }
 
+        if(serMarker.flag.isHeld == true)
+        {
+            serMarker.flag.isHeld = false;
+            serMarker.flag.isLocked = true;
+        }
+
         string flagData = new string(serMarker.toChar());
         serialized += flagData;
 
@@ -703,10 +709,11 @@ public class Serializer
 
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
-        MarkerFlag markerFlab = new MarkerFlag();
-        markerFlab.id = deserializeString(ref ser);
-        markerFlab.parentID = deserializeString(ref ser);
-        return markerFlab;
+        MarkerFlag markerFlag = new MarkerFlag();
+        markerFlag.id = deserializeString(ref ser);
+        markerFlag.parentID = deserializeString(ref ser);
+        markerFlag.isLocked = deserializeBool(ref ser);
+        return markerFlag;
     }
 
     public static Rect deserializeRect(ref string ser)
@@ -846,19 +853,7 @@ public class Serializer
 
 public class serializedComponent
 {
-
     public serializedComponent() { }
-    /*enum typeID
-    {
-        TRANSFORM,
-        BOXCOLLIDER,
-        SPHERECOLLIDER,
-        CAPSULECOLLIDER,
-        RIGIDBODY,
-        CAMERA,
-        MESHFILTER
-    }
-    typeID id;*/
 
     public virtual char[] toChar() { return null; }
 
@@ -871,7 +866,7 @@ public class serMarkerFlag : serializedComponent
     override public char[] toChar()
     {
         string charString = "";
-        charString += flag.id + "|" + flag.parentID + "|";
+        charString += flag.id + "|" + flag.parentID + "|" + flag.isLocked+"|";
         return charString.ToCharArray();
     }
 

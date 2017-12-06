@@ -198,7 +198,7 @@ public class Multiuser_Editor_Window : EditorWindow
 
             if (GUILayout.Button("Manual Sync"))
             {
-                MultiuserPlugin.Sync();
+                MultiuserPlugin.Sync(Selection.gameObjects);
             }
             EditorGUILayout.EndHorizontal();
 
