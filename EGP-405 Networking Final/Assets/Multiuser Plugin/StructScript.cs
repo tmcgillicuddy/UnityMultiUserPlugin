@@ -269,7 +269,6 @@ public class StructScript
 
         return serialized;
     }
-
     public unsafe static void deserializeMessage(char* ser)
     {
         IntPtr care = (IntPtr)ser;
@@ -314,6 +313,7 @@ public class StructScript
                 EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
                 break;
             case (Byte)Message.LEVELLOADED:
+                ReparentObjects();
                 ReparentObjects();
                 expectedObjs = -1;
                 EditorUtility.ClearProgressBar();
@@ -456,6 +456,13 @@ public class StructScript
                 trans.position = deserializeVector3(ref ser);
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
+
+                if(expectedObjs > -1)
+                {
+                    thisFlag.ogPos = trans.position;
+                    thisFlag.ogRot = trans.rotation;
+                    thisFlag.ogScale = trans.localScale;
+                }
             }
             else if (tag == "boxCollider")
             {
@@ -654,12 +661,7 @@ public class StructScript
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
             MarkerFlag currentFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-            Transform newVal = new Transform();
-            newVal.pos = allGameobjects[i].transform.localPosition;
-            newVal.rot = allGameobjects[i].transform.localRotation;
-            newVal.scale = allGameobjects[i].transform.localScale;
-
-            if (currentFlag.parentID != null)
+            if (currentFlag.parentID != null && currentFlag.parentID != "__")
             {
                 int parentHash = genHashCode(currentFlag.parentID);
                 int xParent = parentHash % 10;
@@ -669,9 +671,9 @@ public class StructScript
                 {
                     allGameobjects[i].transform.SetParent(parentFlag.gameObject.transform, false); //Parent the object
 
-                    allGameobjects[i].transform.position = newVal.pos; //Reapply the local values because they have changed with the parent
-                    allGameobjects[i].transform.localScale = newVal.scale;
-                    allGameobjects[i].transform.rotation = newVal.rot;
+                    allGameobjects[i].transform.position = currentFlag.ogPos; //Reapply the local values because they have changed with the parent
+                    allGameobjects[i].transform.localScale = currentFlag.ogScale;
+                    allGameobjects[i].transform.rotation = currentFlag.ogRot;
                 }                                                                         
                 else
                 {
@@ -683,7 +685,7 @@ public class StructScript
             EditorUtility.DisplayProgressBar("Getting Level Data", allGameobjects[i].name, (float)i/allGameobjects.Length);
 
         }
-
+        Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.Iterative;
         EditorUtility.ClearProgressBar();
 
 
