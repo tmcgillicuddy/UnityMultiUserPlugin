@@ -138,7 +138,7 @@ public class MultiuserPlugin
 
     public static void startupServer(int portNum, int maxClients)
     {
-        StructScript.init();
+        Serializer.init();
         EditorUtility.DisplayProgressBar("Setting up", "", 0);
         objectId = "Server ";
         //Runs through entire scene and setups marker flags
@@ -154,7 +154,7 @@ public class MultiuserPlugin
 
             objectFlag.id = objectId + objCounter;
 
-            StructScript.addToMap(objectFlag);
+            Serializer.addToMap(objectFlag);
 
             objCounter++;
             EditorUtility.DisplayProgressBar("Setting up", allGOs[i].name, (float)i / (allGOs.Length - 1));
@@ -195,7 +195,7 @@ public class MultiuserPlugin
 
     public static void startupClient(string targetIP, int portNum)
     {
-        StructScript.init();
+        Serializer.init();
 
         //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
         objCounter = 0;
@@ -233,12 +233,12 @@ public class MultiuserPlugin
             if (objectFlag.isModified)    //If this object's marker flag has been modified
             {
                 Debug.Log("Sending modified obj");
-                string serializedObj = StructScript.serialize(allGameobjects[i]);
+                string serializedObj = Serializer.serialize(allGameobjects[i]);
 
                 if (!mIsServer)
                 {
                     //   Debug.Log("Test Sending to server"); 
-                    SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, serverIP);
+                    SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, serverIP);
                 }
                 else
                 {
@@ -249,7 +249,7 @@ public class MultiuserPlugin
                        // Debug.Log(mConnectedClients[j].IP);
                         if (mConnectedClients[j].IP != "")
                         {
-                            SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, mConnectedClients[j].IP);
+                            SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, mConnectedClients[j].IP);
                         }
                     }
                 }
@@ -270,7 +270,7 @@ public class MultiuserPlugin
         if (data == null)
             return;
        else 
-            StructScript.deserializeMessage(data);
+            Serializer.deserializeMessage(data);
     }
 
     public static void DeleteObject(MarkerFlag target)
@@ -281,7 +281,7 @@ public class MultiuserPlugin
             if (!mIsServer)
             {
                 //   Debug.Log("Test Sending to server"); 
-                SendData((int)StructScript.Message.GO_DELETE, targetID, targetID.Length, "");
+                SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, "");
             }
             else
             {
@@ -292,7 +292,7 @@ public class MultiuserPlugin
                     // Debug.Log(mConnectedClients[j].IP);
                     if (mConnectedClients[j].IP != "")
                     {
-                        SendData((int)StructScript.Message.GO_DELETE, targetID, targetID.Length, mConnectedClients[j].IP);
+                        SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, mConnectedClients[j].IP);
                     }
                 }
             }
@@ -317,14 +317,14 @@ public class MultiuserPlugin
     //    GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
 
         string gOCount = allGOs.Length.ToString() + "|";
-        SendData((int)StructScript.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
+        SendData((int)Serializer.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
         for (int i=0; i < allGOs.Length; ++i)
         {
-            string serializedObj = StructScript.serialize(allGOs[i]);
-            SendData((int)StructScript.Message.GO_UPDATE, serializedObj, serializedObj.Length, newIP);
+            string serializedObj = Serializer.serialize(allGOs[i]);
+            SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, newIP);
         }
 
-        SendData((int)StructScript.Message.LEVELLOADED, gOCount, gOCount.Length, newIP);
+        SendData((int)Serializer.Message.LEVELLOADED, gOCount, gOCount.Length, newIP);
     }
 
     public static void SendMessageOverNetwork(string message)
@@ -335,14 +335,14 @@ public class MultiuserPlugin
                 {
                     foreach (ConnectedClientInfo c in mConnectedClients)
                     {
-                        SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, c.IP);
+                        SendData((int)Serializer.Message.CHAT_MESSAGE, message, message.Length, c.IP);
                     }
                     break;
                 }
 
             case false:
                 {
-                    SendData((int)StructScript.Message.CHAT_MESSAGE, message, message.Length, serverIP);
+                    SendData((int)Serializer.Message.CHAT_MESSAGE, message, message.Length, serverIP);
                     break;
                 }
         }

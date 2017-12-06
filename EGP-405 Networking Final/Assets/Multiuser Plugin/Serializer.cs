@@ -18,7 +18,7 @@ public unsafe struct StraightCharPointer //No mId so all stuffed content can be 
     public fixed char mes[512];
 }
 
-public class StructScript
+public class Serializer
 {
     static int expectedObjs, recievedObjs;
 
@@ -41,9 +41,9 @@ public class StructScript
 
     public static void init()
     {
-        for(int i=0; i < 100; ++i)
+        for (int i = 0; i < 100; ++i)
         {
-            for(int q =0; q<100; ++q)
+            for (int q = 0; q < 100; ++q)
             {
                 objectMap[i, q] = new List<MarkerFlag>();
             }
@@ -57,7 +57,7 @@ public class StructScript
         serMarkerFlag serMarker = new serMarkerFlag(); //Put the marker flag info on the string first !!!
         serMarker.flag = obj.GetComponent<MarkerFlag>();
 
-        if(obj.transform.parent == null)
+        if (obj.transform.parent == null)
         {
             serMarker.flag.parentID = "__";
         }
@@ -192,7 +192,7 @@ public class StructScript
                     //Convert the data into a string and add it to the overall data stream
                     string sStream = new string(meshStruct.toChar());
                     serialized += sStream;
-                    
+
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.MeshRenderer))
                 {
@@ -226,7 +226,7 @@ public class StructScript
                     string sStream = new string(meshStruct.toChar());
                     serialized += sStream;
                 }
-                else if(comps[i].GetType() == typeof(UnityEngine.Light))
+                else if (comps[i].GetType() == typeof(UnityEngine.Light))
                 {
                     UnityEngine.Light newLight = comps[i] as UnityEngine.Light;
 
@@ -242,7 +242,7 @@ public class StructScript
                     string lightString = new string(serNewLight.toChar());
                     serialized += lightString;
                 }
-                else if(comps[i].GetType() == typeof(UnityEngine.GUILayer))
+                else if (comps[i].GetType() == typeof(UnityEngine.GUILayer))
                 {
                     UnityEngine.GUILayer newGuiLayer = comps[i] as UnityEngine.GUILayer;
 
@@ -457,7 +457,7 @@ public class StructScript
                 trans.rotation = deserializeQuaternion(ref ser);
                 trans.localScale = deserializeVector3(ref ser);
 
-                if(expectedObjs > -1)
+                if (expectedObjs > -1)
                 {
                     thisFlag.ogPos = trans.position;
                     thisFlag.ogRot = trans.rotation;
@@ -537,7 +537,7 @@ public class StructScript
                 cam.targetDisplay = deserializeInt(ref ser);
             }
             else if (tag == "light")
-            { 
+            {
                 UnityEngine.Light li = gameObject.GetComponent<UnityEngine.Light>();
                 if (li == null)
                 {
@@ -621,7 +621,7 @@ public class StructScript
                     }
                 }
             }
-            else if(tag == "guilayer")
+            else if (tag == "guilayer")
             {
                 UnityEngine.GUILayer gOGuiLayer = gameObject.GetComponent<GUILayer>();
                 if (gOGuiLayer == null)
@@ -629,7 +629,7 @@ public class StructScript
                     gOGuiLayer = gameObject.AddComponent<GUILayer>();
                 }
             }
-            else if(tag == "flarelayer")
+            else if (tag == "flarelayer")
             {
                 UnityEngine.FlareLayer gOFlareLayer = gameObject.GetComponent<FlareLayer>();
                 if (gOFlareLayer == null)
@@ -637,10 +637,10 @@ public class StructScript
                     gOFlareLayer = gameObject.AddComponent<FlareLayer>();
                 }
             }
-            else if(tag== "audiolistener")
+            else if (tag == "audiolistener")
             {
                 UnityEngine.AudioListener gOAudioListener = gameObject.GetComponent<AudioListener>();
-                if(gOAudioListener == null)
+                if (gOAudioListener == null)
                 {
                     gOAudioListener = gameObject.AddComponent<AudioListener>();
                 }
@@ -674,15 +674,15 @@ public class StructScript
                     allGameobjects[i].transform.position = currentFlag.ogPos; //Reapply the local values because they have changed with the parent
                     allGameobjects[i].transform.localScale = currentFlag.ogScale;
                     allGameobjects[i].transform.rotation = currentFlag.ogRot;
-                }                                                                         
+                }
                 else
                 {
                     allGameobjects[i].transform.SetParent(null);
                 }
             }
 
-            
-            EditorUtility.DisplayProgressBar("Getting Level Data", allGameobjects[i].name, (float)i/allGameobjects.Length);
+
+            EditorUtility.DisplayProgressBar("Getting Level Data", allGameobjects[i].name, (float)i / allGameobjects.Length);
 
         }
         Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.Iterative;
@@ -828,11 +828,11 @@ public class StructScript
     }
 
 
-    public static MarkerFlag findInList (string id, int x, int y)
+    public static MarkerFlag findInList(string id, int x, int y)
     {
-        for (int i=0; i < objectMap[x,y].Count; ++i)
+        for (int i = 0; i < objectMap[x, y].Count; ++i)
         {
-            if(objectMap[x, y][i].id == id)
+            if (objectMap[x, y][i].id == id)
             {
                 return objectMap[x, y][i];
             }
@@ -973,7 +973,7 @@ public class RigidBody : serializedComponent
     }
 }
 
-public class MeshFilter: serializedComponent
+public class MeshFilter : serializedComponent
 {
     public string filePath;
 
@@ -982,12 +982,12 @@ public class MeshFilter: serializedComponent
     override public char[] toChar()
     {
         string meshFilterString = "meshfilter|";
-        meshFilterString += filePath +"|"+ meshName +"|";
+        meshFilterString += filePath + "|" + meshName + "|";
         return meshFilterString.ToCharArray();
     }
 }
 
-public class MeshRenderer: serializedComponent
+public class MeshRenderer : serializedComponent
 {
     public int lightProbe;
 
@@ -1016,7 +1016,7 @@ public class MeshRenderer: serializedComponent
         meshRendererString += motionVectors.ToString() + "|";
         meshRendererString += lightmapStatic + "|";
 
-        for(int i=0; i < materialFiles.Count; ++i)
+        for (int i = 0; i < materialFiles.Count; ++i)
         {
             meshRendererString += materialFiles[i] + ","; //Use a comma because it cannot be used by file reader/writer
         }
@@ -1075,7 +1075,7 @@ public class Light : serializedComponent
     {
         string lightString = "light|";
         lightString += type.ToString() + "|";
-        lightString += shadows.ToString()+ "|";
+        lightString += shadows.ToString() + "|";
         lightString += mode.ToString() + "|";
         lightString += cullingMask.ToString() + "|";
         lightString += color.r + "|";
