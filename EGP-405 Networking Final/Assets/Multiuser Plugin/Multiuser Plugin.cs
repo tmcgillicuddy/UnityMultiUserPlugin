@@ -109,7 +109,7 @@ public class MultiuserPlugin
 				}
 				else
 				{
-					Selection.activeGameObject = null;
+				//	Selection.activeGameObject = null;
 				}
             }
         }

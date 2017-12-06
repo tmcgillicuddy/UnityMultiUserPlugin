@@ -9,6 +9,9 @@ public class MarkerFlag : MonoBehaviour {
      public bool isModified = false;
      public bool isLocked = false;
      public string parentID;
+
+    public Vector3 ogPos, ogScale;
+    public Quaternion ogRot;
     void OnEnable()
     {
         //this.hideFlags = HideFlags.HideInInspector;
