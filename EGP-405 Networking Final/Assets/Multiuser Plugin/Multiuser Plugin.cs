@@ -91,11 +91,9 @@ public class MultiuserPlugin
 
     static void editMode()
     {
-        Debug.Log("editMode()");
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
         if (Selection.gameObjects.Length > 0)
         {
-            Debug.Log(Selection.gameObjects.Length);
             GameObject[] selectedObjects = Selection.gameObjects;
             List<GameObject> approvedObjects = new List<GameObject>();
 
@@ -130,7 +128,6 @@ public class MultiuserPlugin
 				}
 				else
 				{
-                    Debug.Log("selectedObjFlags.isLocked == false");
                     selectedObjFlags.isModified = true;
                     selectedObjFlags.isHeld = true;
                     selectedObjFlags.isLocked = false;
@@ -281,7 +278,6 @@ public class MultiuserPlugin
 
     public static unsafe void Echo(string message)
     {
-        Debug.Log("Echoing");
         char* oGIP = GetLastPacketIP(); //Get the IP of the packet from the original sender to prevent ghosting
         IntPtr careIP = (IntPtr)oGIP;
         StraightCharPointer* IPdata = (StraightCharPointer*)careIP;
