@@ -13,10 +13,7 @@ public class MarkerFlag : MonoBehaviour {
 
     public Vector3 ogPos, ogScale;
     public Quaternion ogRot;
-    void OnEnable()
-    {
-      //  this.hideFlags = HideFlags.HideInInspector;
-    }
+
     private void OnDrawGizmos()
     {
         if (isLocked)
@@ -26,7 +23,17 @@ public class MarkerFlag : MonoBehaviour {
             Gizmos.DrawWireCube(transform.position, size);
         }
     }
+    void OnDisable()
+    {
+        Debug.Log(this.name + " Deselected");
+        MultiuserPlugin.UnlockObject(this);
 
+    }
+    void OnEnable()
+    {
+        Debug.Log(this.name + " Selected");
+        //hideFlags = HideFlags.HideInInspector;
+    }
     private void OnDestroy()
     {
         MultiuserPlugin.DeleteObject(this);

@@ -101,17 +101,17 @@ public class MultiuserPlugin
             {
 
                 // run through all game objects
-                for (int j = 0; j < allGameobjects.Length; ++j)
+               /* for (int j = 0; j < allGameobjects.Length; ++j)
                 {
                     if (selectedObjects[i] == allGameobjects[j])
                         continue;
                     else
                         allGameobjects[j].GetComponent<MarkerFlag>().isLocked = false;
 
-                    Debug.Log(j + " " + allGameobjects[j].GetComponent<MarkerFlag>().isLocked.ToString());
+                    //Debug.Log(j + " " + allGameobjects[j].GetComponent<MarkerFlag>().isLocked.ToString());
                 }
 
-
+    */
                 MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
                 {
@@ -124,7 +124,7 @@ public class MultiuserPlugin
 
 				if (selectedObjFlags.isLocked)
 				{
-                    // TODO: find a way to set object to unlocked when it is deselected
+                    
 				}
 				else
 				{
@@ -149,6 +149,11 @@ public class MultiuserPlugin
             //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
             //  Debug.Log(DateTime.Now.Second);
         }
+    }
+
+    static void unlockObjs()
+    {
+
     }
 
     static void viewMode()
@@ -206,11 +211,31 @@ public class MultiuserPlugin
 
         EditorUtility.ClearProgressBar();
 
-        ServerUtil.saveToNewScene();
+       // ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
     }
-
+    public static void UnlockObject(MarkerFlag target)
+    {
+        if (mConnected)
+        {
+            string targetID = Serializer.serialize(target.gameObject);
+            if (!mIsServer)
+            {
+                SendData((int)Serializer.Message.GO_UPDATE, targetID, targetID.Length, "");
+            }
+            else
+            {
+                for (int j = 0; j < mConnectedClients.Count; ++j)
+                {
+                    if (mConnectedClients[j].IP != "")
+                    {
+                        SendData((int)Serializer.Message.GO_UPDATE, targetID, targetID.Length, mConnectedClients[j].IP);
+                    }
+                }
+            }
+        }
+    }
     public static void startupClient(string targetIP, int portNum)
     {
         Serializer.init();
