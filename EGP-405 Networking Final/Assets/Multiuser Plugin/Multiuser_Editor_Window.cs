@@ -14,7 +14,7 @@ public class Multiuser_Editor_Window : EditorWindow
     //int bottomBuffer = 10, topBuffer = 10;
     public static bool limitAutosave = false;
     public Vector2 scrollPos = Vector2.zero;
-    public string nickName;
+    public string nickName = "";
     public static int clientID;
 
     [MenuItem("Window/Multiuser Network")]
@@ -123,6 +123,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Change to Client Setting"))
                 {
                     mode = 0;
+                    nickName = "Client";
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -133,6 +134,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 if (GUILayout.Button("Change to Server Mode"))
                 {
                     mode = 1;
+                    nickName = "Server";
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -195,6 +197,10 @@ public class Multiuser_Editor_Window : EditorWindow
             if (GUILayout.Button("Disconnect"))
             {
                 MultiuserPlugin.Disconnect();
+                if (mode == 0)
+                    nickName = "Client";
+                else
+                    nickName = "Server";
             }
 
             if (GUILayout.Button("Manual Sync"))
