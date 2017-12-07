@@ -25,14 +25,16 @@ public class MarkerFlag : MonoBehaviour {
     }
     void OnDisable()
     {
-        Debug.Log(this.name + " Deselected");
-        MultiuserPlugin.UnlockObject(this);
+        //Debug.Log(this.name + " Deselected");
+        //MultiuserPlugin.UnlockObject(this);
+        //isHeld = false;
 
     }
     void OnEnable()
     {
         Debug.Log(this.name + " Selected");
         //hideFlags = HideFlags.HideInInspector;
+        isHeld = true;
     }
     private void OnDestroy()
     {

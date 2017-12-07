@@ -94,24 +94,23 @@ public class MultiuserPlugin
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
         if (Selection.gameObjects.Length > 0)
         {
-            GameObject[] selectedObjects = Selection.gameObjects;
+            List<GameObject> selectedObjects = new List<GameObject>(Selection.gameObjects);
             List<GameObject> approvedObjects = new List<GameObject>();
-
-            for (int i = 0; i < selectedObjects.Length; ++i)
+            for (int i = 0; i < allGameobjects.Length; ++i)
             {
-
-                // run through all game objects
-               /* for (int j = 0; j < allGameobjects.Length; ++j)
+                MarkerFlag pMarkerFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+                if(pMarkerFlag.isHeld) //If the object is marked as is held
                 {
-                    if (selectedObjects[i] == allGameobjects[j])
-                        continue;
-                    else
-                        allGameobjects[j].GetComponent<MarkerFlag>().isLocked = false;
-
-                    //Debug.Log(j + " " + allGameobjects[j].GetComponent<MarkerFlag>().isLocked.ToString());
+                    if(!selectedObjects.Contains(allGameobjects[i])) //If the object isn't still selected
+                    {
+                        pMarkerFlag.isHeld = false;
+                        UnlockObject(pMarkerFlag);
+                    }
                 }
+            }
 
-    */
+            for (int i = 0; i < selectedObjects.Count; ++i)
+            {
                 MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
                 {
@@ -122,15 +121,15 @@ public class MultiuserPlugin
                 }
                 else
 
-				if (selectedObjFlags.isLocked)
-				{
-                    
-				}
-				else
-				{
+                if (selectedObjFlags.isLocked)
+                {
+
+                }
+                else
+                {
                     selectedObjFlags.isModified = true;
                     selectedObjFlags.isHeld = true;
-                    selectedObjFlags.isLocked = false;
+                    //selectedObjFlags.isLocked = false;
                     approvedObjects.Add(selectedObjects[i]);
                 }
             }
@@ -143,11 +142,6 @@ public class MultiuserPlugin
         {
             Sync(Selection.gameObjects);
             lastSyncTime = DateTime.Now;
-        }
-        else
-        {
-            //  Debug.Log((DateTime.Now.Minute*60+ DateTime.Now.Second) - (lastSyncTime.Second + syncInterval + lastSyncTime.Minute * 60));
-            //  Debug.Log(DateTime.Now.Second);
         }
     }
 
@@ -199,7 +193,7 @@ public class MultiuserPlugin
             index++;
         }
         serverIP = addr[3].ToString();
-       // Debug.Log("Server IP: " + serverIP);
+        // Debug.Log("Server IP: " + serverIP);
 
 
         //Calls plugin function to start server
@@ -211,7 +205,7 @@ public class MultiuserPlugin
 
         EditorUtility.ClearProgressBar();
 
-       // ServerUtil.saveToNewScene();
+        // ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
     }
@@ -255,7 +249,7 @@ public class MultiuserPlugin
     }
 
     public static void Sync(GameObject[] gOsToSend)   //Sends out the data of the "modified" objects
-    {       
+    {
 
         for (int i = 0; i < gOsToSend.Length; ++i) //Checks All objects in scene and 
         {
@@ -297,7 +291,7 @@ public class MultiuserPlugin
         char* data = GetData();
         if (data == null)
             return;
-       else 
+        else
             Serializer.deserializeMessage(data);
     }
 
@@ -307,20 +301,20 @@ public class MultiuserPlugin
         IntPtr careIP = (IntPtr)oGIP;
         StraightCharPointer* IPdata = (StraightCharPointer*)careIP;
         string newIP = Marshal.PtrToStringAnsi((IntPtr)IPdata->mes);
-        
-        for (int i=0; i < mConnectedClients.Count; ++i)
+
+        for (int i = 0; i < mConnectedClients.Count; ++i)
         {
-            if(mConnectedClients[i].IP != newIP)
+            if (mConnectedClients[i].IP != newIP)
             {
                 Debug.Log(mConnectedClients[i].IP);
-                SendData((int)Serializer.Message.GO_UPDATE, message, message.Length,mConnectedClients[i].IP);
+                SendData((int)Serializer.Message.GO_UPDATE, message, message.Length, mConnectedClients[i].IP);
             }
         }
     }
 
     public static void DeleteObject(MarkerFlag target)
     {
-        if(mConnected)
+        if (mConnected)
         {
             string targetID = target.id + "|";
             if (!mIsServer)
@@ -358,11 +352,11 @@ public class MultiuserPlugin
         mConnectedClients.Add(newClient);
 
         //Send a data buffer of all the objects currently in the scene to the newly connected client
-    //    GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+        //    GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
 
         string gOCount = allGOs.Length.ToString() + "|";
         SendData((int)Serializer.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
-        for (int i=0; i < allGOs.Length; ++i)
+        for (int i = 0; i < allGOs.Length; ++i)
         {
             string serializedObj = Serializer.serialize(allGOs[i]);
             SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, newIP);
