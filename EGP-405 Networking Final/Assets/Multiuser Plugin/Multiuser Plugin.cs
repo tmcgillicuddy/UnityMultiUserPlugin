@@ -92,22 +92,12 @@ public class MultiuserPlugin
     static void editMode()
     {
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
-        if (Selection.gameObjects.Length > 0)
+        List<GameObject> selectedObjects = new List<GameObject>(Selection.gameObjects);
+
+        if (selectedObjects.Count > 0)
         {
-            List<GameObject> selectedObjects = new List<GameObject>(Selection.gameObjects);
             List<GameObject> approvedObjects = new List<GameObject>();
-            for (int i = 0; i < allGameobjects.Length; ++i)
-            {
-                MarkerFlag pMarkerFlag = allGameobjects[i].GetComponent<MarkerFlag>();
-                if(pMarkerFlag.isHeld) //If the object is marked as is held
-                {
-                    if(!selectedObjects.Contains(allGameobjects[i])) //If the object isn't still selected
-                    {
-                        pMarkerFlag.isHeld = false;
-                        UnlockObject(pMarkerFlag);
-                    }
-                }
-            }
+           
 
             for (int i = 0; i < selectedObjects.Count; ++i)
             {
@@ -134,6 +124,18 @@ public class MultiuserPlugin
                 }
             }
             Selection.objects = approvedObjects.ToArray();
+        }
+        for (int i = 0; i < allGameobjects.Length; ++i)
+        {
+            MarkerFlag pMarkerFlag = allGameobjects[i].GetComponent<MarkerFlag>();
+            if (pMarkerFlag.isHeld) //If the object is marked as is held
+            {
+                if (!selectedObjects.Contains(allGameobjects[i])) //If the object isn't still selected
+                {
+                    pMarkerFlag.isHeld = false;
+                    UnlockObject(pMarkerFlag);
+                }
+            }
         }
 
         //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval

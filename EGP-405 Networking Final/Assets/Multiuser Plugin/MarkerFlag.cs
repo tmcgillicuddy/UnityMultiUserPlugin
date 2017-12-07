@@ -32,9 +32,9 @@ public class MarkerFlag : MonoBehaviour {
     }
     void OnEnable()
     {
-        Debug.Log(this.name + " Selected");
+       // Debug.Log(this.name + " Selected");
         //hideFlags = HideFlags.HideInInspector;
-        isHeld = true;
+        //isHeld = true;
     }
     private void OnDestroy()
     {
