@@ -18,15 +18,51 @@ public class MarkerFlag : MonoBehaviour {
     {
         if (isLocked)
         {
-            Vector3 size = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            Gizmos.color = new Color(1, 1, 0, 0.75f);
-            Gizmos.DrawWireCube(transform.position, size);
-        }
-    }
+            Renderer[] childRenderer = GetComponentsInChildren<Renderer>();
+            Bounds tempBounds = getBounds(this.gameObject);
 
+           // Vector3 size = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            //Gizmos.color = new Color(1, 1, 0, 0.75f);
+            Gizmos.DrawWireCube(tempBounds.center, tempBounds.size);
+        }
+        
+    }
+    Bounds getBounds(GameObject objeto)
+    {
+        Bounds bounds;
+        bounds = getRenderBounds(objeto);
+        if (bounds.extents.x == 0)
+        {
+            bounds = new Bounds(objeto.transform.position, Vector3.zero);
+            Renderer[] childRenderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer child in childRenderers)
+            {
+                if (child)
+                {
+                    bounds.Encapsulate(child.bounds);
+                }
+                else
+                {
+                    bounds.Encapsulate(getBounds(child.gameObject));
+                }
+            }
+        }
+        return bounds;
+    }
+    Bounds getRenderBounds(GameObject objeto)
+    {
+        Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+        Renderer render = objeto.GetComponent<Renderer>();
+        if (render != null)
+        {
+            return render.bounds;
+        }
+        return bounds;
+    }
     void OnEnable()
     {
-        hideFlags = HideFlags.HideInInspector;
+        hideFlags = HideFlags.None;
+       
     }
     private void OnDestroy()
     {

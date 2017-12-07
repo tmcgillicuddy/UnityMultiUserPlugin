@@ -195,11 +195,10 @@ public class MultiuserPlugin
 
         mIsServer = true;
         mConnected = true;
-        //ServerUtil.forceSave(); //Save the scene to start with
 
         EditorUtility.ClearProgressBar();
 
-        // ServerUtil.saveToNewScene();
+        ServerUtil.saveToNewScene();
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
     }
