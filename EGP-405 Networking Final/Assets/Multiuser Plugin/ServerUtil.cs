@@ -19,8 +19,6 @@ using System.IO;
 [InitializeOnLoad]
 public class ServerUtil
 {
-    static DateTime lastSaveTime = DateTime.Now;
-    public static int folderIteration = 0;
     public static int saveInterval = 2;
     public const int MAX_SAVED_SCENES = 10;
     public static string currentFolderPath = "Assets/Scenes/";
@@ -40,12 +38,21 @@ public class ServerUtil
         string newSceneName, oldSceneName;
         Scene newScene;
 
-        if (DateTime.Now >= lastSaveTime)
+        int length = EditorSceneManager.GetActiveScene().name.IndexOf("TS-"); // delimiter
+                                                                              // create the new scene
+                                                                              // if we are not currently in a scene
+
+        if (EditorSceneManager.GetActiveScene().name == "") // if we are not in a scene
         {
-            int length = EditorSceneManager.GetActiveScene().name.IndexOf("TS-"); // delimiter
-            // create the new scene
-            // if we are not currently in a scene
-            if (length < 0)
+            newSceneName = "Autosaved Scene" + newTimestamp;
+            oldSceneName = "";
+
+            newScene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+        }
+
+        else // if we are in a scene
+        {
+            if (length < 0) // if the scene name does not contain the delimiter
             {
                 newSceneName = "Test Scene " + newTimestamp;
 
@@ -66,15 +73,23 @@ public class ServerUtil
             // copy everything from old scene into new scene
             EditorSceneManager.MergeScenes(EditorSceneManager.GetSceneByName(oldSceneName), newScene);
             // copied everything from old scene into new scene
-
-            string savedScene = currentFolderPath + folderName + "/" + newSceneName + ".unity";
-            EditorSceneManager.SaveScene(newScene, savedScene, false);
         }
+
+        string savedScene = currentFolderPath + folderName + "/" + newSceneName + ".unity";
+        EditorSceneManager.SaveScene(newScene, savedScene, false);
     }
 
     public static void checkTooManyScenes()
     {
-        String path = "Assets/Scenes/Autosaved Scenes/"; // path to autosaved scenes
+        string path;
+        if (EditorSceneManager.GetActiveScene().name == "") // if we are not in a scene
+            path = "Assets/Scenes/Autosaved Scenes/"; // path to autosaved scenes
+        else // if we are
+        {
+            // get file the scene is in
+            int lim = EditorSceneManager.GetActiveScene().name.Length;
+            path = EditorSceneManager.GetActiveScene().path.Substring(0, lim - 2); // take scene name out of path
+        }
 
         DirectoryInfo levelDirectoryPath = new DirectoryInfo(path); // asset information at path
         FileInfo[] scenesInfo = levelDirectoryPath.GetFiles();  // array of files at the path

@@ -21,8 +21,7 @@ public class MarkerFlag : MonoBehaviour {
             Renderer[] childRenderer = GetComponentsInChildren<Renderer>();
             Bounds tempBounds = getBounds(this.gameObject);
 
-           // Vector3 size = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            //Gizmos.color = new Color(1, 1, 0, 0.75f);
+            Gizmos.color = new Color(1, 1, 0, 0.75f);
             Gizmos.DrawWireCube(tempBounds.center, tempBounds.size);
         }
         

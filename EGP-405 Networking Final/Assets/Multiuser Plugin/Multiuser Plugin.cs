@@ -42,7 +42,6 @@ public class MultiuserPlugin
     struct ConnectedClientInfo  //For storing connected client information
     {
         public string IP;
-        public string userName;
         public string ID;
     }
 
@@ -64,24 +63,15 @@ public class MultiuserPlugin
     //Update Loop
     static void Update()
     {
-
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
             if (mConnected)
             {
                 if (toolMode == mode.EDIT)
-                {
                     editMode();
-                }
                 else if (toolMode == mode.VIEW)
-                {
                     viewMode();
-                }
-                else if (mIsServer)
-                {
-                    //ServerUtil.saveScene();
-                    // ServerUtil.saveToNewScene();
-                }
+
                 checkData();
             }
         }
@@ -97,7 +87,6 @@ public class MultiuserPlugin
         {
             List<GameObject> approvedObjects = new List<GameObject>();
            
-
             for (int i = 0; i < selectedObjects.Count; ++i)
             {
                 MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
@@ -109,16 +98,13 @@ public class MultiuserPlugin
                     objCounter++;
                 }
                 else
-
-                if (selectedObjFlags.isLocked)
                 {
-
-                }
-                else
-                {
-                    selectedObjFlags.isModified = true;
-                    selectedObjFlags.isHeld = true;
-                    approvedObjects.Add(selectedObjects[i]);
+                    if (!selectedObjFlags.isLocked)
+                    {
+                        selectedObjFlags.isModified = true;
+                        selectedObjFlags.isHeld = true;
+                        approvedObjects.Add(selectedObjects[i]);
+                    }
                 }
             }
             Selection.objects = approvedObjects.ToArray();
@@ -164,9 +150,7 @@ public class MultiuserPlugin
         {
             MarkerFlag objectFlag = allGOs[i].GetComponent<MarkerFlag>();
             if (objectFlag == null)
-            {
                 objectFlag = allGOs[i].AddComponent<MarkerFlag>();
-            }
 
             objectFlag.id = objectId + objCounter;
 
@@ -174,7 +158,6 @@ public class MultiuserPlugin
 
             objCounter++;
             EditorUtility.DisplayProgressBar("Setting up", allGOs[i].name, (float)i / (allGOs.Length - 1));
-
         }
 
         // get server ip address
@@ -182,16 +165,14 @@ public class MultiuserPlugin
         IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(hostName);
         IPAddress[] addr = ipEntry.AddressList;
 
-        int index = 0;
-        foreach (IPAddress i in addr)
-        {
-            index++;
-        }
-        serverIP = addr[3].ToString();
-
+        //int index = 0;
+        //foreach (IPAddress i in addr)
+        //    index++;
+        //serverIP = addr[3].ToString();
+        //Debug.Log(serverIP);
 
         //Calls plugin function to start server
-        StartServer(serverIP, portNum, maxClients);
+        StartServer("", portNum, maxClients);
 
         mIsServer = true;
         mConnected = true;
@@ -228,13 +209,15 @@ public class MultiuserPlugin
     {
         Serializer.init();
 
+        serverIP = targetIP;
+
         //Clears any gameobjects from the current scene //TODO: (might change to just open new scene)
         objCounter = 0;
         GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
+
         for (int i = 0; i < allGameobjects.Length; ++i)
-        {
             MonoBehaviour.DestroyImmediate(allGameobjects[i]);
-        }
+
         StartClient(targetIP, portNum, 0);
         clientID++;
 
@@ -244,7 +227,6 @@ public class MultiuserPlugin
 
     public static void Sync(GameObject[] gOsToSend)   //Sends out the data of the "modified" objects
     {
-
         for (int i = 0; i < gOsToSend.Length; ++i) //Checks All objects in scene and 
         {
             MarkerFlag objectFlag = gOsToSend[i].GetComponent<MarkerFlag>();   //TODO: Potentially expensive might change
@@ -262,19 +244,12 @@ public class MultiuserPlugin
                 string serializedObj = Serializer.serialize(gOsToSend[i]);
 
                 if (!mIsServer)
-                {
                     SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, serverIP);
-                }
                 else
-                {
                     for (int j = 0; j < mConnectedClients.Count; ++j)
-                    {
                         if (mConnectedClients[j].IP != "")
-                        {
                             SendData((int)Serializer.Message.GO_UPDATE, serializedObj, serializedObj.Length, mConnectedClients[j].IP);
-                        }
-                    }
-                }
+
                 objectFlag.isModified = false;
             }
         }
@@ -297,12 +272,8 @@ public class MultiuserPlugin
         string newIP = Marshal.PtrToStringAnsi((IntPtr)IPdata->mes);
 
         for (int i = 0; i < mConnectedClients.Count; ++i)
-        {
             if (mConnectedClients[i].IP != newIP)
-            {
                 SendData((int)front, message, message.Length, mConnectedClients[i].IP);
-            }
-        }
     }
 
     public static void DeleteObject(MarkerFlag target)
@@ -311,19 +282,11 @@ public class MultiuserPlugin
         {
             string targetID = target.id + "|";
             if (!mIsServer)
-            {
                 SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, "");
-            }
             else
-            {
                 for (int j = 0; j < mConnectedClients.Count; ++j)
-                {
                     if (mConnectedClients[j].IP != "")
-                    {
                         SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, mConnectedClients[j].IP);
-                    }
-                }
-            }
         }
     }
 
@@ -332,16 +295,12 @@ public class MultiuserPlugin
         char* ip = GetLastPacketIP();
         IntPtr careTwo = (IntPtr)ip;
         StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
-        //string start = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mId);
         string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
         ConnectedClientInfo newClient = new ConnectedClientInfo();
         newClient.IP = newIP;
         newClient.ID = clientID.ToString();
         ++clientID;
         mConnectedClients.Add(newClient);
-
-        //Send a data buffer of all the objects currently in the scene to the newly connected client
-        //    GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();   //Get all gameobjs
 
         string gOCount = allGOs.Length.ToString() + "|";
         SendData((int)Serializer.Message.LOADLEVEL, gOCount, gOCount.Length, newIP);
@@ -361,9 +320,7 @@ public class MultiuserPlugin
             case true:
                 {
                     foreach (ConnectedClientInfo c in mConnectedClients)
-                    {
                         SendData((int)Serializer.Message.CHAT_MESSAGE, message, message.Length, c.IP);
-                    }
                     break;
                 }
 
