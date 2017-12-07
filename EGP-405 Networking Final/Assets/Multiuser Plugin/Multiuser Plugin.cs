@@ -91,35 +91,53 @@ public class MultiuserPlugin
 
     static void editMode()
     {
+        Debug.Log("editMode()");
+        GameObject[] allGameobjects = GameObject.FindObjectsOfType<GameObject>();
         if (Selection.gameObjects.Length > 0)
         {
+            Debug.Log(Selection.gameObjects.Length);
             GameObject[] selectedObjects = Selection.gameObjects;
             List<GameObject> approvedObjects = new List<GameObject>();
 
             for (int i = 0; i < selectedObjects.Length; ++i)
             {
+
+                // run through all game objects
+                for (int j = 0; j < allGameobjects.Length; ++j)
+                {
+                    if (selectedObjects[i] == allGameobjects[j])
+                        continue;
+                    else
+                        allGameobjects[j].GetComponent<MarkerFlag>().isLocked = false;
+
+                    Debug.Log(j + " " + allGameobjects[j].GetComponent<MarkerFlag>().isLocked.ToString());
+                }
+
+
                 MarkerFlag selectedObjFlags = selectedObjects[i].GetComponent<MarkerFlag>();
                 if (selectedObjFlags == null)    //If an object doesn't have the marker flag script on it
-                {                                                           //it will be added
+                {
+                    //it will be added
                     selectedObjFlags = selectedObjects[i].AddComponent<MarkerFlag>();
                     selectedObjFlags.id = objectId + objCounter.ToString();
                     objCounter++;
                 }
+                else
+
 				if (selectedObjFlags.isLocked)
 				{
-					
+                    // TODO: find a way to set object to unlocked when it is deselected
 				}
 				else
 				{
+                    Debug.Log("selectedObjFlags.isLocked == false");
                     selectedObjFlags.isModified = true;
                     selectedObjFlags.isHeld = true;
                     selectedObjFlags.isLocked = false;
                     approvedObjects.Add(selectedObjects[i]);
                 }
             }
-
             Selection.objects = approvedObjects.ToArray();
-
         }
 
         //If the system is running AND the sync interval is 0 or if the current time is greater than the last sync time + the sync interval
@@ -312,7 +330,6 @@ public class MultiuserPlugin
         StraightCharPointer* dataTwo = (StraightCharPointer*)careTwo;
         //string start = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mId);
         string newIP = Marshal.PtrToStringAnsi((IntPtr)dataTwo->mes);
-        Debug.Log(newIP);
         ConnectedClientInfo newClient = new ConnectedClientInfo();
         newClient.IP = newIP;
         newClient.ID = clientID.ToString();
