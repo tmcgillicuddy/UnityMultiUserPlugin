@@ -1,3 +1,14 @@
+/*
+EGP 405-01 Final Project 12/7/17
+Aaron Hamilton
+James Smith
+Thomas McGillicuddy
+“We certify that this work is
+entirely our own. The assessor of this project may reproduce this project
+and provide copies to other academic staff, and/or communicate a copy of
+this project to a plagiarism-checking service, which may retain a copy of the
+project on its database.”
+*/
 #include "ClientState.h"
 
 ClientState::ClientState()
@@ -22,7 +33,7 @@ bool ClientState::init(char *targetIP, int portNum, int maxClients)
 
 	mpPeer->Connect(targetIP, portNum, 0, 0);
 	temp = targetIP;
-	writeToLogger("Connecting to server on ip " + temp); //TODO: Properly send char array to this function
+	writeToLogger("Connecting to server on ip " + temp); 
 
 	mServerIP = targetIP;
 	return true;
