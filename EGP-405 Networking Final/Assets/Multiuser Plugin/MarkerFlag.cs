@@ -23,18 +23,10 @@ public class MarkerFlag : MonoBehaviour {
             Gizmos.DrawWireCube(transform.position, size);
         }
     }
-    void OnDisable()
-    {
-        //Debug.Log(this.name + " Deselected");
-        //MultiuserPlugin.UnlockObject(this);
-        //isHeld = false;
 
-    }
     void OnEnable()
     {
-       // Debug.Log(this.name + " Selected");
-        //hideFlags = HideFlags.HideInInspector;
-        //isHeld = true;
+        hideFlags = HideFlags.HideInInspector;
     }
     private void OnDestroy()
     {

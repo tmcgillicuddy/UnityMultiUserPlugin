@@ -50,6 +50,85 @@ public class Serializer
         }
     }
 
+    public unsafe static void deserializeMessage(char* ser)
+    {
+        IntPtr care = (IntPtr)ser;
+        CharPointer* data = (CharPointer*)care;
+        string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
+        switch ((Byte)ser[0])
+        {
+            case (Byte)Message.ID_CONNECTION_ATTEMPT_FAILED:
+                Debug.Log("Failed to connect to server");
+                break;
+            case (Byte)Message.ID_NEW_INCOMING_CONNECTION:
+                MultiuserPlugin.handleChatMessage("A new client is connecting");
+                MultiuserPlugin.addClient();
+
+                break;
+            case (Byte)Message.ID_CONNECTION_REQUEST_ACCEPTED:
+                Multiuser_Editor_Window.messageStack.Add("You have connected to the server");
+                break;
+
+            case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
+                Debug.Log("Connection Failed, server is FULL");
+                break;
+            case (Byte)Message.ID_CONNECTION_LOST:
+                MultiuserPlugin.handleChatMessage("Someone lost connection");
+                break;
+            case (Byte)Message.ID_DISCONNECTION:
+                if (MultiuserPlugin.mIsServer)
+                {
+                    MultiuserPlugin.handleChatMessage("Client has disconnected");
+                }
+                else
+                {
+                    Multiuser_Editor_Window.messageStack.Add("You have disconnected");
+                }
+                break;
+            case (Byte)Message.LOADLEVEL:
+                expectedObjs = deserializeInt(ref output);
+                recievedObjs = 0;
+                EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
+                break;
+            case (Byte)Message.LEVELLOADED:
+                ReparentObjects();
+                ReparentObjects();
+                expectedObjs = -1;
+                EditorUtility.ClearProgressBar();
+
+                break;
+            case (Byte)Message.GO_DELETE:
+                if (MultiuserPlugin.mIsServer)
+                {
+                    MultiuserPlugin.Echo(Message.GO_DELETE, output);
+                }
+                deleteGO(output);
+                break;
+            case (Byte)Message.CHAT_MESSAGE:
+                MultiuserPlugin.handleChatMessage(output);
+                break;
+            case (Byte)Message.GO_UPDATE:
+                if (expectedObjs > 0)
+                {
+                    recievedObjs++;
+                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs / expectedObjs);
+                }
+                if (MultiuserPlugin.mIsServer) //If this instance is a server
+                {
+                    MultiuserPlugin.Echo(Message.GO_UPDATE, output);
+                }
+                componentSerialize(output);
+                //componentSerialize(ser);
+                break;
+            default:
+                int identifier = (Byte)ser[0].GetHashCode();
+                Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
+                break;
+        }
+
+
+    }
+
     public static string serialize(GameObject obj)
     {
         string serialized = "";//Message.GO_UPDATE.ToString();
@@ -93,14 +172,13 @@ public class Serializer
                     Transform serNewTransform = new Transform();
                     serNewTransform.pos = newTransform.position;
                     serNewTransform.rot = newTransform.rotation;
-                    serNewTransform.scale = newTransform.localScale; //Look here for scaling issues
+                    serNewTransform.scale = newTransform.localScale;
                     string transformString = new string(serNewTransform.toChar());
                     serialized += transformString;
 
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.BoxCollider))
                 {
-                    //   Debug.Log("Has Box Collider");
                     UnityEngine.BoxCollider newBoxCollider = comps[i] as UnityEngine.BoxCollider;
 
                     BoxCollider serNewBoxCollider = new BoxCollider();
@@ -112,7 +190,6 @@ public class Serializer
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.SphereCollider))
                 {
-                    //    Debug.Log("Has Sphere Collider");
                     UnityEngine.SphereCollider newSphereCollider = comps[i] as UnityEngine.SphereCollider;
 
                     SphereCollider serNewSphereCollider = new SphereCollider();
@@ -124,7 +201,6 @@ public class Serializer
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.CapsuleCollider))
                 {
-                    //  Debug.Log("Has Capsule Collider");
                     UnityEngine.CapsuleCollider newCapsuleCollider = comps[i] as UnityEngine.CapsuleCollider;
 
                     CapsuleCollider serNewCapsuleCollider = new CapsuleCollider();
@@ -138,7 +214,6 @@ public class Serializer
                 }
                 else if (comps[i].GetType() == typeof(UnityEngine.Rigidbody))
                 {
-                    //  Debug.Log("Has Rigidbody");
                     UnityEngine.Rigidbody newRigidBody = comps[i] as UnityEngine.Rigidbody;
 
                     RigidBody serNewRigidBody = new RigidBody();
@@ -269,125 +344,9 @@ public class Serializer
 
         return serialized;
     }
-    public unsafe static void deserializeMessage(char* ser)
-    {
-        IntPtr care = (IntPtr)ser;
-        CharPointer* data = (CharPointer*)care;
-        string output = Marshal.PtrToStringAnsi((IntPtr)data->mes);
-        switch ((Byte)ser[0])
-        {
-            case (Byte)Message.ID_CONNECTION_ATTEMPT_FAILED:
-                Debug.Log("Failed to connect to server");
-                break;
-            case (Byte)Message.ID_NEW_INCOMING_CONNECTION:
-                MultiuserPlugin.handleChatMessage("A new client is connecting");
-                MultiuserPlugin.addClient();
-
-                break;
-            case (Byte)Message.ID_CONNECTION_REQUEST_ACCEPTED:
-                Multiuser_Editor_Window.messageStack.Add("You have connected to the server");
-                break;
-
-            case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
-                Debug.Log("Connection Failed, server is FULL");
-                break;
-
-            case (Byte)Message.ID_CONNECTION_LOST:
-                MultiuserPlugin.handleChatMessage("Someone lost connection");
-                break;
-            case (Byte)Message.ID_DISCONNECTION:
-                if (MultiuserPlugin.mIsServer)
-                {
-                    MultiuserPlugin.handleChatMessage("Client has disconnected");
-                }
-                else
-                {
-                    Multiuser_Editor_Window.messageStack.Add("You have disconnected");
-                }
-                break;
-            case (Byte)Message.LOADLEVEL:
-                expectedObjs = deserializeInt(ref output);
-                recievedObjs = 0;
-                //Debug.Log("Expecting " + expectedObjs);
-                EditorUtility.DisplayProgressBar("Getting Level Data", "", 0);
-                break;
-            case (Byte)Message.LEVELLOADED:
-                ReparentObjects();
-                ReparentObjects();
-                expectedObjs = -1;
-                EditorUtility.ClearProgressBar();
-
-                break;
-            case (Byte)Message.GO_DELETE:
-                deleteGO(output);
-                break;
-            case (Byte)Message.CHAT_MESSAGE:
-                MultiuserPlugin.handleChatMessage(output);
-                break;
-            case (Byte)Message.GO_UPDATE:
-                // Debug.Log(recievedObjs);
-                if (expectedObjs > 0)
-                {
-                    recievedObjs++;
-                    EditorUtility.DisplayProgressBar("Getting Level Data", "Recieved " + recievedObjs, (float)recievedObjs / expectedObjs);
-                }
-                if(MultiuserPlugin.mIsServer) //If this instance is a server
-                {
-                    MultiuserPlugin.Echo(output);
-                }
-                componentSerialize(output);
-                //componentSerialize(ser);
-                break;
-            default:
-                Debug.Log(output);
-                int identifier = (Byte)ser[0].GetHashCode();
-                Debug.Log("Message with identifier " + identifier.ToString() + " has arrived");
-                break;
-        }
-
-
-    }
-
-    static int genHashCode(string id)
-    {
-        const int primeNum = 31;
-        int hashCode = 0;
-        for (int i = 0; i < id.Length; ++i)
-        {
-            hashCode += id[i].GetHashCode();
-        }
-        return hashCode * primeNum;
-    }
-
-    public static void deleteGO(string info)
-    {
-        string gOId = deserializeString(ref info);
-
-        int hashLoc = genHashCode(gOId);
-
-        int xLoc = hashLoc % 10;
-        int yLoc = hashLoc % 100;
-
-        MarkerFlag thisFlag = null;
-
-        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
-        {
-            if (objectMap[xLoc, yLoc][i].id == gOId)
-            {
-                thisFlag = objectMap[xLoc, yLoc][i];
-                break;
-            }
-        }
-
-        if (thisFlag != null)
-        {
-            MonoBehaviour.DestroyImmediate(thisFlag.gameObject);
-        }
-    }
 
     public static void componentSerialize(string ser)
     {
-        //Debug.Log(ser);
         GameObject gameObject = null;
 
         MarkerFlag objMarker = deserializeMarkerFlag(ref ser);
@@ -397,17 +356,7 @@ public class Serializer
         int xLoc = hashLoc % 10;
         int yLoc = hashLoc % 100;
 
-        MarkerFlag thisFlag = null;
-
-        for (int i = 0; i < objectMap[xLoc, yLoc].Count; ++i)
-        {
-            if (objectMap[xLoc, yLoc][i].id == objMarker.id)
-            {
-                thisFlag = objectMap[xLoc, yLoc][i];
-                break;
-            }
-        }
-
+        MarkerFlag thisFlag = findInList(objMarker.id,xLoc,yLoc);
 
         if (thisFlag == null) //Make a new game object with given flag if you need to
         {
@@ -448,8 +397,7 @@ public class Serializer
         gameObject.isStatic = deserializeBool(ref ser);
         while (ser.Length > 0)
         {
-
-            string tag = deserializeString(ref ser);
+            string tag = deserializeString(ref ser); //Identifies the component type
 
             if (tag == "transform")
             {
@@ -610,7 +558,6 @@ public class Serializer
                             {
                                 newMat = (Material)AssetDatabase.LoadAssetAtPath(ret, typeof(Material));
                             }
-                            //Debug.Log("Loading material: " + newMat.name);
 
                             renderMaterials.Add(newMat);
 
@@ -653,6 +600,35 @@ public class Serializer
         }
         addToMap(thisFlag);
     }
+    static int genHashCode(string id)
+    {
+        const int primeNum = 31;
+        int hashCode = 0;
+        for (int i = 0; i < id.Length; ++i)
+        {
+            hashCode += id[i].GetHashCode();
+        }
+        return hashCode * primeNum;
+    }
+
+    public static void deleteGO(string info) //Function used to delete a gameobject
+    {
+        string gOId = deserializeString(ref info);
+
+        int hashLoc = genHashCode(gOId);
+
+        int xLoc = hashLoc % 10;
+        int yLoc = hashLoc % 100;
+
+        MarkerFlag thisFlag = null;
+
+        thisFlag = findInList(gOId, xLoc, yLoc);
+
+        if (thisFlag != null)
+        {
+            MonoBehaviour.DestroyImmediate(thisFlag.gameObject);
+        }
+    }
 
     public static void ReparentObjects() //Used to reparent all objects, used when server has sent over all game objects
     {
@@ -692,14 +668,33 @@ public class Serializer
 
     }
 
-    public static void addToMap(MarkerFlag flag)
+    public static void addToMap(MarkerFlag flag) 
     {
-        int hashCode = genHashCode(flag.id); //TODO Need to do an overwrite check
+        int hashCode = genHashCode(flag.id); 
         int xLoc = hashCode % 10;
         int yLoc = hashCode % 100;
-        objectMap[xLoc, yLoc].Add(flag);
+
+        if (!objectMap[xLoc,yLoc].Contains(flag)) //The flag doesn't exsist in the map anywhere
+        {
+            objectMap[xLoc, yLoc].Add(flag);
+        }
+        //Otherwise, don't bother adding it
     }
 
+    public static MarkerFlag findInList(string id, int x, int y) //Searches a map location for a specific ID (good for really complex scenes)
+    {
+        for (int i = 0; i < objectMap[x, y].Count; ++i)
+        {
+            if (objectMap[x, y][i].id == id)
+            {
+                return objectMap[x, y][i];
+            }
+        }
+
+        return null;
+    }
+
+    //Functions to return various types of information for interpreting the given string information
     public static MarkerFlag deserializeMarkerFlag(ref string ser)
     {
         MarkerFlag markerFlag = new MarkerFlag();
@@ -810,38 +805,7 @@ public class Serializer
         return vec;
     }
 
-    public string vecToString(Vector3 vec)
-    {
-        string vecString = "";
-        vecString += vec.x;
-        vecString += vec.y;
-        vecString += vec.z;
-        return vecString;
-    }
-
-    public string quatToString(Quaternion qua)
-    {
-        string quatString = "";
-        quatString += qua.x;
-        quatString += qua.y;
-        quatString += qua.z;
-        quatString += qua.w;
-        return quatString;
-    }
-
-
-    public static MarkerFlag findInList(string id, int x, int y)
-    {
-        for (int i = 0; i < objectMap[x, y].Count; ++i)
-        {
-            if (objectMap[x, y][i].id == id)
-            {
-                return objectMap[x, y][i];
-            }
-        }
-
-        return null;
-    }
+   
 }
 
 public class serializedComponent

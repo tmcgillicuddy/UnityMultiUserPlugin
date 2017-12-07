@@ -67,7 +67,6 @@ public class MultiuserPlugin
 
         if (!Application.isPlaying && !mIsPaused)   // Only run the systems when the game is not in play mode and the user hasn't paused the sync system
         {
-            //Debug.Log(mConnected);
             if (mConnected)
             {
                 if (toolMode == mode.EDIT)
@@ -119,12 +118,12 @@ public class MultiuserPlugin
                 {
                     selectedObjFlags.isModified = true;
                     selectedObjFlags.isHeld = true;
-                    //selectedObjFlags.isLocked = false;
                     approvedObjects.Add(selectedObjects[i]);
                 }
             }
             Selection.objects = approvedObjects.ToArray();
         }
+
         for (int i = 0; i < allGameobjects.Length; ++i)
         {
             MarkerFlag pMarkerFlag = allGameobjects[i].GetComponent<MarkerFlag>();
@@ -145,11 +144,6 @@ public class MultiuserPlugin
             Sync(Selection.gameObjects);
             lastSyncTime = DateTime.Now;
         }
-    }
-
-    static void unlockObjs()
-    {
-
     }
 
     static void viewMode()
@@ -191,11 +185,9 @@ public class MultiuserPlugin
         int index = 0;
         foreach (IPAddress i in addr)
         {
-            //Debug.Log("Address " + index + ": " + i.ToString() + " ");
             index++;
         }
         serverIP = addr[3].ToString();
-        // Debug.Log("Server IP: " + serverIP);
 
 
         //Calls plugin function to start server
@@ -211,6 +203,7 @@ public class MultiuserPlugin
         if (Multiuser_Editor_Window.limitAutosave)
             ServerUtil.checkTooManyScenes();
     }
+
     public static void UnlockObject(MarkerFlag target)
     {
         if (mConnected)
@@ -297,7 +290,7 @@ public class MultiuserPlugin
             Serializer.deserializeMessage(data);
     }
 
-    public static unsafe void Echo(string message)
+    public static unsafe void Echo(Serializer.Message front ,string message) //Used to send the given message with the given message ID to all clients minus the client with the IP of the last packet
     {
         char* oGIP = GetLastPacketIP(); //Get the IP of the packet from the original sender to prevent ghosting
         IntPtr careIP = (IntPtr)oGIP;
@@ -308,8 +301,7 @@ public class MultiuserPlugin
         {
             if (mConnectedClients[i].IP != newIP)
             {
-                Debug.Log(mConnectedClients[i].IP);
-                SendData((int)Serializer.Message.GO_UPDATE, message, message.Length, mConnectedClients[i].IP);
+                SendData((int)front, message, message.Length, mConnectedClients[i].IP);
             }
         }
     }
@@ -321,16 +313,12 @@ public class MultiuserPlugin
             string targetID = target.id + "|";
             if (!mIsServer)
             {
-                //   Debug.Log("Test Sending to server"); 
                 SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, "");
             }
             else
             {
-                //  Debug.Log("Test Broadcasting");
-
                 for (int j = 0; j < mConnectedClients.Count; ++j)
                 {
-                    // Debug.Log(mConnectedClients[j].IP);
                     if (mConnectedClients[j].IP != "")
                     {
                         SendData((int)Serializer.Message.GO_DELETE, targetID, targetID.Length, mConnectedClients[j].IP);
