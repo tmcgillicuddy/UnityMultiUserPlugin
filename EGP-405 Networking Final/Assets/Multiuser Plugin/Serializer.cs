@@ -280,12 +280,12 @@ public class Serializer
                 Debug.Log("Failed to connect to server");
                 break;
             case (Byte)Message.ID_NEW_INCOMING_CONNECTION:
-                Debug.Log("A new client is connecting");
+                MultiuserPlugin.handleChatMessage("A new client is connecting");
                 MultiuserPlugin.addClient();
 
                 break;
             case (Byte)Message.ID_CONNECTION_REQUEST_ACCEPTED:
-                Debug.Log("You have connected to the server");
+                Multiuser_Editor_Window.messageStack.Add("You have connected to the server");
                 break;
 
             case (Byte)Message.ID_NO_FREE_INCOMING_CONNECTIONS:
@@ -293,17 +293,16 @@ public class Serializer
                 break;
 
             case (Byte)Message.ID_CONNECTION_LOST:
-                Debug.Log("Someone lost connection");
+                MultiuserPlugin.handleChatMessage("Someone lost connection");
                 break;
             case (Byte)Message.ID_DISCONNECTION:
                 if (MultiuserPlugin.mIsServer)
                 {
-                    Debug.Log("Client has disconnected");
-                    //TODO: remove this client from client list
+                    MultiuserPlugin.handleChatMessage("Client has disconnected");
                 }
                 else
                 {
-                    Debug.Log("You have disconnected");
+                    Multiuser_Editor_Window.messageStack.Add("You have disconnected");
                 }
                 break;
             case (Byte)Message.LOADLEVEL:
