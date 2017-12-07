@@ -65,10 +65,8 @@ public class Multiuser_Editor_Window : EditorWindow
 
                 EditorGUILayout.BeginHorizontal();
 
-                MultiuserPlugin.objectId = "Client";
-                nickName = "Client";
                 GUILayout.Label("Enter nickname:");
-                MultiuserPlugin.objectId = EditorGUILayout.TextField(MultiuserPlugin.objectId);
+                nickName = EditorGUILayout.TextField(nickName);
 
                 EditorGUILayout.EndHorizontal();
                 MultiuserPlugin.toolMode = (MultiuserPlugin.mode)EditorGUILayout.EnumPopup("Mode:", MultiuserPlugin.toolMode);
@@ -85,12 +83,10 @@ public class Multiuser_Editor_Window : EditorWindow
                 ServerUtil.saveInterval = EditorGUILayout.IntField(ServerUtil.saveInterval);
                 EditorGUILayout.EndHorizontal();
 
-                MultiuserPlugin.objectId = "Server";
-                nickName = "Server";
                 EditorGUILayout.BeginHorizontal();
 
                 GUILayout.Label("Enter nickname:");
-                MultiuserPlugin.objectId = EditorGUILayout.TextField(MultiuserPlugin.objectId);
+                nickName = EditorGUILayout.TextField(nickName);
 
                 EditorGUILayout.EndHorizontal();
 
@@ -104,6 +100,9 @@ public class Multiuser_Editor_Window : EditorWindow
                     //CALL CONNECT TO SERVER FUNCTION HERE
                     MultiuserPlugin.startupClient(mTargetIP, mPortNum);
                     clientID = MultiuserPlugin.clientID;
+                    if (nickName == "")
+                        nickName = "Client";
+                    MultiuserPlugin.objectId = nickName;
                 }
             }
             else // server
@@ -112,6 +111,9 @@ public class Multiuser_Editor_Window : EditorWindow
                 {
                     //CALL START SERVER FUNCTION HERE
                     MultiuserPlugin.startupServer(mPortNum, mMaxClients);
+                    if (nickName == "")
+                        nickName = "Server";
+                    MultiuserPlugin.objectId = nickName;
                 }
             }
 
@@ -215,7 +217,6 @@ public class Multiuser_Editor_Window : EditorWindow
 
     void sendMessage()
     {
-        //string fullMessage = nickName + ": " + message; // full message is "nickname: message"
         string fullMessage = MultiuserPlugin.objectId + ": " + message;
 
         if (MultiuserPlugin.mIsServer)
