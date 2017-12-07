@@ -1,4 +1,16 @@
-﻿using System.Collections;
+﻿/*
+EGP 405-01 Final Project 12/7/17
+Aaron Hamilton
+James Smith
+Thomas McGillicuddy
+“We certify that this work is
+entirely our own. The assessor of this project may reproduce this project
+and provide copies to other academic staff, and/or communicate a copy of
+this project to a plagiarism-checking service, which may retain a copy of the
+project on its database.”
+*/
+
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEditor;
@@ -22,7 +34,6 @@ public class ServerUtil
     public static int saveInterval = 2;
     public const int MAX_SAVED_SCENES = 10;
     public static string currentFolderPath = "Assets/Scenes/";
-
 
     public void Update()
     {
@@ -54,7 +65,7 @@ public class ServerUtil
         {
             if (length < 0) // if the scene name does not contain the delimiter
             {
-                newSceneName = "Test Scene " + newTimestamp;
+                newSceneName = "Test Scene" + " " + newTimestamp;
 
                 oldSceneName = EditorSceneManager.GetActiveScene().name;
             }
@@ -80,7 +91,7 @@ public class ServerUtil
         Lightmapping.Bake();
     }
 
-    public static void checkTooManyScenes()
+public static void checkTooManyScenes()
     {
         string path;
         if (EditorSceneManager.GetActiveScene().name == "") // if we are not in a scene
@@ -88,8 +99,11 @@ public class ServerUtil
         else // if we are
         {
             // get file the scene is in
-            int lim = EditorSceneManager.GetActiveScene().name.Length;
-            path = EditorSceneManager.GetActiveScene().path.Substring(0, lim - 2); // take scene name out of path
+            string sceneName = EditorSceneManager.GetActiveScene().name + ".unity";
+            Debug.Log(sceneName);
+            int lim = sceneName.Length;//EditorSceneManager.GetActiveScene().name.Length;// + ".unity";
+            path = EditorSceneManager.GetActiveScene().path.Substring(0, EditorSceneManager.GetActiveScene().path.Length - lim); // take scene name out of path
+            Debug.Log(path);
         }
 
         DirectoryInfo levelDirectoryPath = new DirectoryInfo(path); // asset information at path
