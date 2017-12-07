@@ -77,6 +77,7 @@ public class ServerUtil
 
         string savedScene = currentFolderPath + folderName + "/" + newSceneName + ".unity";
         EditorSceneManager.SaveScene(newScene, savedScene, false);
+        Lightmapping.Bake();
     }
 
     public static void checkTooManyScenes()
@@ -96,15 +97,9 @@ public class ServerUtil
 
         Queue<String> sceneNames = new Queue<String>(); // queue of names in the file
 
-        int i = 0;
         foreach (FileInfo fi in scenesInfo)
-        {
             if (fi.Name.Contains(".meta") == false) // filter out .meta files
-            {
                 sceneNames.Enqueue(fi.Name); // add appropriate file names into the queue
-                i++;
-            }
-        }
 
         if (sceneNames.Count > 10) // if there are more than 10 scenes saved
         {
@@ -113,7 +108,6 @@ public class ServerUtil
                 string earliestScene = sceneNames.Dequeue(); // name of earliest scene in the file
                 AssetDatabase.DeleteAsset(path + earliestScene); // delete the scene
             }
-
         }
     }
 

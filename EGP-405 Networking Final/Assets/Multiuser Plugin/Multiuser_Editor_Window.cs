@@ -189,6 +189,7 @@ public class Multiuser_Editor_Window : EditorWindow
                 else
                     nickName = "Server";
             }
+            EditorGUILayout.EndHorizontal();
         }
     }
 
