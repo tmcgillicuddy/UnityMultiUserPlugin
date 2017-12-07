@@ -32,8 +32,10 @@ public class ServerUtil
 
     public static void saveToNewScene()
     {
+        Debug.Log("saveToNewScene()");
         string folderName = "Autosaved Scenes";
-        String newTimestamp = getTimestamp(DateTime.Now, true, true);
+        string newTimestamp = "TS-" + getTimestamp(DateTime.Now, true, true);
+
         int tsLength = newTimestamp.Length;
 
         string newSceneName, oldSceneName;
@@ -53,9 +55,16 @@ public class ServerUtil
             // if there is an open scene
             else
             {
+                Debug.Log("fuck");
                 // Get the new scene name
                 oldSceneName = EditorSceneManager.GetActiveScene().name;
-                newSceneName = oldSceneName.Substring(0, oldSceneName.Length - tsLength) + newTimestamp;
+
+                Debug.Log("fuck");
+
+                int length = oldSceneName.IndexOf("TS-");
+                newSceneName = oldSceneName.Substring(0, length - 1) + " " + newTimestamp;
+
+                Debug.Log(newSceneName);
                 // got the new scene name
 
                 // create new scene
