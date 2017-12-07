@@ -60,7 +60,7 @@ public class MarkerFlag : MonoBehaviour {
     }
     void OnEnable()
     {
-        hideFlags = HideFlags.None;
+        hideFlags = HideFlags.HideInInspector;
        
     }
     private void OnDestroy()
