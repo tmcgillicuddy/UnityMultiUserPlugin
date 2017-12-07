@@ -33,7 +33,7 @@ bool ClientState::init(char *targetIP, int portNum, int maxClients)
 
 	mpPeer->Connect(targetIP, portNum, 0, 0);
 	temp = targetIP;
-	writeToLogger("Connecting to server on ip " + temp); //TODO: Properly send char array to this function
+	writeToLogger("Connecting to server on ip " + temp); 
 
 	mServerIP = targetIP;
 	return true;
