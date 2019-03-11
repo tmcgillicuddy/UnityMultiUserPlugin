@@ -18,7 +18,7 @@ The Multiuser Plugin uses these libraries:
 
 ## Using Plugin:
 
-Drag and drop the [Multieuser Plugin](https://github.com/tmcgillicuddy/UnityMultiUserPlugin/tree/develop/Multiuser%20Plugin) folder into your Assets Folder.
+Drag and drop the [Multieuser Plugin](https://github.com/tmcgillicuddy/UnityMultiUserPlugin/tree/master/Multiuser%20Plugin) folder into your Assets Folder.
 
 Open the project as you would any other Unity Project
 
