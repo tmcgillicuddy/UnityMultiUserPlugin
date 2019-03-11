@@ -2,13 +2,13 @@
 # Created by https://www.gitignore.io/api/unity,visualstudio
 
 ### Unity ###
-EGP-405 Networking Final/[Ll]ibrary/
-EGP-405 Networking Final/[Tt]emp/
-EGP-405 Networking Final/[Oo]bj/
-EGP-405 Networking Final/[Bb]uild/
-EGP-405 Networking Final/[Bb]uilds/
-EGP-405 Networking Final/Assets/AssetStoreTools*
-EGP-405 Networking Final/Assets/Scenes/Autosaved Scenes/
+Example Project/[Ll]ibrary/
+Example Project/[Tt]emp/
+Example Project/[Oo]bj/
+Example Project/[Bb]uild/
+Example Project/[Bb]uilds/
+Example Project/Assets/AssetStoreTools*
+Example Project/Assets/Scenes/Autosaved Scenes/
 
 # Visual Studio 2015 cache directory
 /.vs/

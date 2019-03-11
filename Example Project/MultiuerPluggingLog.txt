@@ -1,0 +1,170 @@
+----------------------------------------------------------------------
+Starting a Server
+In Framework StartServer Function
+Made Socket Descriptor on 6666
+10
+Started Peer
+Set Max connections to 10
+----------------------------------------------------------------------
+There is data
+'¢j'
+?WMþÔ:?W'þÔ:'¢jŒÔ:ÿÿÿÿ
+----------------------------------------------------------------------
+Sending Data
+A new client is connecting
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+1|
+Sending data to 216.93.149.115|54330
+Sent data
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|False|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Default-Material,|
+Sending data to 216.93.149.115|54330
+Sent data
+----------------------------------------------------------------------
+Sending Data
+1|
+Sending data to 216.93.149.115|54330
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|0|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|2.49|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|2.49|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+There is data
+ˆServer 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+----------------------------------------------------------------------
+Getting last packet IP
+216.93.149.115|54330
+----------------------------------------------------------------------
+Sending Data
+Server 0|__|True|Cube|Untagged|0|False|transform|0|4.39|0|0|0|0|1|1|1|1|meshfilter|Library/unity default resources|Cube|boxCollider|0|0|0|1|1|1|False|meshRenderer|1|1|1|True|1|False|Resources/unity_builtin_extra,|
+Sending data to 216.93.149.115|53921
+Sent data
+----------------------------------------------------------------------
+Shutting Down
+Shutting down server
+----------------------------------------------------------------------
